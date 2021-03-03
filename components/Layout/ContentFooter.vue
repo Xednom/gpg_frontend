@@ -34,15 +34,8 @@
         </li>
       </ul>
       <div class="copyright">
-        &copy; {{ year }}, made with <i class="tim-icons icon-heart-2"></i> by
-        <a href="https://binarcode.com" rel="noopener" target="_blank">BinarCode</a> and
-        <a
-          href="https://www.creative-tim.com/?ref=pdf-vuejs"
-          target="_blank"
-          rel="noopener"
-          >Creative Tim</a
-        >
-        for a better web.
+        &copy; GPG Corporation {{ year }}, made with <i class="tim-icons icon-heart-2"></i> by
+        <a href="https://psalmsglobal.com/" rel="noopener" target="_blank">Psalms Global</a>
       </div>
     </div>
   </footer>
