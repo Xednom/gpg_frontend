@@ -7,7 +7,11 @@
             <img src="img//card-primary.png" alt="" />
             <h1 class="card-title">Log in</h1>
           </template>
-
+          <base-alert v-if="error" type="danger" dismissible>
+            <span>
+              {{ errorMessage(error) }}
+            </span>
+          </base-alert>
           <div>
             <base-input
               v-validate="'required'"
@@ -75,12 +79,17 @@
   </div>
 </template>
 <script>
+import { BaseAlert } from "@/components";
 export default {
+  components: {
+    BaseAlert,
+  },
   name: "login-page",
   layout: "auth",
   data() {
     return {
       loading: false,
+      error: "",
       loginData: {
         login: "",
         password: "",
