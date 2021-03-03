@@ -1,5 +1,5 @@
 <template>
-  <div class="container login-page">
+  <div class="container forgot-password-page login-page">
     <div class="col-lg-4 col-md-6 ml-auto mr-auto">
       <card class="card-login card-white">
         <template slot="header">
@@ -124,7 +124,7 @@ export default {
   line-height: inherit;
   margin-left: 5px;
 }
-.card-title {
+.forgot-password-page .card-title {
   font-size: 46px !important;
 }
 </style>
