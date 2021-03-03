@@ -8,31 +8,23 @@
       <div class="block block-four"></div>
       <a href="javascript:void(0)">
         <img class="avatar" src="img/emilyz.jpg" alt="..." />
-        <h5 class="title">Mike Andrew</h5>
+        <h5 class="title">{{ user.first_name }} {{ user.last_name }}</h5>
       </a>
-      <p class="description">Ceo/Co-Founder</p>
+      <p class="description">{{ user.designation_category }}/{{ user.company_category }}</p>
     </div>
     <p></p>
     <div class="card-description">
-      Do not be scared of the truth because we need to restart the human
-      foundation in truth And I love you like Kanye loves Kanye I love Rick
-      Owens’ bed design but the back is...
-    </div>
-
-    <div slot="footer" class="button-container">
-      <base-button class="btn-facebook" icon round>
-        <i class="fab fa-facebook"></i>
-      </base-button>
-      <base-button class="btn-twitter" icon round>
-        <i class="fab fa-twitter"></i>
-      </base-button>
-      <base-button class="btn-google" icon round>
-        <i class="fab fa-google-plus"></i>
-      </base-button>
+      
     </div>
   </card>
 </template>
 <script>
-export default {};
+export default {
+  props: {
+    user: {
+      type: Object
+    }
+  }
+};
 </script>
 <style></style>
