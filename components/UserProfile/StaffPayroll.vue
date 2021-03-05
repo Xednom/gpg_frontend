@@ -94,7 +94,6 @@ export default {
     async saveStaff() {
       const staffPayload = {
         id: this.staff.id,
-        user: this.user.id,
         bank_name: this.staff.bank_name,
         bank_account_name: this.staff.bank_account_name,
         bank_type: this.staff.bank_type,

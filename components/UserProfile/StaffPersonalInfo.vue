@@ -71,6 +71,8 @@
             <el-date-picker
               v-model="staff.start_date_hired"
               type="date"
+              format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd"
               placeholder="Choose date"
             >
             </el-date-picker>
@@ -81,6 +83,8 @@
             <el-date-picker
               v-model="staff.date_hired_in_contract"
               type="date"
+              format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd"
               placeholder="Choose date"
             >
             </el-date-picker>
@@ -256,7 +260,6 @@ export default {
     async saveStaff() {
       const staffPayload = {
         id: this.staff.id,
-        user: this.user.id,
         date_of_birth: this.staff.date_of_birth,
         blood_type: this.staff.blood_type,
         position: this.staff.position,
@@ -280,7 +283,7 @@ export default {
             .then((res) => {
               this.saving = false;
               this.success = true;
-              this.successMessage2();
+              this.successMessage();
               return res.data;
             })
             .catch((err) => {

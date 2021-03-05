@@ -115,7 +115,6 @@ export default {
     async saveStaff() {
       const staffPayload = {
         id: this.staff.id,
-        user: this.user.id,
         emergency_contact_full_name: this.staff.emergency_contact_full_name,
         relationship: this.staff.relationship,
         emergency_contact_number: this.staff.emergency_contact_number,

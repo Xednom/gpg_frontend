@@ -92,7 +92,6 @@ export default {
     async saveStaff() {
       const staffPayload = {
         id: this.staff.id,
-        user: this.user.id,
         tin_number: this.staff.tin_number,
         sss_number: this.staff.sss_number,
         pag_ibig_number: this.staff.pag_ibig_number,
