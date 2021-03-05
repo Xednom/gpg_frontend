@@ -69,6 +69,7 @@
             size="medium"
             placeholder="Select your designation..."
             v-model="user.designation_category"
+            disabled
           >
             <el-option
               v-for="option in designations.categories"
@@ -87,6 +88,7 @@
             size="medium"
             placeholder="Select your company..."
             v-model="user.company_category"
+            disabled
           >
             <el-option
               v-for="option in companies.categories"
@@ -107,7 +109,7 @@
   </card>
 </template>
 <script>
-import {BaseAlert} from "@/components";
+import { BaseAlert } from "@/components";
 import { mapActions } from "vuex";
 import { Select, Option } from "element-ui";
 import UserCard from "@/components/UserProfile/UserCard.vue";

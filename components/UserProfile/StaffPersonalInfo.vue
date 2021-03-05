@@ -1,9 +1,9 @@
 <template>
   <div>
     <form @submit.prevent="saveStaff">
-      <base-alert v-if="success2" type="success" dismissible>
+      <base-alert v-if="success" type="success" dismissible>
         <span>
-          {{ successMessage2() }}
+          {{ successMessage() }}
         </span>
       </base-alert>
       <base-alert v-if="error" type="danger" dismissible>
@@ -15,7 +15,7 @@
         <div class="col-md-2">
           <base-input label="Date of Birth">
             <el-date-picker
-              v-model="staffUser.date_of_birth"
+              v-model="staff.date_of_birth"
               type="date"
               placeholder="Date Picker"
             >
@@ -27,7 +27,7 @@
             type="text"
             label="Blood type"
             placeholder="Your blood type"
-            v-model="staffUser.blood_type"
+            v-model="staff.blood_type"
           >
           </base-input>
         </div>
@@ -36,7 +36,7 @@
             type="text"
             label="Position"
             placeholder="Position"
-            v-model="staffUser.position"
+            v-model="staff.position"
           >
           </base-input>
         </div>
@@ -45,7 +45,7 @@
             type="text"
             label="Phone/Mobile Number"
             placeholder="Phone/Mobile number"
-            v-model="staffUser.phone_number"
+            v-model="staff.phone_number"
           >
           </base-input>
         </div>
@@ -58,7 +58,7 @@
             label="Company email"
             name="email"
             :error="getError('email')"
-            v-model="staffUser.company_email"
+            v-model="staff.company_email"
             type="email"
             autocomplete="email"
             placeholder="Email"
@@ -69,7 +69,7 @@
         <div class="col-md-4">
           <base-input label="Start date hired">
             <el-date-picker
-              v-model="staffUser.start_date_hired"
+              v-model="staff.start_date_hired"
               type="date"
               placeholder="Choose date"
             >
@@ -79,7 +79,7 @@
         <div class="col-md-4">
           <base-input label="Date hired in contract">
             <el-date-picker
-              v-model="staffUser.date_hired_in_contract"
+              v-model="staff.date_hired_in_contract"
               type="date"
               placeholder="Choose date"
             >
@@ -94,7 +94,7 @@
             type="text"
             label="Base pay"
             placeholder="Your base pay"
-            v-model="staffUser.base_pay"
+            v-model="staff.base_pay"
             addon-left-icon="tim-icons icon-money-coins"
           >
           </base-input>
@@ -104,7 +104,7 @@
             type="text"
             label="Hourly rate"
             placeholder="Your hourly rate"
-            v-model="staffUser.hourly_rate"
+            v-model="staff.hourly_rate"
             addon-left-icon="tim-icons icon-money-coins"
           >
           </base-input>
@@ -116,7 +116,7 @@
             class="select-primary"
             size="medium"
             placeholder="Select your status..."
-            v-model="staffUser.status"
+            v-model="staff.status"
             disabled
           >
             <el-option
@@ -136,7 +136,7 @@
             class="select-primary"
             size="medium"
             placeholder="Select your status..."
-            v-model="staffUser.category"
+            v-model="staff.category"
             disabled
           >
             <el-option
@@ -156,7 +156,7 @@
             type="text"
             label="Company ID"
             placeholder="Your Company ID"
-            v-model="staffUser.company_id"
+            v-model="staff.company_id"
             disabled
           >
           </base-input>
@@ -166,7 +166,7 @@
             type="text"
             label="Staff ID"
             placeholder="Your Staff ID"
-            v-model="staffUser.staff_id"
+            v-model="staff.staff_id"
             disabled
           >
           </base-input>
@@ -178,14 +178,14 @@
           <textarea
             class="form-control res-address"
             placeholder="Residential Address"
-            v-model="staffUser.residential_address"
+            v-model="staff.residential_address"
           >
           </textarea>
         </div>
       </div>
 
       <base-button
-        v-if="!saving2"
+        v-if="!saving"
         native-type="submit"
         type="primary"
         class="btn-fill"
@@ -206,7 +206,15 @@
 </template>
 
 <script>
+import { Select, Option, DatePicker } from "element-ui";
+import { BaseAlert } from "@/components";
 export default {
+  components: {
+    [Select.name]: Select,
+    [DatePicker.name]: DatePicker,
+    [Option.name]: Option,
+    BaseAlert,
+  },
   props: {
     user: {
       type: Object,
@@ -217,33 +225,66 @@ export default {
       description: "Staff personal information",
     },
   },
+  data() {
+    return {
+      success: false,
+      saving: false,
+      error: "",
+      status: {
+        categories: [
+          { value: "regular", label: "Regular" },
+          { value: "probitionary", label: "Probitionary" },
+          { value: "inactive", label: "Inactive" },
+        ],
+      },
+      category: {
+        categories: [
+          { value: "office_based", label: "Office based" },
+          { value: "part_timers", label: "Part-timers" },
+          { value: "home_based", label: "Home based" },
+        ],
+      },
+    };
+  },
   methods: {
+    getError(fieldName) {
+      return this.errors.first(fieldName);
+    },
+    successMessage() {
+      return "Successfully updated your Personal informations!";
+    },
     async saveStaff() {
-      const clientPayload = {
-        id: this.staffUser.id,
+      const staffPayload = {
+        id: this.staff.id,
         user: this.user.id,
-        date_of_birth: this.staffUser.date_of_birth,
-        company_id: this.staffUser.company_id,
-        staff_id: this.staffUser.staff_id,
-        pin: this.staffUser.pin,
-        lead_information: this.staffUser.lead_information,
-        customer_id: this.staffUser.customer_id,
+        date_of_birth: this.staff.date_of_birth,
+        blood_type: this.staff.blood_type,
+        position: this.staff.position,
+        phone_number: this.staff.phone_number,
+        company_email: this.staff.company_email,
+        start_date_hired: this.staff.start_date_hired,
+        date_hired_in_contract: this.staff.date_hired_in_contract,
+        base_pay: this.staff.base_pay,
+        hourly_rate: this.staff.hourly_rate,
+        status: this.staff.status,
+        category: this.staff.category,
+        residential_address: this.staff.residential_address,
       };
-      this.saving2 = true;
+      this.saving = true;
       let isValidForm = await this.$validator.validateAll();
       if (isValidForm) {
         let url = `/api/v1/staff/${this.user.id}/`;
-        if (this.staffUser) {
+        if (this.staff) {
           return await this.$axios
-            .put(url, clientPayload)
+            .put(url, staffPayload)
             .then((res) => {
-              this.saving2 = false;
-              this.success2 = true;
+              this.saving = false;
+              this.success = true;
               this.successMessage2();
               return res.data;
             })
             .catch((err) => {
-              this.saving2 = false;
+              this.saving = false;
               console.log(err);
             });
         }

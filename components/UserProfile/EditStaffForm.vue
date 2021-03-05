@@ -1,10 +1,10 @@
 <template>
   <div>
     <card>
-        <!-- TODO: create a collapse component for each info -->
+      <!-- TODO: create a collapse component for each info -->
       <collapse :multiple-active="false" :active-index="0">
         <collapse-item title="Staff personal information">
-          
+          <personal-info :user="user" :staff="staffUser"></personal-info>
         </collapse-item>
 
         <collapse-item title="Government information">
@@ -19,7 +19,7 @@
         </collapse-item>
       </collapse>
       <card>
-        <h5 slot="header" class="title">Client files</h5>
+        <h5 slot="header" class="title">Your staff file(s)</h5>
         <base-alert v-if="error" type="danger" dismissible>
           <span>
             {{ errorMessage(error) }}
@@ -34,7 +34,7 @@
           <div class="col-xs-12">
             <div
               class="row"
-              v-for="(item, index) in staffUser.client_files"
+              v-for="(item, index) in staffUser.staff_files"
               :key="index"
             >
               <div class="row">
@@ -106,6 +106,7 @@ import { BaseAlert, Collapse, CollapseItem } from "@/components";
 import StaffGov from "@/components/UserProfile/StaffGovInfo.vue";
 import EmergencyInfo from "@/components/UserProfile/StaffEmergencyInfo.vue";
 import PayrollInfo from "@/components/UserProfile/StaffPayroll.vue";
+import PersonalInfo from "@/components/UserProfile/StaffPersonalInfo.vue";
 import Card from "../Cards/Card.vue";
 
 export default {
@@ -113,6 +114,7 @@ export default {
     StaffGov,
     EmergencyInfo,
     PayrollInfo,
+    PersonalInfo,
     BaseAlert,
     Collapse,
     CollapseItem,
@@ -137,20 +139,6 @@ export default {
         phone: "",
         designation_category: "",
         company_category: "",
-      },
-      status: {
-        categories: [
-          { value: "regular", label: "Regular" },
-          { value: "probitionary", label: "Probitionary" },
-          { value: "inactive", label: "Inactive" },
-        ],
-      },
-      category: {
-        categories: [
-          { value: "office_based", label: "Office based" },
-          { value: "part_timers", label: "Part-timers" },
-          { value: "home_based", label: "Home based" },
-        ],
       },
     };
   },
@@ -246,22 +234,16 @@ export default {
         });
     },
     async saveUser() {
-      const clientPayload = {
+      const staffPayload = {
         id: this.staffUser.id,
-        client: this.user.id,
-        client_code: this.staffUser.client_code,
-        affiliate_partner_code: this.staffUser.affiliate_partner_code,
-        affiliate_partner_name: this.staffUser.affiliate_partner_name,
-        pin: this.staffUser.pin,
-        lead_information: this.staffUser.lead_information,
-        customer_id: this.staffUser.customer_id,
-        client_files: this.staffUser.client_files,
+        staff: this.user.id,
+        staff_files: this.staffUser.staff_files,
       };
       this.saving = true;
-      let url = `/api/v1/client/${this.user.id}/`;
+      let url = `/api/v1/staff/${this.user.id}/`;
       if (this.staffUser) {
         return await this.$axios
-          .put(url, clientPayload)
+          .put(url, staffPayload)
           .then((res) => {
             this.saving = false;
             this.success = true;
@@ -274,9 +256,35 @@ export default {
           });
       }
     },
+    async saveStaff() {
+      const staffPayload = {
+        id: this.staff.id,
+        user: this.user.id,
+        staff_files: this.staffUser.staff_files
+      };
+      this.saving = true;
+      let isValidForm = await this.$validator.validateAll();
+      if (isValidForm) {
+        let url = `/api/v1/staff/${this.user.id}/`;
+        if (this.staffUser) {
+          return await this.$axios
+            .put(url, staffPayload)
+            .then((res) => {
+              this.saving = false;
+              this.success = true;
+              this.successMessage2();
+              return res.data;
+            })
+            .catch((err) => {
+              this.saving = false;
+              console.log(err);
+            });
+        }
+      }
+    },
     addInternalFiles(e) {
       e.preventDefault();
-      this.staffUser.client_files.push({
+      this.staffUser.staff_files.push({
         file_name: "",
         url: "",
         description: "",
@@ -284,16 +292,16 @@ export default {
     },
     removeInternalFiles(e, id) {
       e.preventDefault();
-      var index = this.staffUser.client_files
+      var index = this.staffUser.staff_files
         .map(function(item) {
           console.log(item.id);
           return item.id;
         })
         .indexOf(id);
-      this.staffUser.client_files.splice(index, 1);
+      this.staffUser.staff_files.splice(index, 1);
     },
     addRow: function() {
-      this.staffUser.client_files.push({
+      this.staffUser.staff_files.push({
         file_name: "",
         url: "",
         description: "",
@@ -301,13 +309,13 @@ export default {
     },
     deleteRow: function(e, item) {
       e.preventDefault();
-      var index = this.staffUser.client_files
+      var index = this.staffUser.staff_files
         .map(function(item) {
           console.log(item.id);
           return item.id;
         })
         .indexOf(item);
-      this.staffUser.client_files.splice(index, 1);
+      this.staffUser.staff_files.splice(index, 1);
     },
     errorMessage(error) {
       if (error.password) {
