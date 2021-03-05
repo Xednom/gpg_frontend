@@ -125,7 +125,6 @@ const blankState = {
       return await this.$axios
         .get(endpoint)
         .then(res => {
-          console.log(res);
           commit("setClientUser", { clientUser: res.data });
         })
         .catch(e => {
@@ -146,7 +145,6 @@ const blankState = {
     async saveMe({ commit }, payload) {
       let url = "/auth/users/me/";
       return await this.$axios.put(url, payload).then(res => {
-        console.log(res.data);
         commit("setUser", payload);
       })
       .catch((err) => {
