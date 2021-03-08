@@ -1,111 +1,132 @@
 <template>
   <div class="content">
-    <div class="col-md-8 ml-auto mr-auto">
-      <h2 class="text-center">Paginated Tables</h2>
-      <p class="text-center">
-        With a selection of custom components & and Element UI components, you
-        can built beautiful data tables. For more info check
-        <a
-          href="http://element.eleme.io/#/en-US/component/table"
-          target="_blank"
-          >Element UI Table</a
-        >
-      </p>
-    </div>
     <div class="row mt-5">
       <div class="col-12">
         <card card-body-classes="table-full-width">
-          <h4 slot="header" class="card-title">Paginated Tables</h4>
+          <h4 slot="header" class="card-title">General Job Order</h4>
           <div>
-            <div
-              class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
-            >
-              <el-select
-                class="select-primary mb-3 pagination-select"
-                v-model="pagination.perPage"
-                placeholder="Per page"
-              >
-                <el-option
-                  class="select-primary"
-                  v-for="item in pagination.perPageOptions"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                >
-                </el-option>
-              </el-select>
+            <b-container fluid>
+              <b-row>
+                <b-col sm="5" md="6" class="my-1">
+                  <b-form-group
+                    label="Per page"
+                    label-for="per-page-select"
+                    label-cols-sm="6"
+                    label-cols-md="4"
+                    label-cols-lg="3"
+                    label-align-sm="right"
+                    label-size="sm"
+                    class="mb-0"
+                  >
+                    <b-form-select
+                      id="per-page-select"
+                      v-model="perPage"
+                      :options="pageOptions"
+                      size="sm"
+                    ></b-form-select>
+                  </b-form-group>
+                </b-col>
 
-              <base-input>
-                <el-input
-                  type="search"
-                  class="mb-3 search-input"
-                  clearable
-                  prefix-icon="el-icon-search"
-                  placeholder="Search records"
-                  v-model="searchQuery"
-                  aria-controls="datatables"
-                >
-                </el-input>
-              </base-input>
-            </div>
-            <el-table :data="queriedData">
-              <el-table-column
-                v-for="column in tableColumns"
-                :key="column.label"
-                :min-width="column.minWidth"
-                :prop="column.prop"
-                :label="column.label"
+                <b-col lg="6" class="my-1">
+                  <b-form-group
+                    label="Filter"
+                    label-for="filter-input"
+                    label-cols-sm="3"
+                    label-align-sm="right"
+                    label-size="sm"
+                    class="mb-0"
+                  >
+                    <b-input-group size="sm">
+                      <b-form-input
+                        id="filter-input"
+                        v-model="filter"
+                        type="search"
+                        placeholder="Type to Search"
+                      ></b-form-input>
+
+                      <b-input-group-append>
+                        <b-button :disabled="!filter" @click="filter = ''"
+                          >Clear</b-button
+                        >
+                      </b-input-group-append>
+                    </b-input-group>
+                  </b-form-group>
+                </b-col>
+              </b-row>
+
+              <!-- Main table element -->
+              <b-table
+                :items="jobOrders"
+                :fields="fields"
+                :current-page="currentPage"
+                :per-page="perPage"
+                :filter="filter"
+                :busy="isBusy"
+                :sort-by.sync="sortBy"
+                :sort-desc.sync="sortDesc"
+                :sort-direction="sortDirection"
+                stacked="md"
+                show-empty
+                small
+                @filtered="onFiltered"
               >
-              </el-table-column>
-              <el-table-column :min-width="135" align="right" label="Actions">
-                <div slot-scope="props">
-                  <base-button
-                    @click.native="handleLike(props.$index, props.row)"
-                    class="like btn-link"
-                    type="info"
+                <template #table-busy>
+                  <div class="text-center text-default my-2">
+                    <b-spinner class="align-middle"></b-spinner>
+                    <strong>Loading...</strong>
+                  </div>
+                </template>
+                <template #cell(name)="row">
+                  {{ row.value.first }} {{ row.value.last }}
+                </template>
+
+                <template #cell(actions)="row">
+                  <b-button
                     size="sm"
-                    icon
+                    @click="info(row.item, row.index, $event.target)"
+                    class="mr-1"
                   >
-                    <i class="tim-icons icon-heart-2"></i>
-                  </base-button>
-                  <base-button
-                    @click.native="handleEdit(props.$index, props.row)"
-                    class="edit btn-link"
-                    type="warning"
-                    size="sm"
-                    icon
-                  >
-                    <i class="tim-icons icon-pencil"></i>
-                  </base-button>
-                  <base-button
-                    @click.native="handleDelete(props.$index, props.row)"
-                    class="remove btn-link"
-                    type="danger"
-                    size="sm"
-                    icon
-                  >
-                    <i class="tim-icons icon-simple-remove"></i>
-                  </base-button>
-                </div>
-              </el-table-column>
-            </el-table>
+                    Info
+                  </b-button>
+                </template>
+
+                <template #row-details="row">
+                  <b-card>
+                    <ul>
+                      <li v-for="(value, key) in row.item" :key="key">
+                        {{ key }}: {{ value }}
+                      </li>
+                    </ul>
+                  </b-card>
+                </template>
+              </b-table>
+
+              <!-- Info modal -->
+              <b-modal
+                :id="infoModal.id"
+                :title="infoModal.title"
+                ok-only
+                @hide="resetInfoModal"
+              >
+                <pre>{{ infoModal.content }}</pre>
+              </b-modal>
+            </b-container>
           </div>
           <div
             slot="footer"
             class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
           >
             <div class="">
-              <p class="card-category">
-                Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
-              </p>
+              <p class="card-category"></p>
             </div>
-            <base-pagination
-              class="pagination-no-border"
-              v-model="pagination.currentPage"
-              :per-page="pagination.perPage"
-              :total="total"
-            >
-            </base-pagination>
+            <b-pagination
+              v-model="currentPage"
+              :total-rows="totalRows"
+              :per-page="perPage"
+              align="fill"
+              size="sm"
+              class="my-0"
+            ></b-pagination>
           </div>
         </card>
       </div>
@@ -114,15 +135,14 @@
 </template>
 <script>
 import { Table, TableColumn, Select, Option } from "element-ui";
-import { BasePagination } from "@/components";
 import users from "../../../util/mock-users";
 import Fuse from "fuse.js";
 import swal from "sweetalert2";
+import { mapGetters } from "vuex";
 
 export default {
   name: "paginated",
   components: {
-    BasePagination,
     [Select.name]: Select,
     [Option.name]: Option,
     [Table.name]: Table,
@@ -132,6 +152,10 @@ export default {
     /***
      * Returns a page from the searched data or the whole data. Search is performed in the watch section below
      */
+    ...mapGetters({
+      jobOrders: "jobOrder/jobOrders",
+      pagination: "jobOrder/jobOrdersPagination",
+    }),
     queriedData() {
       let result = this.tableData;
       if (this.searchedData.length > 0) {
@@ -139,57 +163,49 @@ export default {
       }
       return result.slice(this.from, this.to);
     },
-    to() {
-      let highBound = this.from + this.pagination.perPage;
-      if (this.total < highBound) {
-        highBound = this.total;
-      }
-      return highBound;
-    },
-    from() {
-      return this.pagination.perPage * (this.pagination.currentPage - 1);
-    },
-    total() {
-      return this.searchedData.length > 0
-        ? this.searchedData.length
-        : this.tableData.length;
+    sortOptions() {
+      // Create an options list from our fields
+      return this.fields
+        .filter((f) => f.sortable)
+        .map((f) => {
+          return { text: f.label, value: f.key };
+        });
     },
   },
   data() {
     return {
-      pagination: {
-        perPage: 5,
-        currentPage: 1,
-        perPageOptions: [5, 10, 25, 50],
-        total: 0,
-      },
       searchQuery: "",
-      propsToSearch: ["name", "email", "age"],
-      tableColumns: [
-        {
-          prop: "name",
-          label: "Name",
-          minWidth: 200,
-        },
-        {
-          prop: "email",
-          label: "Email",
-          minWidth: 250,
-        },
-        {
-          prop: "age",
-          label: "Age",
-          minWidth: 100,
-        },
-        {
-          prop: "salary",
-          label: "Salary",
-          minWidth: 120,
-        },
-      ],
       tableData: users,
       searchedData: [],
       fuseSearch: null,
+      isBusy: false,
+
+      // bootstrap-vue data
+      fields: [
+        { key: "client", sortable: true },
+        { key: "client_code", sortable: true },
+        { key: "request_date", sortable: true },
+        { key: "due_date", sortable: true },
+        { key: "job_title", sortable: true },
+        { key: "va_assigned", sortable: true },
+        { key: "status", sortable: true },
+        { key: "date_completed", sortable: true },
+        { key: "total_time_consumed", sortable: true },
+        { key: "actions", label: "Actions" },
+      ],
+      totalRows: 1,
+      currentPage: 1,
+      perPage: 5,
+      pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
+      sortBy: "",
+      sortDesc: false,
+      sortDirection: "asc",
+      filter: null,
+      infoModal: {
+        id: "info-modal",
+        title: "",
+        content: "",
+      },
     };
   },
   methods: {
@@ -207,6 +223,28 @@ export default {
         buttonsStyling: false,
         confirmButtonClass: "btn btn-info btn-fill",
       });
+    },
+    async fetchJobOrders() {
+      this.isBusy = true;
+      await this.$store
+        .dispatch("jobOrder/fetchJobOrders", this.pagination)
+        .then(() => {
+          this.isBusy = false;
+        });
+    },
+    info(item, index, button) {
+      this.infoModal.title = `Row index: ${index}`;
+      this.infoModal.content = JSON.stringify(item, null, 2);
+      this.$root.$emit("bv::show::modal", this.infoModal.id, button);
+    },
+    resetInfoModal() {
+      this.infoModal.title = "";
+      this.infoModal.content = "";
+    },
+    onFiltered(filteredItems) {
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.totalRows = filteredItems.length;
+      this.currentPage = 1;
     },
     handleDelete(index, row) {
       swal({
@@ -231,35 +269,10 @@ export default {
         }
       });
     },
-    deleteRow(row) {
-      let indexToDelete = this.tableData.findIndex(
-        (tableRow) => tableRow.id === row.id
-      );
-      if (indexToDelete >= 0) {
-        this.tableData.splice(indexToDelete, 1);
-      }
-    },
   },
-  mounted() {
-    // Fuse search initialization.
-    this.fuseSearch = new Fuse(this.tableData, {
-      keys: ["name", "email"],
-      threshold: 0.3,
-    });
-  },
-  watch: {
-    /**
-     * Searches through the table data by a given query.
-     * NOTE: If you have a lot of data, it's recommended to do the search on the Server Side and only display the results here.
-     * @param value of the query
-     */
-    searchQuery(value) {
-      let result = this.tableData;
-      if (value !== "") {
-        result = this.fuseSearch.search(this.searchQuery);
-      }
-      this.searchedData = result;
-    },
+  async mounted() {
+    await this.fetchJobOrders();
+    this.totalRows = this.jobOrders.length;
   },
 };
 </script>
