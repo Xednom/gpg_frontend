@@ -75,8 +75,13 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/axios',
     '@nuxtjs/auth-next',
+    'bootstrap-vue/nuxt',
     'nuxt-i18n'
   ],
+  bootstrapVue: {
+    // Install the `IconsPlugin` plugin (in addition to `BootstrapVue` plugin)
+    icons: true
+  },
   // Axios module configuration
 	axios: {
 		// See https://github.com/nuxt-community/axios-module#options
