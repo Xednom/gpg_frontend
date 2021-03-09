@@ -25,6 +25,8 @@ const blankState = {
     users: [],
     user: {},
     clientUser: {},
+    staff: {},
+    staffs: [],
     usersPagination: {
       limit: 12,
       offset: 0,
@@ -47,11 +49,15 @@ const blankState = {
     company_category: state => state.company_category,
     client: state => state.client,
     users: state => state.users,
+    staffs: state => state.staffs,
     user: state => {
       return state.user;
     },
     clientUser: state => {
       return state.clientUser;
+    },
+    staff: state => {
+      return state.staff;
     },
     usersPagination: state => state.usersPagination
   };
@@ -62,6 +68,9 @@ const blankState = {
     },
     setClientUser(state, payload) {
       state.clientUser = payload.clientUser;
+    },
+    setStaff(state, payload) {
+      state.staff = payload.staff;
     },
     setUsers(state, payload) {
       state.users = payload.users;
@@ -130,6 +139,17 @@ const blankState = {
         .catch(e => {
           throw e;
         });
+    },
+    async fetchStaff({commit, dispatch}, payload) {
+      this.loading = true;
+      let endpoint = `/api/v1/staff/${payload}`;
+      try {
+        await this.$axios.get(endpoint).then(res => {
+          commit("setStaff", {staff: res.data})
+        });
+      } catch (err) {
+        throw err;
+      }
     },
     async fetchAdminUser({ commit, dispatch }, payload) {
       let endpoint = `/auth/admin-users-list/${payload}/`;

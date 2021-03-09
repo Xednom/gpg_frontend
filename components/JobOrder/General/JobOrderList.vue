@@ -7,9 +7,11 @@
           <div>
             <b-container fluid>
               <!-- <b-row> -->
-                <b-col sm="12" md="4" class="my-1 pull-left">
-                  <b-button variant="success">Create Job order</b-button>
-                </b-col>
+              <b-col sm="12" md="4" class="my-1 pull-left">
+                <b-button variant="success" @click="modals.classic = true"
+                  >Create Job order</b-button
+                >
+              </b-col>
 
               <b-col sm="12" md="4" lg="4" class="my-1 pull-right">
                 <b-form-group
@@ -59,7 +61,7 @@
               <!-- Main table element -->
               <b-table
                 :items="jobOrders"
-                :fields="fields"
+                :fields="computedFields"
                 :current-page="currentPage"
                 :per-page="perPage"
                 :filter="filter"
@@ -133,18 +135,35 @@
         </card>
       </div>
     </div>
+    <!-- Classic Modal -->
+    <modal
+      :show.sync="modals.classic"
+      headerClasses="justify-content-center"
+      class="white-content"
+    >
+      <job-order-create
+        :fetch="fetchJobOrders"
+        :staff="staff"
+        :client="client"
+      ></job-order-create>
+    </modal>
   </div>
 </template>
 <script>
 import { Table, TableColumn, Select, Option } from "element-ui";
+import { Modal } from "@/components";
 import users from "../../../util/mock-users";
 import Fuse from "fuse.js";
 import swal from "sweetalert2";
 import { mapGetters } from "vuex";
 
+import JobOrderCreate from "./JobOrderCreate.vue";
+
 export default {
   name: "paginated",
   components: {
+    JobOrderCreate,
+    Modal,
     [Select.name]: Select,
     [Option.name]: Option,
     [Table.name]: Table,
@@ -157,6 +176,9 @@ export default {
     ...mapGetters({
       jobOrders: "jobOrder/jobOrders",
       pagination: "jobOrder/jobOrdersPagination",
+      staff: "user/staff",
+      user: "user/user",
+      client: "user/clientUser",
     }),
     queriedData() {
       let result = this.tableData;
@@ -173,6 +195,17 @@ export default {
           return { text: f.label, value: f.key };
         });
     },
+    computedFields() {
+      if (
+        this.$auth.user.designation_category == "new_client" ||
+        this.$auth.user.designation_category == "current_client" ||
+        this.$auth.user.designation_category == "affiliate_partner"
+      ) {
+        return this.fields.filter(field => !field.requiresStaff);
+      } else {
+        return this.fields.filter(field => !field.requiresClient);
+      }
+    },
   },
   data() {
     return {
@@ -181,15 +214,13 @@ export default {
       searchedData: [],
       fuseSearch: null,
       isBusy: false,
-
-      // bootstrap-vue data
       fields: [
-        { key: "client", sortable: true },
+        { key: "client_name", sortable: true, requiresClient: true },
         { key: "client_code", sortable: true },
         { key: "request_date", sortable: true },
         { key: "due_date", sortable: true },
         { key: "job_title", sortable: true },
-        { key: "va_assigned", sortable: true },
+        { key: "staff_name", sortable: true, requiresStaff: true },
         { key: "status", sortable: true },
         { key: "date_completed", sortable: true },
         { key: "total_time_consumed", sortable: true },
@@ -207,6 +238,9 @@ export default {
         id: "info-modal",
         title: "",
         content: "",
+      },
+      modals: {
+        classic: false,
       },
     };
   },
@@ -226,6 +260,46 @@ export default {
         confirmButtonClass: "btn btn-info btn-fill",
       });
     },
+    async fetchClient(id) {
+      this.loading = true;
+      try {
+        await this.$store.dispatch("user/fetchClientUser", id).then(() => {
+          this.loading = false;
+        });
+      } catch (err) {
+        console.log(err.response.data);
+      }
+    },
+    async fetchStaff(id) {
+      this.loading = true;
+      try {
+        await this.$store.dispatch("user/fetchStaff", id).then(() => {
+          this.loading = false;
+        });
+      } catch (err) {
+        this.loading = false;
+      }
+    },
+    async fetchMe() {
+      this.loading = true;
+      try {
+        await this.$store.dispatch("user/fetchUser").then(() => {
+          this.loading = false;
+          if (
+            this.$auth.user.designation_category == "new_client" ||
+            this.$auth.user.designation_category == "current_client" ||
+            this.$auth.user.designation_category == "affiliate_partner"
+          ) {
+            this.fetchClient(this.$auth.user.id);
+          } else {
+            this.fetchStaff(this.$auth.user.id);
+          }
+        });
+      } catch (err) {
+        console.log(err.response.data);
+        this.loading = false;
+      }
+    },
     async fetchJobOrders() {
       this.isBusy = true;
       await this.$store
@@ -234,6 +308,7 @@ export default {
           this.isBusy = false;
         });
     },
+
     info(item, index, button) {
       this.infoModal.title = `Row index: ${index}`;
       this.infoModal.content = JSON.stringify(item, null, 2);
@@ -274,6 +349,7 @@ export default {
   },
   async mounted() {
     await this.fetchJobOrders();
+    await this.fetchMe();
     this.totalRows = this.jobOrders.length;
   },
 };

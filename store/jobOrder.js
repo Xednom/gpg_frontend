@@ -102,12 +102,12 @@ const blankState = {
           throw e;
         });
     },
-    async fetchClientUser({ commit, dispatch }, payload) {
-      let endpoint = `/api/v1/client/${payload}/`;
+    async fetchJobOrder({ commit, dispatch }, payload) {
+      let endpoint = `/api/v1/job-order/${payload}/`;
       return await this.$axios
         .get(endpoint)
         .then(res => {
-          commit("setClientUser", { clientUser: res.data });
+          commit("setJobOrder", { jobOrder: res.data });
         })
         .catch(e => {
           throw e;
@@ -124,10 +124,10 @@ const blankState = {
           throw e;
         });
     },
-    async saveMe({ commit }, payload) {
-      let url = "/auth/users/me/";
-      return await this.$axios.put(url, payload).then(res => {
-        commit("setUser", payload);
+    async saveJobOrder({ commit }, payload) {
+      let url = "/api/v1/job-order/";
+      return await this.$axios.post(url, payload).then(() => {
+        commit("setBasicField", payload);
       })
       .catch((err) => {
         console.log(err);
