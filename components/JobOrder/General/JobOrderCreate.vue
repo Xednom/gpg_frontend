@@ -2,6 +2,11 @@
   <div class="col-md-12">
     <form @submit.prevent="save">
       <h4 class="card-title">Create job order</h4>
+      <base-alert v-if="success" type="success" dismissible>
+        <span>
+          {{ successMessage() }}
+        </span>
+      </base-alert>
       <base-alert v-if="error" type="danger" dismissible>
         <span>
           {{ errorMessage(error) }}
@@ -10,13 +15,14 @@
       <div class="form-row">
         <div class="col-sm-12 col-md-12">
           <base-input
-            v-validate="'required'"
-            :error="getError('request_date')"
-            name="request_date"
+            v-model="request_date"
             label="Request date"
+            v-validate="'required'"
+            name="Request date"
+            :error="getError('Request date')"
           >
             <el-date-picker
-              v-model="job.request_date"
+              v-model="request_date"
               type="date"
               format="yyyy-MM-dd"
               value-format="yyyy-MM-dd"
@@ -26,14 +32,10 @@
           </base-input>
         </div>
         <div class="col-sm-12 col-md-12">
-          <base-input
-            label="Due date"
-            v-validate="'required'"
-            :error="getError('due_date')"
-            name="due_date"
-          >
+          <base-input label="Due date">
             <el-date-picker
-              v-model="job.due_date"
+              v-model="due_date"
+              v-validate="'required'"
               type="date"
               format="yyyy-MM-dd"
               value-format="yyyy-MM-dd"
@@ -48,9 +50,9 @@
           <base-input
             label="Job title"
             v-validate="'required'"
-            :error="getError('job_title')"
-            name="job_title"
-            v-model="job.job_title"
+            :error="getError('Job title')"
+            name="Job title"
+            v-model="job_title"
           >
           </base-input>
         </div>
@@ -61,7 +63,8 @@
           <textarea
             class="form-control"
             placeholder="Job description"
-            v-model="job.job_description"
+            v-model="job_description"
+            required
           >
           </textarea>
         </div>
@@ -73,7 +76,7 @@
             v-if="!loading"
             native-type="submit"
             slot="footer"
-            type="primary"
+            type="submit"
             round
             block
             size="lg"
@@ -102,8 +105,10 @@
 import { mapActions } from "vuex";
 import CreateJobMixin from "@/mixins/CreateJobOrderMixin.js";
 import { DatePicker, Select } from "element-ui";
+import { BaseAlert } from "@/components";
 export default {
   components: {
+    BaseAlert,
     [DatePicker.name]: DatePicker,
     [Select.name]: Select,
   },
@@ -114,8 +119,8 @@ export default {
       decription: "Staff data",
     },
     client: {
-        type: Object,
-        description: "Client data"
+      type: Object,
+      description: "Client data",
     },
     fetch: {
       type: Function,
@@ -125,6 +130,7 @@ export default {
     return {
       loading: false,
       saving: false,
+      success: false,
       job: {
         request_date: "",
         due_date: "",
@@ -132,6 +138,7 @@ export default {
         job_description: "",
         client_notes: "",
       },
+      error: "",
     };
   },
   methods: {
@@ -140,49 +147,99 @@ export default {
       return this.errors.first(fieldName);
     },
     async save() {
-      this.loading = true;
-      if (
-        this.$auth.user.designation_category == "new_client" ||
-        this.$auth.user.designation_category == "current_client" ||
-        this.$auth.user.designation_category == "affiliate_partner"
-      ) {
-        const payload = {
-          client: this.client.id,
-          request_date: this.job.request_date,
-          due_date: this.job.due_date,
-          job_title: this.job.job_title,
-          job_description: this.job.job_description,
-          client_notes: this.job.client_notes,
-        };
-        await this.saveJobOrder(payload);
-        this.loading = false;
-        this.fetch();
-        this.reset();
-      } else {
-        const payload = {
-          va_assigned: this.staff.id,
-          request_date: this.job.request_date,
-          due_date: this.job.due_date,
-          job_title: this.job.job_title,
-          job_description: this.job.job_description,
-          client_notes: this.job.client_notes,
-        };
-        await this.saveJobOrder(payload);
-        this.loading = false;
-        this.fetch();
-        this.reset();
+      let isValidForm = await this.$validator.validateAll();
+      if (isValidForm) {
+        this.loading = true;
+        if (
+          this.$auth.user.designation_category == "new_client" ||
+          this.$auth.user.designation_category == "current_client" ||
+          this.$auth.user.designation_category == "affiliate_partner"
+        ) {
+          const payload = {
+            client: this.client.id,
+            request_date: this.request_date,
+            due_date: this.due_date,
+            job_title: this.job_title,
+            job_description: this.job_description,
+          };
+          try {
+            await this.saveJobOrder(payload).then(() => {
+              this.loading = false;
+              this.success = true;
+              this.successMessage();
+              this.reset();
+              this.fetch();
+            });
+          } catch (err) {
+            console.log(err);
+            this.success = false;
+            this.error = err;
+            this.errorMessage(this.error);
+          }
+        } else {
+          const payload = {
+            va_assigned: this.staff.id,
+            request_date: this.request_date,
+            due_date: this.due_date,
+            job_title: this.job_title,
+            job_description: this.job_description,
+          };
+          await this.saveJobOrder(payload);
+          this.loading = false;
+          this.reset();
+          this.fetch();
+        }
       }
     },
+    successMessage() {
+      return "Successfully added a new Job Order. Management is on it's way to process this.";
+    },
     errorMessage(error) {
-      if (error.password) {
-        return "Password: " + this.error.password;
-      } else if (error.username) {
-        return "Username: " + this.error.username;
-      } else if (error.detail) {
-        return "Detail: " + this.error.detail;
+      if (error.request_date) {
+        return "Request date: " + this.error.request_date;
+      } else if (error.due_date) {
+        return "due_date: " + this.error.due_date;
+      } else if (error.job_title) {
+        return "Job title: " + this.error.job_title;
+      } else if (error.job_description) {
+        return "Job description: " + this.error.job_decription;
       } else if (error.non_field_errors) {
         return this.error.non_field_errors;
       }
+    },
+  },
+  computed: {
+    request_date: {
+      get() {
+        return this.$store.getters["jobOrder/request_date"];
+      },
+      set(value) {
+        this.setBasicStoreValue("request_date", value);
+      },
+    },
+    due_date: {
+      get() {
+        return this.$store.getters["jobOrder/due_date"];
+      },
+      set(value) {
+        this.setBasicStoreValue("due_date", value);
+      },
+    },
+    job_title: {
+      get() {
+        return this.$store.getters["jobOrder/job_title"];
+      },
+      set(value) {
+        this.setBasicStoreValue("job_title", value);
+      },
+    },
+    job_description: {
+      get() {
+        return this.$store.getters["jobOrder/job_description"];
+      },
+      set(value) {
+        this.setBasicStoreValue("job_description", value);
+      },
     },
   },
 };

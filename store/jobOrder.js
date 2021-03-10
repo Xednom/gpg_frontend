@@ -4,9 +4,9 @@ const blankState = {
     job_title: "",
     job_description: "",
     client_notes: "",
-    va_notes: false,
-    status: false,
-    date_completed: false,
+    va_notes: "",
+    status: "",
+    date_completed: "",
     total_time_consumed: "",
     client: {},
     va_assigned: {}
@@ -17,7 +17,6 @@ const blankState = {
     jobOrders: [],
     jobOrder: {},
     jobOrdersPagination: {
-      limit: 12,
       offset: 0,
       count: 0,
       showing: 0,
@@ -78,7 +77,6 @@ const blankState = {
           commit("setJobOrders", { jobOrders: res.data.results });
           const offset = getOffset(res.data.previous);
           commit("setJobOrdersPagination", {
-            limit: 12,
             offset: offset,
             count: res.data.count,
             showing: res.data.results.length,
@@ -126,12 +124,13 @@ const blankState = {
     },
     async saveJobOrder({ commit }, payload) {
       let url = "/api/v1/job-order/";
-      return await this.$axios.post(url, payload).then(() => {
-        commit("setBasicField", payload);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      try {
+        return await this.$axios.post(url, payload).then(() => {
+          commit("setBasicField", payload);
+        })
+      } catch(err) {
+        console.log(err)
+      }
     },
     async updateClientUser({commit, dispatch}, payload) {
       let url = `/api/v1/client/${payload}/`;
