@@ -87,7 +87,11 @@
                 <template #cell(actions)="row">
                   <b-button
                     size="sm"
-                    @click="info(row.item, row.index, $event.target)"
+                    @click="
+                      {
+                        fetchJobOrder(row.item.id), (modals.info = true);
+                      }
+                    "
                     class="mr-1"
                   >
                     Info
@@ -161,6 +165,15 @@
     </modal>
 
     <modal
+      :show.sync="modals.info"
+      headerClasses="justify-content-center"
+      class="white-content"
+    >
+      <job-order-info :job="jobOrder"></job-order-info>
+    </modal>
+
+    <modal
+      fade
       id="job-order-comments"
       headerClasses="justify-content-center"
       :show.sync="modals.comments"
@@ -185,12 +198,14 @@ import { mapGetters } from "vuex";
 
 import JobOrderCreate from "./JobOrderCreate.vue";
 import JobOrderComment from "./JobOrderComment.vue";
+import JobOrderInfo from "./JobOrderInfo.vue";
 
 export default {
   name: "paginated",
   components: {
     JobOrderCreate,
     JobOrderComment,
+    JobOrderInfo,
     Modal,
     [Select.name]: Select,
     [Option.name]: Option,
@@ -245,6 +260,7 @@ export default {
       fuseSearch: null,
       isBusy: false,
       fields: [
+        { key: "ticket_number", sortable: true },
         { key: "client_name", sortable: true, requiresClient: true },
         { key: "client_code", sortable: true },
         { key: "request_date", sortable: true },
@@ -272,6 +288,7 @@ export default {
       modals: {
         classic: false,
         comments: false,
+        info: false,
       },
     };
   },
@@ -393,7 +410,7 @@ export default {
 .search-input {
   width: 200px;
 }
-.modal-show .modal-dialog {
-  transform: 0 !important;
+.modal-dialog {
+  transform: none !important;
 }
 </style>
