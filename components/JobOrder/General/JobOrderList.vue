@@ -92,6 +92,18 @@
                   >
                     Info
                   </b-button>
+
+                  <b-button
+                    size="sm"
+                    variant="success"
+                    v-b-modal.job-order-comments
+                    @click="
+                      {
+                        fetchJobOrder(row.item.id), (modals.comments = true);
+                      }
+                    "
+                    >Comments</b-button
+                  >
                 </template>
 
                 <template #row-details="row">
@@ -147,6 +159,20 @@
         :client="client"
       ></job-order-create>
     </modal>
+
+    <modal
+      id="job-order-comments"
+      headerClasses="justify-content-center"
+      :show.sync="modals.comments"
+      hide-footer
+    >
+      <job-order-comment
+        :fetch="fetchJobOrders"
+        :staff="staff"
+        :client="client"
+        :job="jobOrder"
+      ></job-order-comment>
+    </modal>
   </div>
 </template>
 <script>
@@ -158,11 +184,13 @@ import swal from "sweetalert2";
 import { mapGetters } from "vuex";
 
 import JobOrderCreate from "./JobOrderCreate.vue";
+import JobOrderComment from "./JobOrderComment.vue";
 
 export default {
   name: "paginated",
   components: {
     JobOrderCreate,
+    JobOrderComment,
     Modal,
     [Select.name]: Select,
     [Option.name]: Option,
@@ -175,6 +203,7 @@ export default {
      */
     ...mapGetters({
       jobOrders: "jobOrder/jobOrders",
+      jobOrder: "jobOrder/jobOrder",
       pagination: "jobOrder/jobOrdersPagination",
       staff: "user/staff",
       user: "user/user",
@@ -201,9 +230,9 @@ export default {
         this.$auth.user.designation_category == "current_client" ||
         this.$auth.user.designation_category == "affiliate_partner"
       ) {
-        return this.fields.filter(field => !field.requiresStaff);
+        return this.fields.filter((field) => !field.requiresStaff);
       } else {
-        return this.fields.filter(field => !field.requiresClient);
+        return this.fields.filter((field) => !field.requiresClient);
       }
     },
   },
@@ -212,6 +241,7 @@ export default {
       searchQuery: "",
       tableData: users,
       searchedData: [],
+      currentJobOrder: {},
       fuseSearch: null,
       isBusy: false,
       fields: [
@@ -241,6 +271,7 @@ export default {
       },
       modals: {
         classic: false,
+        comments: false,
       },
     };
   },
@@ -300,6 +331,9 @@ export default {
         this.loading = false;
       }
     },
+    async fetchJobOrder(id) {
+      await this.$store.dispatch("jobOrder/fetchJobOrder", id);
+    },
     async fetchJobOrders() {
       this.isBusy = true;
       await this.$store
@@ -354,9 +388,12 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .pagination-select,
 .search-input {
   width: 200px;
+}
+.modal-show .modal-dialog {
+  transform: 0 !important;
 }
 </style>

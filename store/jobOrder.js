@@ -9,7 +9,8 @@ const blankState = {
     date_completed: "",
     total_time_consumed: "",
     client: {},
-    va_assigned: {}
+    va_assigned: {},
+    comment: ""
   };
   
   export const state = () => ({
@@ -38,6 +39,7 @@ const blankState = {
     va_assigned: state => state.va_assigned,
     jobOrdersPagination: state => state.jobOrdersPagination,
     jobOrders: state => state.jobOrders,
+    comment: state => state.comment,
     jobOrder: state => {
         return state.jobOrder
     }
@@ -132,20 +134,25 @@ const blankState = {
         console.log(err)
       }
     },
-    async updateClientUser({commit, dispatch}, payload) {
-      let url = `/api/v1/client/${payload}/`;
-      if (payload.id) {
-        return await this.$axios.put(url, payload.id).then(res => {
+    async JobOrderComment({ commit }, payload, id) {
+      let url = `/api/v1/job-order-comment/${id}/`;
+      try {
+        return await this.$axios.put(url, payload).then(() => {
           commit("setBasicField", payload);
-          return res.data;
         })
-        .catch((err) => {
-          console.log(err);
-        })
+      } catch(err) {
+        console.log(err)
       }
     },
-    updateField({commit}, {first_name, fieldName, value}) {
-      commit("updateField", {first_name, fieldName, value});
+    async updateJobOrder({ commit }, payload) {
+      let url = `/api/v1/job-order/${payload}`;
+      try {
+        return await this.$axios.post(url, payload).then(() => {
+          commit("setBasicField", payload);
+        })
+      } catch(err) {
+        console.log(err)
+      }
     },
     reset({commit}) {
       commit("reset");
