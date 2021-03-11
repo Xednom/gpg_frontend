@@ -261,13 +261,11 @@ export default {
       isBusy: false,
       fields: [
         { key: "ticket_number", sortable: true },
-        { key: "client_name", sortable: true, requiresClient: true },
-        { key: "client_code", sortable: true },
         { key: "request_date", sortable: true },
         { key: "due_date", sortable: true },
         { key: "job_title", sortable: true },
         { key: "staff_name", sortable: true, requiresStaff: true },
-        { key: "status", sortable: true },
+        { key: "status_name", sortable: true },
         { key: "date_completed", sortable: true },
         { key: "total_time_consumed", sortable: true },
         { key: "actions", label: "Actions" },
@@ -410,7 +408,7 @@ export default {
 .search-input {
   width: 200px;
 }
-.modal-dialog {
+#job-order-comments .modal-dialog {
   transform: none !important;
 }
 </style>
