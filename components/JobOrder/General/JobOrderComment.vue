@@ -19,7 +19,7 @@
             <template slot-scope="{ row }">
               <td>
                 <p class="title">{{ row.commenter }}</p>
-                <p class="text-muted">{{ row.comment }}</p>
+                <p class="text-muted comment">{{ row.comment }}</p>
               </td>
             </template>
           </base-table>
@@ -97,7 +97,8 @@ export default {
       type: Function,
     },
     job: {
-      type: Array,
+      type: Object,
+
       description: "Job order object data",
     },
   },
@@ -105,13 +106,6 @@ export default {
     return {
       loading: false,
       saving: false,
-      job: {
-        request_date: "",
-        due_date: "",
-        job_title: "",
-        job_description: "",
-        client_notes: "",
-      },
       error: "",
     };
   },
@@ -202,5 +196,8 @@ export default {
 <style scoped>
 .modal-body {
   margin-top: 35px !important;
+}
+.comment {
+  margin-left: 10px;
 }
 </style>

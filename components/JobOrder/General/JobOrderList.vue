@@ -261,11 +261,11 @@ export default {
       isBusy: false,
       fields: [
         { key: "ticket_number", sortable: true },
+        { key: "client_code", sortable: true, requiredStaff: true },
         { key: "request_date", sortable: true },
         { key: "due_date", sortable: true },
         { key: "job_title", sortable: true },
-        { key: "staff_name", sortable: true, requiresStaff: true },
-        { key: "status_name", sortable: true },
+        { key: "status_", sortable: true },
         { key: "date_completed", sortable: true },
         { key: "total_time_consumed", sortable: true },
         { key: "actions", label: "Actions" },
