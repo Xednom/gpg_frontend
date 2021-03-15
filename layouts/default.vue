@@ -18,7 +18,7 @@
         </sidebar-item>
         <sidebar-item
           :link="{
-            name: $t('Job order'),
+            name: ('Job order'),
             icon: 'tim-icons icon-bullet-list-67',
             path: '/',
           }"
@@ -31,8 +31,8 @@
           ></sidebar-item>
           <sidebar-item
             :link="{
-              name: 'Land Master JO by APN',
-              path: '/job-order/apn',
+              name: 'Property Details',
+              path: '/job-order/property-detail',
             }"
           ></sidebar-item>
         </sidebar-item>
