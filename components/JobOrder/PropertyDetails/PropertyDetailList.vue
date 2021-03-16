@@ -80,12 +80,15 @@
                     <strong>Loading...</strong>
                   </div>
                 </template>
-                <template #cell(name)="row">
-                  {{ row.value.first }} {{ row.value.last }}
+                <template #cell(ticket_number)="row">
+                  <nuxt-link
+                    :to="'/job-order/property-detail/' + row.item.ticket_number"
+                    >{{ row.item.ticket_number }}</nuxt-link
+                  >
                 </template>
 
                 <template #cell(actions)="row">
-                  <b-button
+                  <!-- <b-button
                     size="sm"
                     @click="
                       {
@@ -95,9 +98,9 @@
                     class="mr-1"
                   >
                     Info
-                  </b-button>
+                  </b-button> -->
 
-                  <b-button
+                  <!-- <b-button
                     size="sm"
                     variant="success"
                     v-b-modal.job-order-comments
@@ -107,7 +110,16 @@
                       }
                     "
                     >Comments</b-button
+                  > -->
+                  <base-button
+                    type="danger"
+                    icon
+                    size="sm"
+                    class="btn-link"
+                    @click="handleDelete(row.item.ticket_number)"
                   >
+                    <i class="tim-icons icon-simple-remove"></i>
+                  </base-button>
                 </template>
 
                 <template #row-details="row">
@@ -151,41 +163,6 @@
         </card>
       </div>
     </div>
-    <!-- Classic Modal -->
-    <!-- <modal
-      :show.sync="modals.classic"
-      headerClasses="justify-content-center"
-      class="white-content"
-    >
-      <job-order-create
-        :fetch="fetchPropertyDetails"
-        :staff="staff"
-        :client="client"
-      ></job-order-create>
-    </modal> -->
-
-    <!-- <modal
-      :show.sync="modals.info"
-      headerClasses="justify-content-center"
-      class="white-content"
-    >
-      <job-order-info :job="propertyDetail"></job-order-info>
-    </modal> -->
-
-    <!-- <modal
-      fade
-      id="job-order-comments"
-      headerClasses="justify-content-center"
-      :show.sync="modals.comments"
-      hide-footer
-    >
-      <job-order-comment
-        :fetch="fetchPropertyDetails"
-        :staff="staff"
-        :client="client"
-        :job="propertyDetail"
-      ></job-order-comment>
-    </modal> -->
   </div>
 </template>
 <script>
@@ -194,7 +171,7 @@ import { Modal } from "@/components";
 import users from "../../../util/mock-users";
 import Fuse from "fuse.js";
 import swal from "sweetalert2";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "paginated",
@@ -282,6 +259,7 @@ export default {
     };
   },
   methods: {
+    // ...mapActions("propertyDetail", ["deletePropertyDetail"]),
     handleLike(index, row) {
       swal({
         title: `You liked ${row.name}`,
@@ -348,6 +326,9 @@ export default {
           this.isBusy = false;
         });
     },
+    async deletePropertyDetail(id) {
+      await this.$store.dispatch("propertyDetail/deletePropertyDetail", id);
+    },
 
     info(item, index, button) {
       this.infoModal.title = `Row index: ${index}`;
@@ -363,7 +344,7 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    handleDelete(index, row) {
+    handleDelete(row) {
       swal({
         title: "Are you sure?",
         text: `You won't be able to revert this!`,
@@ -374,11 +355,20 @@ export default {
         confirmButtonText: "Yes, delete it!",
         buttonsStyling: false,
       }).then((result) => {
+        console.log(row);
         if (result.value) {
-          this.deleteRow(row);
+          console.log(row);
+          this.deletePropertyDetail(row);
+          let url = `/api/v1/property-detail/${row}/`;
+          try {
+            this.$axios.delete(url);
+            this.fetchPropertyDetails();
+          } catch (err) {
+            console.error(err);
+          }
           swal({
             title: "Deleted!",
-            text: `You deleted ${row.name}`,
+            text: `You deleted ${row}`,
             type: "success",
             confirmButtonClass: "btn btn-success btn-fill",
             buttonsStyling: false,

@@ -5,60 +5,58 @@
         Listing Ad Details
       </h5>
       <div class="row justify-content-center mt-5">
-        <div class="col-sm-5">
-          <!-- <el-select
-          class="select-primary"
-          size="large"
-          placeholder="Category"
-          v-model="selects.simple"
-        >
-          <el-option
-            v-for="option in selects.countries"
+        <div class="col-sm-10 category-choices">
+          <el-select
             class="select-primary"
-            :value="option.value"
-            :label="option.label"
-            :key="option.label"
+            size="large"
+            placeholder="Category"
+            v-model="category"
           >
-          </el-option>
-        </el-select> -->
+            <el-option
+              v-for="option in categoryChoices.status"
+              class="select-primary"
+              :value="option.value"
+              :label="option.label"
+              :key="option.label"
+            >
+            </el-option>
+          </el-select>
         </div>
         <div class="col-sm-10">
-          <base-input
+          <textarea
             name="ad_details"
-            required
-            placeholder="Ad Details"
+            class="form-control"
+            placeholder="Ad details"
             v-model="ad_details"
-            v-validate="modelValidations.adDetails"
-            addon-left-icon="tim-icons icon-email-85"
           >
-          </base-input>
+          </textarea>
         </div>
         <div class="col-sm-10">
-          <base-input
+          <textarea
             name="notes_client_side"
-            placeholder="Notes"
+            class="form-control"
+            placeholder="Notes from the Client"
             v-model="notes_client_side"
-            addon-left-icon="tim-icons icon-caps-small"
           >
-          </base-input>
+          </textarea>
 
-          <base-input
+          <textarea
             v-if="this.$auth.user.designation_category == 'staff'"
             name="notes_va_side"
-            placeholder="Notes - VA side"
+            class="form-control"
+            placeholder="Notes from VA"
             v-model="notes_va_side"
-            addon-left-icon="tim-icons icon-mobile"
           >
-          </base-input>
+          </textarea>
 
-          <base-input
+          <textarea
             v-if="this.$auth.user.designation_category == 'staff'"
             name="notes_management_side"
+            class="form-control"
             placeholder="Notes - Management side"
             v-model="notes_management_side"
-            addon-left-icon="tim-icons icon-mobile"
           >
-          </base-input>
+          </textarea>
         </div>
       </div>
     </card>
@@ -66,9 +64,15 @@
 </template>
 <script>
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
+import { Select, Option } from "element-ui";
+
 export default {
   mixins: [CreatePropertyDetailMixin],
-  inject: ['$validator'],
+  inject: ["$validator"],
+  components: {
+    [Select.name]: Select,
+    [Option.name]: Option,
+  },
   data() {
     return {
       modelValidations: {
@@ -78,6 +82,15 @@ export default {
         adDetails: {
           required: true,
         },
+      },
+      categoryChoices: {
+        placeholder: "",
+        status: [
+          { value: "company_name", label: "Company name" },
+          { value: "phone", label: "Phone" },
+          { value: "email_ad", label: "Email Ad" },
+          { value: "website_url", label: "Website url" },
+        ],
       },
     };
   },
@@ -136,4 +149,8 @@ export default {
   },
 };
 </script>
-<style></style>
+<style scoped>
+.category-choices {
+  margin-bottom: 10px;
+}
+</style>

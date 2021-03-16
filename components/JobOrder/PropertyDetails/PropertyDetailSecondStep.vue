@@ -197,7 +197,7 @@ export default {
 </script>
 <style scoped>
   .status {
-    margin-top: 20px !important;
-    margin-bottom: 20px !important;
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
 </style>
