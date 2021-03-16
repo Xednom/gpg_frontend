@@ -1,97 +1,105 @@
 <template>
   <div>
-    <h5 class="info-text">
-      Property Price
-    </h5>
-    <div class="row justify-content-center mt-5">
-      <div class="col-sm-5">
-        <base-input
-          name="asking_price"
-          required
-          placeholder="Asking Price"
-          v-model="askingPrice"
-          v-validate="modelValidations.askingPrice"
-          :error="getError('asking_price')"
-          addon-left-icon="tim-icons icon-single-02"
-        >
-        </base-input>
-
-        <base-input
-          name="cash_terms"
-          required
-          placeholder="Cash Terms"
-          v-model="cashTerms"
-          v-validate="modelValidations.cashTerms"
-          :error="getError('cash_terms')"
-          addon-left-icon="tim-icons icon-email-85"
-        >
-        </base-input>
-      </div>
-      <div class="col-sm-5">
-        <base-input
-          name="finance_terms"
-          required
-          placeholder="Finance terms"
-          v-model="financeTerms"
-          v-validate="modelValidations.financeTerms"
-          :error="getError('finance_terms')"
-          addon-left-icon="tim-icons icon-caps-small"
-        >
-        </base-input>
-
-        <base-input
-          name="other_terms"
-          required
-          placeholder="Other Terms"
-          v-model="otherTerms"
-          v-validate="modelValidations.otherTerms"
-          :error="getError('other_terms')"
-          addon-left-icon="tim-icons icon-mobile"
-        >
-        </base-input>
-
-        <el-select
-          class="select-primary"
-          reqiured
-          size="large"
-          name="price_status"
-          placeholder="Property Status"
-          v-model="priceStatus"
-          v-validate="modelValidations.priceStatus"
-          :error="getError('price_status')"
-        >
-          <el-option
-            v-for="option in priceStatusChoices.status"
-            class="select-primary"
-            :value="option.value"
-            :label="option.label"
-            :key="option.label"
+    <card>
+      <h5 class="info-text">
+        Property Price
+      </h5>
+      <div class="row justify-content-center mt-5">
+        <div class="col-sm-5">
+          <textarea
+            class="form-control"
+            type="text"
+            placeholder="Asking price"
+            v-model="askingPrice"
+            v-validate="'required'"
+            :error="getError('asking_price')"
+            required
           >
-          </el-option>
-        </el-select>
+          </textarea>
+
+          <textarea
+            class="form-control"
+            type="text"
+            placeholder="Cash terms"
+            v-model="cashTerms"
+            v-validate="'required'"
+            :error="getError('cash_terms')"
+            required
+          >
+          </textarea>
+        </div>
+        <div class="col-sm-5">
+          <textarea
+            name="finance_terms"
+            class="form-control"
+            type="text"
+            placeholder="Finance terms"
+            v-model="financeTerms"
+            v-validate="'required'"
+            :error="getError('finance_terms')"
+            required
+          >
+          </textarea>
+
+          <textarea
+            name="other_terms"
+            class="form-control"
+            type="text"
+            placeholder="Other terms"
+            v-model="otherTerms"
+            v-validate="'required'"
+            :error="getError('other_terms')"
+            required
+          >
+          </textarea>
+        </div>
+        <div class="col-sm-10 status">
+          <el-select
+            class="select-primary"
+            reqiured
+            size="large"
+            name="price_status"
+            placeholder="Property Status"
+            v-model="priceStatus"
+            v-validate="modelValidations.priceStatus"
+            :error="getError('price_status')"
+          >
+            <el-option
+              v-for="option in priceStatusChoices.status"
+              class="select-primary"
+              :value="option.value"
+              :label="option.label"
+              :key="option.label"
+            >
+            </el-option>
+          </el-select>
+        </div>
+        <div class="col-sm-10">
+          <textarea
+            name="notes"
+            class="form-control"
+            type="text"
+            placeholder="Notes"
+            v-model="notes"
+            v-validate="'required'"
+            :error="getError('notes')"
+            required
+          >
+          </textarea>
+        </div>
       </div>
-      <div class="col-sm-10">
-        <base-input
-          name="notes"
-          placeholder="Notes"
-          v-model="notes"
-          v-validate="modelValidations.notes"
-          :error="getError('notes')"
-          addon-left-icon="tim-icons icon-square-pin"
-        >
-        </base-input>
-      </div>
-    </div>
+    </card>
   </div>
 </template>
 <script>
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
-import {Select, Option} from "element-ui";
+import { Select, Option } from "element-ui";
 export default {
   mixins: [CreatePropertyDetailMixin],
+  inject: ["$validator"],
   components: {
-      [Select.name]: Select,
-      [Option.name]: Option
+    [Select.name]: Select,
+    [Option.name]: Option,
   },
   data() {
     return {
@@ -187,4 +195,9 @@ export default {
   },
 };
 </script>
-<style></style>
+<style scoped>
+  .status {
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+  }
+</style>

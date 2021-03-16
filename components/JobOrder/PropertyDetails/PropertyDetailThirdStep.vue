@@ -1,11 +1,12 @@
 <template>
   <div>
-    <h5 class="info-text">
-      Listing Ad Details
-    </h5>
-    <div class="row justify-content-center mt-5">
-      <div class="col-sm-5">
-        <!-- <el-select
+    <card>
+      <h5 class="info-text">
+        Listing Ad Details
+      </h5>
+      <div class="row justify-content-center mt-5">
+        <div class="col-sm-5">
+          <!-- <el-select
           class="select-primary"
           size="large"
           placeholder="Category"
@@ -20,52 +21,54 @@
           >
           </el-option>
         </el-select> -->
-      </div>
-      <div class="col-sm-10">
-        <base-input
-          name="ad_details"
-          required
-          placeholder="Ad Details"
-          v-model="ad_details"
-          v-validate="modelValidations.adDetails"
-          addon-left-icon="tim-icons icon-email-85"
-        >
-        </base-input>
-      </div>
-      <div class="col-sm-10">
-        <base-input
-          name="notes_client_side"
-          placeholder="Notes"
-          v-model="notes_client_side"
-          addon-left-icon="tim-icons icon-caps-small"
-        >
-        </base-input>
+        </div>
+        <div class="col-sm-10">
+          <base-input
+            name="ad_details"
+            required
+            placeholder="Ad Details"
+            v-model="ad_details"
+            v-validate="modelValidations.adDetails"
+            addon-left-icon="tim-icons icon-email-85"
+          >
+          </base-input>
+        </div>
+        <div class="col-sm-10">
+          <base-input
+            name="notes_client_side"
+            placeholder="Notes"
+            v-model="notes_client_side"
+            addon-left-icon="tim-icons icon-caps-small"
+          >
+          </base-input>
 
-        <base-input
-          v-if="this.$auth.user.designation_category == 'staff'"
-          name="notes_va_side"
-          placeholder="Notes - VA side"
-          v-model="notes_va_side"
-          addon-left-icon="tim-icons icon-mobile"
-        >
-        </base-input>
+          <base-input
+            v-if="this.$auth.user.designation_category == 'staff'"
+            name="notes_va_side"
+            placeholder="Notes - VA side"
+            v-model="notes_va_side"
+            addon-left-icon="tim-icons icon-mobile"
+          >
+          </base-input>
 
-        <base-input
-          v-if="this.$auth.user.designation_category == 'staff'"
-          name="notes_management_side"
-          placeholder="Notes - Management side"
-          v-model="notes_management_side"
-          addon-left-icon="tim-icons icon-mobile"
-        >
-        </base-input>
+          <base-input
+            v-if="this.$auth.user.designation_category == 'staff'"
+            name="notes_management_side"
+            placeholder="Notes - Management side"
+            v-model="notes_management_side"
+            addon-left-icon="tim-icons icon-mobile"
+          >
+          </base-input>
+        </div>
       </div>
-    </div>
+    </card>
   </div>
 </template>
 <script>
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
 export default {
   mixins: [CreatePropertyDetailMixin],
+  inject: ['$validator'],
   data() {
     return {
       modelValidations: {

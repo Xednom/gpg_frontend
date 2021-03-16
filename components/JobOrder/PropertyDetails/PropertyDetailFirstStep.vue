@@ -1,88 +1,92 @@
 <template>
   <div>
-    <h5 class="info-text">
-      Property Details
-    </h5>
-    <div class="row justify-content-center mt-5">
-      <div class="col-sm-5">
-        <base-input
-          name="apn"
-          required
-          placeholder="APN"
-          v-model="apn"
-          v-validate="modelValidations.apn"
-          :error="getError('apn')"
-          addon-left-icon="tim-icons icon-single-02"
-        >
-        </base-input>
-
-        <base-input
-          name="county"
-          required
-          placeholder="County"
-          v-model="county"
-          v-validate="modelValidations.county"
-          :error="getError('county')"
-          addon-left-icon="tim-icons icon-email-85"
-        >
-        </base-input>
-      </div>
-      <div class="col-sm-5">
-        <base-input
-          name="state"
-          required
-          placeholder="State"
-          v-model="state"
-          v-validate="modelValidations.state"
-          :error="getError('state')"
-          addon-left-icon="tim-icons icon-caps-small"
-        >
-        </base-input>
-
-        <base-input
-          name="size"
-          required
-          placeholder="Size(Acreage)"
-          v-model="size"
-          v-validate="modelValidations.size"
-          :error="getError('size')"
-          addon-left-icon="tim-icons icon-mobile"
-        >
-        </base-input>
-      </div>
-      <div class="col-sm-10">
-        <el-select
-          class="select-primary"
-          reqiured
-          size="large"
-          name="propertyStatus"
-          placeholder="Property Status"
-          v-model="propertyStatus"
-          v-validate="modelValidations.propertyStatus"
-          :error="getError('propertyStatus')"
-        >
-          <el-option
-            v-for="option in propertyStatusChoices.status"
-            class="select-primary"
-            :value="option.value"
-            :label="option.label"
-            :key="option.label"
+    <card>
+      <h5 class="info-text">
+        Property Details
+      </h5>
+      <div class="row justify-content-center mt-5">
+        <div class="col-sm-5">
+          <base-input
+            name="apn"
+            required
+            placeholder="APN"
+            v-model="apn"
+            v-validate="modelValidations.apn"
+            :error="getError('apn')"
+            addon-left-icon="tim-icons icon-single-02"
           >
-          </el-option>
-        </el-select>
+          </base-input>
+
+          <base-input
+            name="county"
+            required
+            placeholder="County"
+            v-model="county"
+            v-validate="modelValidations.county"
+            :error="getError('county')"
+            addon-left-icon="tim-icons icon-email-85"
+          >
+          </base-input>
+        </div>
+        <div class="col-sm-5">
+          <base-input
+            name="state"
+            required
+            placeholder="State"
+            v-model="state"
+            v-validate="modelValidations.state"
+            :error="getError('state')"
+            addon-left-icon="tim-icons icon-caps-small"
+          >
+          </base-input>
+
+          <base-input
+            name="size"
+            required
+            placeholder="Size(Acreage)"
+            v-model="size"
+            v-validate="modelValidations.size"
+            :error="getError('size')"
+            addon-left-icon="tim-icons icon-mobile"
+          >
+          </base-input>
+        </div>
+        <div class="col-sm-10">
+          <el-select
+            class="select-primary"
+            reqiured
+            size="large"
+            name="propertyStatus"
+            placeholder="Property Status"
+            v-model="propertyStatus"
+            v-validate="modelValidations.propertyStatus"
+            :error="getError('propertyStatus')"
+          >
+            <el-option
+              v-for="option in propertyStatusChoices.status"
+              class="select-primary"
+              :value="option.value"
+              :label="option.label"
+              :key="option.label"
+            >
+            </el-option>
+          </el-select>
+        </div>
       </div>
-    </div>
+    </card>
   </div>
 </template>
 <script>
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
 import { Select, Option } from "element-ui";
+import Card from '~/components/Cards/Card.vue';
 export default {
   mixins: [CreatePropertyDetailMixin],
   components: {
     [Select.name]: Select,
     [Option.name]: Option
   },
+  inject: ['$validator'],
   data() {
     return {
       property: {

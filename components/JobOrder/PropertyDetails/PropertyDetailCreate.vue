@@ -2,66 +2,40 @@
   <div>
     <div class="row d-flex justify-content-center">
       <div class="col-md-10">
-        <simple-wizard>
-          <template slot="header">
-            <h3 class="card-title">Property Details</h3>
-            <h3 class="description">
-              This information will will give us more information about your Property.
-            </h3>
-          </template>
-
-          <wizard-tab :before-change="() => validateStep('step1')">
-            <template slot="label">
-              <i class="tim-icons icon-single-02"></i>
-              <p>Property Details</p>
-            </template>
-            <first-step
-              ref="step1"
-              @on-validated="onStepValidated"
-            ></first-step>
-          </wizard-tab>
-
-          <wizard-tab :before-change="() => validateStep('step2')">
-            <template slot="label">
-              <i class="tim-icons icon-settings-gear-63"></i>
-              <p>Property Price</p>
-            </template>
-            <second-step
-              ref="step2"
-              @on-validated="onStepValidated"
-            ></second-step>
-          </wizard-tab>
-
-          <wizard-tab :before-change="() => validateStep('step3')">
-            <template slot="label">
-              <i class="tim-icons icon-delivery-fast"></i>
-              <p>Listing Ad Details</p>
-            </template>
-            <third-step ref="step3"></third-step>
-
-
-            <base-button @click="save">test</base-button>
-          </wizard-tab>
-        </simple-wizard>
+        <form @submit.prevent="save">
+          <first-step></first-step>
+          <second-step></second-step>
+          <third-step></third-step>
+          <div class="pull-right">
+            <base-button
+              native-type="submit"
+              type="success"
+              class="animation-on-hover"
+              >Save</base-button
+            >
+          </div>
+        </form>
       </div>
     </div>
   </div>
 </template>
 <script>
-import {mapGetters, mapActions} from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
-import FirstStep from '@/components/JobOrder/PropertyDetails/PropertyDetailFirstStep.vue';
-import SecondStep from '@/components/JobOrder/PropertyDetails/PropertyDetailSecondStep.vue';
-import ThirdStep from '@/components/JobOrder/PropertyDetails/PropertyDetailThirdStep.vue';
-import swal from 'sweetalert2';
-import { SimpleWizard, WizardTab } from '@/components';
+import FirstStep from "@/components/JobOrder/PropertyDetails/PropertyDetailFirstStep.vue";
+import SecondStep from "@/components/JobOrder/PropertyDetails/PropertyDetailSecondStep.vue";
+import ThirdStep from "@/components/JobOrder/PropertyDetails/PropertyDetailThirdStep.vue";
+import swal from "sweetalert2";
+import { SimpleWizard, WizardTab } from "@/components";
 
 export default {
-  name: 'wizard-form',
+  name: "wizard-form",
   data() {
     return {
       wizardModel: {},
-      loading: false
+      loading: false,
+      clientUser: {},
+      staffUser: {},
     };
   },
   components: {
@@ -69,7 +43,12 @@ export default {
     SecondStep,
     ThirdStep,
     SimpleWizard,
-    WizardTab
+    WizardTab,
+  },
+  provide() {
+    return {
+      $validator: this.$validator,
+    };
   },
   methods: {
     ...mapActions("propertyDetail", ["savePropertyDetail", "reset"]),
@@ -80,58 +59,115 @@ export default {
       this.wizardModel = { ...this.wizardModel, ...model };
     },
     wizardComplete() {
-      swal('Good job!', 'You clicked the finish button!', 'success');
+      swal("Good job!", "You clicked the finish button!", "success");
+    },
+    async fetchClient(id) {
+      this.loading = true;
+      let endpoint = `/api/v1/client/${id}/`;
+      try {
+        await this.$axios.get(endpoint).then((res) => {
+          this.clientUser = res.data;
+          this.loading = false;
+        });
+      } catch (err) {
+        console.error(err.response.data);
+      }
+    },
+    async fetchStaff(id) {
+      this.loading = true;
+      let endpoint = `/api/v1/staff/${id}`;
+      try {
+        await this.$axios.get(endpoint).then((res) => {
+          this.staffUser = res.data;
+          this.loading = false;
+        });
+      } catch (err) {
+        this.loading = false;
+      }
+    },
+    async fetchMe() {
+      this.loading = true;
+      try {
+        let endpoint = `/auth/users/me/`;
+        await this.$axios.get(endpoint).then((res) => {
+          this.user = res.data;
+          this.loading = false;
+          console.log(this.user);
+          if (
+            this.user.designation_category == "new_client" ||
+            this.user.designation_category == "current_client" ||
+            this.user.designation_category == "affiliate_partner"
+          ) {
+            this.fetchClient(this.user.id);
+          } else {
+            this.fetchStaff(this.user.id);
+          }
+        });
+      } catch (err) {
+        console.log(err.response.data);
+        this.loading = false;
+        UIkit.notification("Error:" + err.response.data, {
+          status: "danger",
+        });
+      }
     },
     async save() {
-      this.loading = true;
-      const clientPayload = {
-        client: this.$auth.user.id,
-        price_status: this.price_status,
-        property_status: this.property_status,
-        category: this.category,
-        apn: this.apn,
-        county: this.county,
-        state: this.state,
-        size: this.size,
-        asking_price: this.asking_price,
-        cash_terms: this.cash_terms,
-        finance_terms: this.finance_terms,
-        other_terms: this.other_terms,
-        notes: this.notes,
-        ad_details: this.ad_details,
-        notes_client_side: this.notes_client_side,
-        notes_va_side: this.notes_va_side,
-        notes_management_side: this.notes_management_side
-      }
+      let isValidForm = await this.$validator.validateAll();
+      if (isValidForm) {
+        this.loading = true;
+        const clientPayload = {
+          client: this.clientUser.id,
+          price_status: this.price_status,
+          property_status: this.property_status,
+          category: this.category,
+          apn: this.apn,
+          county: this.county,
+          state: this.state,
+          size: this.size,
+          asking_price: this.asking_price,
+          cash_terms: this.cash_terms,
+          finance_terms: this.finance_terms,
+          other_terms: this.other_terms,
+          notes: this.notes,
+          ad_details: this.ad_details,
+          notes_client_side: this.notes_client_side,
+          notes_va_side: this.notes_va_side,
+          notes_management_side: this.notes_management_side,
+        };
 
-      const staffPayload = {
-        staff: this.$auth.user.id,
-        price_status: this.price_status,
-        property_status: this.property_status,
-        category: this.category,
-        apn: this.apn,
-        county: this.county,
-        state: this.state,
-        size: this.size,
-        asking_price: this.asking_price,
-        cash_terms: this.cash_terms,
-        finance_terms: this.finance_terms,
-        other_terms: this.other_terms,
-        notes: this.notes,
-        ad_details: this.ad_details,
-        notes_client_side: this.notes_client_side,
-        notes_va_side: this.notes_va_side,
-        notes_management_side: this.notes_management_side
-      }
+        const staffPayload = {
+          staff: this.staffUser.id,
+          price_status: this.price_status,
+          property_status: this.property_status,
+          category: this.category,
+          apn: this.apn,
+          county: this.county,
+          state: this.state,
+          size: this.size,
+          asking_price: this.asking_price,
+          cash_terms: this.cash_terms,
+          finance_terms: this.finance_terms,
+          other_terms: this.other_terms,
+          notes: this.notes,
+          ad_details: this.ad_details,
+          notes_client_side: this.notes_client_side,
+          notes_va_side: this.notes_va_side,
+          notes_management_side: this.notes_management_side,
+        };
 
-      if (this.$auth.user.designation_category == "staff") {
-        await this.savePropertyDetail(staffPayload);
-      } else {
-        await this.savePropertyDetail(clientPayload);
+        if (this.$auth.user.designation_category == "staff") {
+          await this.savePropertyDetail(staffPayload).then(() => {
+            this.$router.push("/job-order/property-detail");
+          });
+        } else {
+          await this.savePropertyDetail(clientPayload).then(() => {
+            this.$router.push("/job-order/property-detail");
+          });
+        }
+        this.loading = false;
+        this.reset();
       }
-      this.loading = false;
-      this.reset();
-    }
+    },
   },
   computed: {
     ...mapGetters("propertyDetail", [
@@ -150,8 +186,11 @@ export default {
       "ad_details",
       "notes_client_side",
       "notes_va_side",
-      "notes_management_side"
-    ])
-  }
+      "notes_management_side",
+    ]),
+  },
+  mounted() {
+    this.fetchMe();
+  },
 };
 </script>
