@@ -228,6 +228,20 @@ export default {
       searchedData: [],
       fuseSearch: null,
       isBusy: false,
+      error: {
+        client: "",
+        staff: "",
+        apn: "",
+        state: "",
+        county: "",
+        size: "",
+        asking_price: "",
+        cash_terms: "",
+        finance_terms: "",
+        other_terms: "",
+        notes: "",
+        non_field_errors: "",
+      },
       fields: [
         { key: "ticket_number", sortable: true },
         { key: "client_code", sortable: true, requiredStaff: true },
@@ -344,6 +358,38 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
+    errorMessage(variant = null, error) {
+      this.$bvToast.toast(
+        error.apn
+          ? "APN: " + error.apn
+          : error.state
+          ? "State: " + errors.state
+          : errors.county
+          ? "County" + error.county
+          : error.size
+          ? "Size: " + error.username
+          : error.property_status
+          ? "Property status: " + error.property_status
+          : error.asking_price
+          ? "Asking price: " + error.asking_price
+          : error.finance_terms
+          ? "Finance terms: " + error.finance_terms
+          : error.cash_terms
+          ? "Cash terms: " + error.cash_terms
+          : error.other_terms
+          ? "Other terms: " + error.other_terms
+          : error.notes
+          ? "Notes: " + error.notes
+          : error.non_field_errors
+          ? error.non_field_errors
+          : error,
+        {
+          title: `Something went wrong`,
+          variant: variant,
+          solid: true
+        }
+      );
+    },
     handleDelete(row) {
       swal({
         title: "Are you sure?",
@@ -365,6 +411,8 @@ export default {
             this.fetchPropertyDetails();
           } catch (err) {
             console.error(err);
+            this.error = err.response.data;
+            this.errorMessage("danger", this.error);
           }
           swal({
             title: "Deleted!",

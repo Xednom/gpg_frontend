@@ -74,12 +74,9 @@
           </div>
           <el-select
             class="select-primary"
-            reqiured
             size="large"
             name="price_status"
             v-model="priceStatus"
-            v-validate="modelValidations.priceStatus"
-            :error="getError('price_status')"
           >
             <el-option
               v-for="option in priceStatusChoices.status"

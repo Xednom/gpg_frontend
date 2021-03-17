@@ -140,20 +140,16 @@ export const actions = {
         throw e;
       });
   },
-  async savePropertyDetail({ commit }, payload) {
+  async savePropertyDetail({ commit, dispatch }, payload) {
     let url = "/api/v1/property-detail/";
-    try {
-      return await this.$axios.post(url, payload).then((res) => {
-        return res.data;
-      });
-    } catch (err) {
-      console.error(err);
-    }
+    await this.$axios.post(url, payload).then((res) => {
+      return res.data;
+    });
   },
   async deletePropertyDetail({ commit, dispatch }, payload) {
     let url = `/api/v1/property-detail/${payload}/`;
     try {
-      return await this.$axios.delete(url, payload);
+      await this.$axios.delete(url, payload);
     } catch (err) {
       console.error(err);
     }
@@ -169,17 +165,13 @@ export const actions = {
     }
   },
   async updatePropertyDetail({ commit }, payload) {
-    console.log(payload)
+    console.log(payload);
     let url = `/api/v1/property-detail/${payload.ticket_number}/`;
     let method = "put";
-    try {
-      console.log(payload)
-      return await this.$axios[method](url, payload).then((res) => {
-        return res.data;
-      });
-    } catch (err) {
-      console.log(err);
-    }
+    console.log(payload);
+    return await this.$axios[method](url, payload).then((res) => {
+      return res.data;
+    });
   },
   reset({ commit }) {
     commit("reset");

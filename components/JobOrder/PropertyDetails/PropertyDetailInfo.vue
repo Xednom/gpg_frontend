@@ -282,6 +282,20 @@ export default {
       clientUser: {},
       staffUser: {},
       propertyDetail: {},
+      error: {
+        client: "",
+        staff: "",
+        apn: "",
+        state: "",
+        county: "",
+        size: "",
+        asking_price: "",
+        cash_terms: "",
+        finance_terms: "",
+        other_terms: "",
+        notes: "",
+        non_field_errors: "",
+      },
       propertyStatusChoices: {
         placeholder: "",
         status: [
@@ -433,6 +447,38 @@ export default {
         this.loading = false;
       }
     },
+    errorMessage(variant = null, error) {
+      this.$bvToast.toast(
+        this.error.apn
+          ? "APN: " + this.error.apn
+          : this.error.state
+          ? "State: " + this.error.state
+          : this.error.county
+          ? "County" + this.error.county
+          : this.error.size
+          ? "Size: " + this.error.username
+          : this.error.property_status
+          ? "Property status: " + this.error.property_status
+          : this.error.asking_price
+          ? "Asking price: " + this.error.asking_price
+          : this.error.finance_terms
+          ? "Finance terms: " + this.error.finance_terms
+          : this.error.cash_terms
+          ? "Cash terms: " + this.error.cash_terms
+          : this.error.other_terms
+          ? "Other terms: " + this.error.other_terms
+          : this.error.notes
+          ? "Notes: " + this.error.notes
+          : this.error.non_field_errors
+          ? this.error.non_field_errors
+          : this.error,
+        {
+          title: `Error`,
+          variant: variant,
+          solid: true,
+        }
+      );
+    },
     async save() {
       let isValidForm = await this.$validator.validateAll();
       if (isValidForm) {
@@ -480,13 +526,33 @@ export default {
         };
 
         if (this.$auth.user.designation_category == "staff") {
-          await this.updatePropertyDetail(staffPayload).then(() => {
-            this.$router.push("/job-order/property-detail");
-          });
+          try {
+            await this.updatePropertyDetail(staffPayload)
+              .then(() => {
+                this.$router.push("/job-order/property-detail");
+              })
+              .catch((e) => {
+                this.error = e.response.data;
+                this.errorMessage("danger", this.error);
+              });
+          } catch (e) {
+            this.error = e.response.data;
+            this.errorMessage("danger", this.error);
+          }
         } else {
-          await this.updatePropertyDetail(clientPayload).then(() => {
-            this.$router.push("/job-order/property-detail");
-          });
+          try {
+            await this.updatePropertyDetail(clientPayload)
+              .then(() => {
+                this.$router.push("/job-order/property-detail");
+              })
+              .catch((e) => {
+                this.error = e.response.data;
+                this.errorMessage("danger", this.error);
+              });
+          } catch (e) {
+            this.error = e.response.data;
+            this.errorMessage("danger", this.error);
+          }
         }
         this.loading = false;
         this.reset();

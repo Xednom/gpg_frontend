@@ -61,13 +61,10 @@
           </div>
           <el-select
             class="select-primary"
-            reqiured
             size="large"
             name="propertyStatus"
             placeholder="Property Status"
             v-model="propertyStatus"
-            v-validate="modelValidations.propertyStatus"
-            :error="getError('propertyStatus')"
           >
             <el-option
               v-for="option in propertyStatusChoices.status"

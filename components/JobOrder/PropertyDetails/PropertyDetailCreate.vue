@@ -36,6 +36,20 @@ export default {
       loading: false,
       clientUser: {},
       staffUser: {},
+      error: {
+        client: "",
+        staff: "",
+        apn: "",
+        state: "",
+        county: "",
+        size: "",
+        asking_price: "",
+        cash_terms: "",
+        finance_terms: "",
+        other_terms: "",
+        notes: "",
+        non_field_errors: "",
+      },
     };
   },
   components: {
@@ -111,6 +125,38 @@ export default {
         });
       }
     },
+    errorMessage(variant = null, error) {
+      this.$bvToast.toast(
+        error.apn
+          ? "APN: " + error.apn
+          : error.state
+          ? "State: " + error.state
+          : error.county
+          ? "County" + error.county
+          : error.size
+          ? "Size: " + error.username
+          : error.property_status
+          ? "Property status: " + error.property_status
+          : error.asking_price
+          ? "Asking price: " + error.asking_price
+          : error.finance_terms
+          ? "Finance terms: " + error.finance_terms
+          : error.cash_terms
+          ? "Cash terms: " + error.cash_terms
+          : error.other_terms
+          ? "Other terms: " + error.other_terms
+          : error.notes
+          ? "Notes: " + error.notes
+          : error.non_field_errors
+          ? error.non_field_errors
+          : error,
+        {
+          title: `Error`,
+          variant: variant,
+          solid: true,
+        }
+      );
+    },
     async save() {
       let isValidForm = await this.$validator.validateAll();
       if (isValidForm) {
@@ -156,16 +202,37 @@ export default {
         };
 
         if (this.$auth.user.designation_category == "staff") {
-          await this.savePropertyDetail(staffPayload).then(() => {
-            this.$router.push("/job-order/property-detail");
-          });
+          try {
+            await this.savePropertyDetail(staffPayload)
+              .then(() => {
+                this.$router.push("/job-order/property-detail");
+                this.reset();
+              })
+              .catch((e) => {
+                this.error = e.response.data;
+                this.errorMessage("danger", this.error);
+              });
+          } catch (e) {
+            this.error = e.response.data;
+            this.errorMessage("danger", this.error);
+          }
         } else {
-          await this.savePropertyDetail(clientPayload).then(() => {
-            this.$router.push("/job-order/property-detail");
-          });
+          try {
+            await this.savePropertyDetail(clientPayload)
+              .then(() => {
+                this.$router.push("/job-order/property-detail");
+                this.reset();
+              })
+              .catch((e) => {
+                this.error = e.response.data;
+                this.errorMessage("danger", this.error);
+              });
+          } catch (e) {
+            this.error = e.response.data;
+            this.errorMessage("danger", this.error);
+          }
         }
         this.loading = false;
-        this.reset();
       }
     },
   },
