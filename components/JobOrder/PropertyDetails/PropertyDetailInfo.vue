@@ -11,6 +11,7 @@
               <div class="row justify-content-center mt-5">
                 <div class="col-sm-5">
                   <base-input
+                    label="APN"
                     name="apn"
                     required
                     placeholder="APN"
@@ -22,6 +23,7 @@
                   </base-input>
 
                   <base-input
+                    label="County"
                     name="county"
                     required
                     placeholder="County"
@@ -34,6 +36,7 @@
                 </div>
                 <div class="col-sm-5">
                   <base-input
+                    label="State"
                     name="state"
                     required
                     placeholder="State"
@@ -45,6 +48,7 @@
                   </base-input>
 
                   <base-input
+                    label="Size"
                     name="size"
                     required
                     placeholder="Size(Acreage)"
@@ -56,6 +60,9 @@
                   </base-input>
                 </div>
                 <div class="col-sm-10">
+                  <div class="row">
+                    <label>Property Status </label>
+                  </div>
                   <el-select
                     class="select-primary"
                     reqiured
@@ -85,6 +92,7 @@
               </h5>
               <div class="row justify-content-center mt-5">
                 <div class="col-sm-5">
+                  <label>Asking Price</label>
                   <textarea
                     class="form-control"
                     type="text"
@@ -95,7 +103,9 @@
                     required
                   >
                   </textarea>
-
+                </div>
+                <div class="col-sm-5">
+                  <label>Cash terms</label>
                   <textarea
                     class="form-control"
                     type="text"
@@ -107,7 +117,8 @@
                   >
                   </textarea>
                 </div>
-                <div class="col-sm-5">
+                <div class="col-sm-5 mt-3">
+                  <label>Finance terms</label>
                   <textarea
                     name="finance_terms"
                     class="form-control"
@@ -119,7 +130,9 @@
                     required
                   >
                   </textarea>
-
+                </div>
+                <div class="col-sm-5 mt-3">
+                  <label>Other terms</label>
                   <textarea
                     name="other_terms"
                     class="form-control"
@@ -132,13 +145,16 @@
                   >
                   </textarea>
                 </div>
-                <div class="col-sm-10 status">
+                <div class="col-sm-10 status mt-3">
+                  <div class="row">
+                    <label>Price Status</label>
+                  </div>
                   <el-select
                     class="select-primary"
                     reqiured
                     size="large"
                     name="price_status"
-                    placeholder="Property Status"
+                    placeholder="Price Status"
                     v-model="propertyDetail.price_status"
                     v-validate="modelValidations.priceStatus"
                     :error="getError('price_status')"
@@ -153,7 +169,8 @@
                     </el-option>
                   </el-select>
                 </div>
-                <div class="col-sm-10">
+                <div class="col-sm-10 mt-3">
+                  <label>Notes</label>
                   <textarea
                     name="notes"
                     class="form-control"
@@ -175,6 +192,9 @@
               </h5>
               <div class="row justify-content-center mt-5">
                 <div class="col-sm-10 category-choices">
+                  <div class="row">
+                    <label>Categroy</label>
+                  </div>
                   <el-select
                     class="select-primary"
                     size="large"
@@ -191,7 +211,8 @@
                     </el-option>
                   </el-select>
                 </div>
-                <div class="col-sm-10">
+                <div class="col-sm-10 mt-3">
+                  <label>Ad Details</label>
                   <textarea
                     name="ad_details"
                     class="form-control"
@@ -200,7 +221,8 @@
                   >
                   </textarea>
                 </div>
-                <div class="col-sm-10">
+                <div class="col-sm-10 mt-3">
+                  <label>Notes</label>
                   <textarea
                     name="notes_client_side"
                     class="form-control"
