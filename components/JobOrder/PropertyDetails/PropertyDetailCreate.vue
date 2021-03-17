@@ -8,11 +8,28 @@
           <third-step></third-step>
           <div class="pull-right">
             <base-button
+              v-if="!saving"
               native-type="submit"
-              type="success"
-              class="animation-on-hover"
-              >Save</base-button
+              slot="footer"
+              type="submit"
+              round
+              block
+              size="lg"
             >
+              Save
+            </base-button>
+            <base-button
+              v-else
+              native-type="submit"
+              slot="footer"
+              type="primary"
+              round
+              block
+              size="lg"
+              disabled
+            >
+              Saving...
+            </base-button>
           </div>
         </form>
       </div>
@@ -34,6 +51,7 @@ export default {
     return {
       wizardModel: {},
       loading: false,
+      saving: false,
       clientUser: {},
       staffUser: {},
       error: {
@@ -203,31 +221,39 @@ export default {
 
         if (this.$auth.user.designation_category == "staff") {
           try {
+            this.saving = true;
             await this.savePropertyDetail(staffPayload)
               .then(() => {
+                this.saving = false;
                 this.$router.push("/job-order/property-detail");
                 this.reset();
               })
               .catch((e) => {
+                this.saving = false;
                 this.error = e.response.data;
                 this.errorMessage("danger", this.error);
               });
           } catch (e) {
+            this.saving = false;
             this.error = e.response.data;
             this.errorMessage("danger", this.error);
           }
         } else {
           try {
+            this.saving = true;
             await this.savePropertyDetail(clientPayload)
               .then(() => {
+                this.saving = false;
                 this.$router.push("/job-order/property-detail");
                 this.reset();
               })
               .catch((e) => {
+                this.saving = false;
                 this.error = e.response.data;
                 this.errorMessage("danger", this.error);
               });
           } catch (e) {
+            this.saving = false;
             this.error = e.response.data;
             this.errorMessage("danger", this.error);
           }
