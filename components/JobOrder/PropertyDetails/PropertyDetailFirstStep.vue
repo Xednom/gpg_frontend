@@ -14,7 +14,6 @@
             v-model="apn"
             v-validate="modelValidations.apn"
             :error="getError('apn')"
-            addon-left-icon="tim-icons icon-single-02"
           >
           </base-input>
 
@@ -26,7 +25,6 @@
             v-model="county"
             v-validate="modelValidations.county"
             :error="getError('county')"
-            addon-left-icon="tim-icons icon-email-85"
           >
           </base-input>
         </div>
@@ -39,7 +37,6 @@
             v-model="state"
             v-validate="modelValidations.state"
             :error="getError('state')"
-            addon-left-icon="tim-icons icon-caps-small"
           >
           </base-input>
 
@@ -51,7 +48,6 @@
             v-model="size"
             v-validate="modelValidations.size"
             :error="getError('size')"
-            addon-left-icon="tim-icons icon-mobile"
           >
           </base-input>
         </div>
