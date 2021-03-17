@@ -18,9 +18,9 @@
               :class="{ 'float-left': $rtl.isRTL }"
             >
               <i slot="title" class="tim-icons icon-settings-gear-63"></i>
-              <a class="dropdown-item" href="#pablo">Action</a>
-              <a class="dropdown-item" href="#pablo">Another action</a>
-              <a class="dropdown-item" href="#pablo">Something else</a>
+              <a class="dropdown-item" href="##">Action</a>
+              <a class="dropdown-item" href="##">Another action</a>
+              <a class="dropdown-item" href="##">Something else</a>
             </base-dropdown>
           </template>
           <div class="table-full-width table-responsive">
@@ -185,7 +185,7 @@
 
       <div class="col-md-6">
         <card type="testimonial" header-classes="card-header-avatar">
-          <a slot="header" href="#pablo">
+          <a slot="header" href="#">
             <img class="img img-raised" src="img//james.jpg" alt="Card image" />
           </a>
 
