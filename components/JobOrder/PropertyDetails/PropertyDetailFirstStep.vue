@@ -7,6 +7,7 @@
       <div class="row justify-content-center mt-5">
         <div class="col-sm-5">
           <base-input
+            label="APN"
             name="apn"
             required
             placeholder="APN"
@@ -18,6 +19,7 @@
           </base-input>
 
           <base-input
+            label="County"
             name="county"
             required
             placeholder="County"
@@ -30,6 +32,7 @@
         </div>
         <div class="col-sm-5">
           <base-input
+            label="State"
             name="state"
             required
             placeholder="State"
@@ -41,6 +44,7 @@
           </base-input>
 
           <base-input
+            label="Size(Acreage)"
             name="size"
             required
             placeholder="Size(Acreage)"
@@ -52,6 +56,9 @@
           </base-input>
         </div>
         <div class="col-sm-10">
+          <div class="row">
+            <label>Property Status</label>
+          </div>
           <el-select
             class="select-primary"
             reqiured
@@ -79,14 +86,14 @@
 <script>
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
 import { Select, Option } from "element-ui";
-import Card from '~/components/Cards/Card.vue';
+import Card from "~/components/Cards/Card.vue";
 export default {
   mixins: [CreatePropertyDetailMixin],
   components: {
     [Select.name]: Select,
-    [Option.name]: Option
+    [Option.name]: Option,
   },
-  inject: ['$validator'],
+  inject: ["$validator"],
   data() {
     return {
       property: {

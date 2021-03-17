@@ -6,10 +6,12 @@
       </h5>
       <div class="row justify-content-center mt-5">
         <div class="col-sm-10 category-choices">
+          <div class="row">
+            <label>Category</label>
+          </div>
           <el-select
             class="select-primary"
             size="large"
-            placeholder="Category"
             v-model="category"
           >
             <el-option
@@ -22,20 +24,20 @@
             </el-option>
           </el-select>
         </div>
-        <div class="col-sm-10">
+        <div class="col-sm-10 mt-3">
+          <label>Ad details</label>
           <textarea
             name="ad_details"
             class="form-control"
-            placeholder="Ad details"
             v-model="ad_details"
           >
           </textarea>
         </div>
-        <div class="col-sm-10">
+        <div class="col-sm-10 mt-3">
+          <label>Notes</label>
           <textarea
             name="notes_client_side"
             class="form-control"
-            placeholder="Notes from the Client"
             v-model="notes_client_side"
           >
           </textarea>

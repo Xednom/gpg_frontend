@@ -6,21 +6,22 @@
       </h5>
       <div class="row justify-content-center mt-5">
         <div class="col-sm-5">
+          <label>Asking price</label>
           <textarea
             class="form-control"
             type="text"
-            placeholder="Asking price"
             v-model="askingPrice"
             v-validate="'required'"
             :error="getError('asking_price')"
             required
           >
           </textarea>
-
+        </div>
+        <div class="col-sm-5">
+          <label>Cash terms</label>
           <textarea
             class="form-control"
             type="text"
-            placeholder="Cash terms"
             v-model="cashTerms"
             v-validate="'required'"
             :error="getError('cash_terms')"
@@ -28,24 +29,25 @@
           >
           </textarea>
         </div>
-        <div class="col-sm-5">
+        <div class="col-sm-5 mt-3">
+          <label>Finance Terms</label>
           <textarea
             name="finance_terms"
             class="form-control"
             type="text"
-            placeholder="Finance terms"
             v-model="financeTerms"
             v-validate="'required'"
             :error="getError('finance_terms')"
             required
           >
           </textarea>
-
+        </div>
+        <div class="col-sm-5 mt-3">
+          <label>Other terms</label>
           <textarea
             name="other_terms"
             class="form-control"
             type="text"
-            placeholder="Other terms"
             v-model="otherTerms"
             v-validate="'required'"
             :error="getError('other_terms')"
@@ -53,13 +55,28 @@
           >
           </textarea>
         </div>
+        <div class="col-sm-10 mt-3">
+          <label>Notes</label>
+          <textarea
+            name="notes"
+            class="form-control"
+            type="text"
+            v-model="notes"
+            v-validate="'required'"
+            :error="getError('notes')"
+            required
+          >
+          </textarea>
+        </div>
         <div class="col-sm-10 status">
+          <div class="row">
+            <label>Price status</label>
+          </div>
           <el-select
             class="select-primary"
             reqiured
             size="large"
             name="price_status"
-            placeholder="Property Status"
             v-model="priceStatus"
             v-validate="modelValidations.priceStatus"
             :error="getError('price_status')"
@@ -73,19 +90,6 @@
             >
             </el-option>
           </el-select>
-        </div>
-        <div class="col-sm-10">
-          <textarea
-            name="notes"
-            class="form-control"
-            type="text"
-            placeholder="Notes"
-            v-model="notes"
-            v-validate="'required'"
-            :error="getError('notes')"
-            required
-          >
-          </textarea>
         </div>
       </div>
     </card>
@@ -196,8 +200,8 @@ export default {
 };
 </script>
 <style scoped>
-  .status {
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
+.status {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
 </style>
