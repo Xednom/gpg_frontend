@@ -23,6 +23,12 @@
             path: '/',
           }"
         >
+        <sidebar-item
+            :link="{
+              name: 'APN',
+              path: '/job-order/category',
+            }"
+          ></sidebar-item>
           <sidebar-item
             :link="{
               name: 'General',
