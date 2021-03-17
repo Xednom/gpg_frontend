@@ -168,6 +168,8 @@ export default {
               this.success = true;
               this.successMessage();
               this.reset();
+              this.$validator.reset();
+
               this.fetch();
             });
           } catch (err) {
@@ -187,6 +189,7 @@ export default {
           await this.saveJobOrder(payload);
           this.loading = false;
           this.reset();
+          this.$validator.reset();
           this.fetch();
         }
       }
