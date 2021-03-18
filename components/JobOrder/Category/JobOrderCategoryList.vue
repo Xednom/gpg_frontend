@@ -3,13 +3,15 @@
     <div class="row mt-5">
       <div class="col-12">
         <card card-body-classes="table-full-width">
-          <h4 slot="header" class="card-title">Job Order by Category details</h4>
+          <h4 slot="header" class="card-title">
+            Job Order by Category details
+          </h4>
           <div>
             <b-container fluid>
               <!-- <b-row> -->
               <b-col sm="12" md="4" class="my-1 pull-left">
-                <nuxt-link to="/job-order/property-detail/create"
-                  >Create Job Order by Category</nuxt-link
+                <b-button variant="success" @click="modals.classic = true"
+                  >Create Job order</b-button
                 >
               </b-col>
 
@@ -60,7 +62,7 @@
 
               <!-- Main table element -->
               <b-table
-                :items="jobOrderCategorys"
+                :items="jobOrderCategories"
                 :fields="computedFields"
                 :current-page="currentPage"
                 :per-page="perPage"
@@ -82,7 +84,7 @@
                 </template>
                 <template #cell(ticket_number)="row">
                   <nuxt-link
-                    :to="'/job-order/property-detail/' + row.item.ticket_number"
+                    :to="'/job-order/category/' + row.item.ticket_number"
                     >{{ row.item.ticket_number }}</nuxt-link
                   >
                 </template>
@@ -92,7 +94,7 @@
                     size="sm"
                     @click="
                       {
-                        fetchjobOrderCategory(row.item.id), (modals.info = true);
+                        fetchjobOrderCategoryCategory(row.item.id), (modals.info = true);
                       }
                     "
                     class="mr-1"
@@ -111,6 +113,21 @@
                     "
                     >Comments</b-button
                   > -->
+                  <base-button
+                    type="info"
+                    icon
+                    size="sm"
+                    class="btn-link"
+                    @click="
+                      {
+                        fetchJobOrderCategory(row.item.ticket_number),
+                          (modals.comments = true);
+                      }
+                    "
+                  >
+                    <i class="tim-icons icon-align-center"></i>
+                  </base-button>
+
                   <base-button
                     type="danger"
                     icon
@@ -163,6 +180,34 @@
         </card>
       </div>
     </div>
+    <!-- modal for create -->
+    <modal
+      :show.sync="modals.classic"
+      headerClasses="justify-content-center"
+      class="white-content"
+    >
+      <job-order-create
+        :fetch="fetchJobOrderCategories"
+        :staff="staff"
+        :client="client"
+      ></job-order-create>
+    </modal>
+
+    <!-- modal for comment -->
+    <modal
+      fade
+      id="job-order-comments"
+      headerClasses="justify-content-center"
+      :show.sync="modals.comments"
+      hide-footer
+    >
+      <job-order-category-comment
+        :fetch="fetchJobOrderCategories"
+        :staff="staff"
+        :client="client"
+        :job="jobOrderCategory"
+      ></job-order-category-comment>
+    </modal>
   </div>
 </template>
 <script>
@@ -173,9 +218,14 @@ import Fuse from "fuse.js";
 import swal from "sweetalert2";
 import { mapGetters, mapActions } from "vuex";
 
+import jobOrderCreate from "@/components/JobOrder/Category/JobOrderCategoryCreate";
+import jobOrderCategoryComment from "@/components/JobOrder/Category/JobOrderCategoryComment";
+
 export default {
   name: "paginated",
   components: {
+    jobOrderCreate,
+    jobOrderCategoryComment,
     Modal,
     [Select.name]: Select,
     [Option.name]: Option,
@@ -245,11 +295,11 @@ export default {
       fields: [
         { key: "ticket_number", sortable: true },
         { key: "client_code", sortable: true, requiredStaff: true },
-        { key: "apn", sortable: true },
-        { key: "county", sortable: true },
-        { key: "state", sortable: true },
-        { key: "size", sortable: true },
-        { key: "property_status", sortable: true },
+        { key: "category_", sortable: true },
+        { key: "status", sortable: true },
+        { key: "due_date", sortable: true },
+        { key: "date_completed", sortable: true },
+        { key: "completed_url_work", sortable: true },
         { key: "actions", label: "Actions" },
       ],
       totalRows: 1,
@@ -273,7 +323,7 @@ export default {
     };
   },
   methods: {
-    // ...mapActions("jobOrderCategory", ["deletejobOrderCategory"]),
+    // ...mapActions("jobOrderCategoryCategory", ["deletejobOrderCategoryCategory"]),
     handleLike(index, row) {
       swal({
         title: `You liked ${row.name}`,
@@ -329,7 +379,7 @@ export default {
         this.loading = false;
       }
     },
-    async fetchjobOrderCategory(id) {
+    async fetchJobOrderCategory(id) {
       await this.$store.dispatch("jobOrderCategory/fetchJobOrderCategory", id);
     },
     async fetchJobOrderCategories() {
@@ -386,7 +436,7 @@ export default {
         {
           title: `Something went wrong`,
           variant: variant,
-          solid: true
+          solid: true,
         }
       );
     },
@@ -405,7 +455,7 @@ export default {
         if (result.value) {
           console.log(row);
           this.deletejobOrderCategory(row);
-          let url = `/api/v1/property-detail/${row}/`;
+          let url = `/api/v1/job-order-by-category/${row}/`;
           try {
             this.$axios.delete(url);
             this.fetchJobOrderCategories();

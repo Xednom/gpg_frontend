@@ -25,7 +25,7 @@
         >
         <sidebar-item
             :link="{
-              name: 'APN',
+              name: 'Category',
               path: '/job-order/category',
             }"
           ></sidebar-item>

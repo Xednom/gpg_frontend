@@ -14,19 +14,42 @@
       </base-alert>
       <div class="form-row">
         <div class="col-sm-12 col-md-12">
-          <div class="col-sm-10">
+          <div class="col-sm-12">
             <div class="row">
               <label>Category</label>
             </div>
             <el-select
               class="select-primary"
               size="large"
-              name="propertyStatus"
-              placeholder="Property Status"
-              v-model="propertyStatus"
+              name="status"
+              placeholder="Status"
+              v-model="category"
             >
               <el-option
-                v-for="option in propertyStatusChoices.status"
+                v-for="option in apnCategories"
+                class="select-primary"
+                :value="option.category"
+                :label="option.category"
+                :key="option.id"
+              >
+              </el-option>
+            </el-select>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-12 mt-3">
+          <div class="col-sm-10">
+            <div class="row">
+              <label>Status</label>
+            </div>
+            <el-select
+              class="select-primary"
+              size="large"
+              name="status"
+              placeholder="Status"
+              v-model="status"
+            >
+              <el-option
+                v-for="option in StatusChoices.status"
                 class="select-primary"
                 :value="option.value"
                 :label="option.label"
@@ -34,12 +57,50 @@
               >
               </el-option>
             </el-select>
+            <small class="text-muted"
+              >If you don't set the status. The default value will be
+              <strong>N/A</strong></small
+            >
           </div>
         </div>
-        <div class="col-sm-12 col-md-12">
-          <base-input label="Due date">
+        <div class="col-sm-12 col-md-12 mt-3" v-if="$auth.user.designation_category == 'staff'">
+          <base-input
+            label="Completed url work"
+            v-validate="'required'"
+            :error="getError('completedUrlWork')"
+            name="completedUrlWork"
+            v-model="completedUrlWork"
+          >
+          </base-input>
+        </div>
+        <div class="col-sm-12 col-md-12 mt3">
+          <base-input
+            label="Total time consumed"
+            v-model="totalTimeConsumed"
+          >
+          </base-input>
+        </div>
+        <div class="col-sm-12 col-md-12 mt-3">
+          <base-input
+            label="Due date"
+          >
             <el-date-picker
-              v-model="due_date"
+              v-model="dueDate"
+              type="date"
+              format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd"
+              placeholder="Choose date"
+            >
+            </el-date-picker>
+          </base-input>
+        </div>
+        <div
+          class="col-sm-12 col-md-12 mt-3"
+          v-if="$auth.user.designation_category == 'staff'"
+        >
+          <base-input label="Date completed">
+            <el-date-picker
+              v-model="dateCompleted"
               v-validate="'required'"
               type="date"
               format="yyyy-MM-dd"
@@ -50,28 +111,22 @@
           </base-input>
         </div>
       </div>
-      <div class="form-row">
+
+      <div class="form-row mt-3">
         <div class="col-sm-12 col-md-12">
-          <base-input
-            label="Job title"
-            v-validate="'required'"
-            :error="getError('Job title')"
-            name="Job title"
-            v-model="job_title"
-          >
-          </base-input>
+          <label>Job description</label>
+          <textarea class="form-control" v-model="jobDescription" required>
+          </textarea>
         </div>
       </div>
 
-      <div class="form-row">
+      <div
+        class="form-row mt-3"
+        v-if="$auth.user.designation_category == 'staff'"
+      >
         <div class="col-sm-12 col-md-12">
-          <textarea
-            class="form-control"
-            placeholder="Job description"
-            v-model="job_description"
-            required
-          >
-          </textarea>
+          <label>Notes - VA side</label>
+          <textarea class="form-control" v-model="notesVa"> </textarea>
         </div>
       </div>
 
@@ -107,7 +162,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import CreateJobMixin from "@/mixins/CreateJobOrderCategoryMixin.js";
 import { DatePicker, Select, Option } from "element-ui";
 import { BaseAlert } from "@/components";
@@ -137,6 +192,7 @@ export default {
       loading: false,
       saving: false,
       success: false,
+      error: "",
       job: {
         request_date: "",
         due_date: "",
@@ -144,13 +200,30 @@ export default {
         job_description: "",
         client_notes: "",
       },
-      error: "",
+      StatusChoices: {
+        placeholder: "",
+        status: [
+          { value: "na", label: "N/A" },
+          { value: "job_order_request", label: "Job order request" },
+          { value: "va_processing", label: "VA Processing" },
+          { value: "management_processing", label: "Management Processing" },
+          { value: "verified_job_order", label: "Verified Job Order" },
+          { value: "on_hold", label: "On Hold" },
+          { value: "canceled", label: "Canceled" },
+          { value: "follow_up", label: "Follow up" },
+          { value: "dispute", label: "Dispute" },
+          { value: "complete", label: "Complete" },
+        ],
+      },
     };
   },
   methods: {
     ...mapActions("jobOrderCategory", ["reset", "saveJobOrderCategory"]),
     getError(fieldName) {
       return this.errors.first(fieldName);
+    },
+    async fetchCategory() {
+      await this.$store.dispatch("jobOrderCategory/fetchCategory");
     },
     async save() {
       let isValidForm = await this.$validator.validateAll();
@@ -163,13 +236,12 @@ export default {
         ) {
           const payload = {
             client: this.client.id,
-            request_date: this.request_date,
-            due_date: this.due_date,
-            job_title: this.job_title,
-            job_description: this.job_description,
+            due_date: this.dueDate,
+            category: this.category,
+            job_description: this.jobDescription,
           };
           try {
-            await this.saveJobOrder(payload).then(() => {
+            await this.saveJobOrderCategory(payload).then(() => {
               this.loading = false;
               this.success = true;
               this.successMessage();
@@ -186,13 +258,17 @@ export default {
           }
         } else {
           const payload = {
-            va_assigned: this.staff.id,
-            request_date: this.request_date,
-            due_date: this.due_date,
-            job_title: this.job_title,
-            job_description: this.job_description,
+            category: this.category,
+            status: this.status,
+            staff: this.staff.id,
+            due_date: this.dueDate,
+            date_completed: this.dateCompleted,
+            total_time_consumed: this.totalTimeConsumed,
+            completed_url_work: this.completedUrlWork,
+            job_description: this.jobDescription,
+            notes_va: this.notesVa
           };
-          await this.saveJobOrder(payload);
+          await this.saveJobOrderCategory(payload);
           this.loading = false;
           this.reset();
           this.$validator.reset();
@@ -218,6 +294,9 @@ export default {
     },
   },
   computed: {
+    ...mapGetters({
+      apnCategories: "jobOrderCategory/apnCategories",
+    }),
     category: {
       get() {
         return this.$store.getters["jobOrderCategory/category"];
@@ -290,6 +369,9 @@ export default {
         this.setBasicStoreValue("total_time_consumed", value);
       },
     },
+  },
+  mounted() {
+    this.fetchCategory();
   },
 };
 </script>

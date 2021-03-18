@@ -17,6 +17,7 @@ const blankState = {
   export const state = () => ({
     ...blankState,
     jobOrderCategories: [],
+    apnCategories: [],
     jobOrderCategory: {},
     jobOrderCategoriesPagination: {
       offset: 0,
@@ -42,20 +43,24 @@ const blankState = {
     comment: (state) => state.comment,
     jobOrderCategoriesPagination: (state) => state.jobOrderCategoriesPagination,
     jobOrderCategories: (state) => state.jobOrderCategories,
+    apnCategories: (state) => state.apnCategories,
     jobOrderCategory: (state) => {
       return state.jobOrderCategory;
     },
   };
   
   export const mutations = {
-    setjobOrderCategory(state, payload) {
+    setJobOrderCategory(state, payload) {
       state.jobOrderCategory = payload.jobOrderCategory;
     },
-    setjobOrderCategories(state, payload) {
+    setJobOrderCategories(state, payload) {
       state.jobOrderCategories = payload.jobOrderCategories;
     },
     setJobOrderCategoriesPagination(state, payload) {
       state.jobOrderCategoriesPagination = payload;
+    },
+    setCategories(state, payload) {
+      state.apnCategories = payload.apnCategories;
     },
     setBasicField(state, { field, value }) {
       state[field] = value;
@@ -104,12 +109,23 @@ const blankState = {
           throw e;
         });
     },
+    async fetchCategory({ commit, dispatch }) {
+      let endpoint = `/api/v1/apn-category-type/`;
+      return await this.$axios
+        .get(endpoint)
+        .then((res) => {
+          commit("setCategories", { apnCategories: res.data.results });
+        })
+        .catch((e) => {
+          throw e;
+        });
+    },
     async fetchJobOrderCategory({ commit, dispatch }, payload) {
       let endpoint = `/api/v1/job-order-by-category/${payload}/`;
       return await this.$axios
         .get(endpoint)
         .then((res) => {
-          commit("setBasicField", { jobOrderCategory: res.data });
+          commit("setJobOrderCategory", { jobOrderCategory: res.data });
         })
         .catch((e) => {
           throw e;
@@ -130,7 +146,7 @@ const blankState = {
       }
     },
     async updateJobOrderCategory({ commit }, payload) {
-      console.log(payload);
+      console.log(payload.ticket_number);
       let url = `/api/v1/job-order-by-category/${payload.ticket_number}/`;
       let method = "put";
       console.log(payload);
