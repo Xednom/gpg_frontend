@@ -37,7 +37,7 @@
           ></sidebar-item>
           <sidebar-item
             :link="{
-              name: 'Property Details',
+              name: 'Per APN',
               path: '/job-order/property-detail',
             }"
           ></sidebar-item>
