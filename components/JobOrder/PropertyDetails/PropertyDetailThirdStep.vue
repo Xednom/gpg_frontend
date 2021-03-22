@@ -5,32 +5,28 @@
         Listing Ad Details
       </h5>
       <div class="row justify-content-center mt-5">
-        <div class="col-sm-10 category-choices">
-          <div class="row">
-            <label>Category</label>
-          </div>
-          <el-select
-            class="select-primary"
-            size="large"
-            v-model="category"
+        <div class="col-sm-5">
+          <base-input label="Company name" v-model="company_name"> </base-input>
+        </div>
+        <div class="col-sm-5">
+          <base-input label="Phone" name="phone" v-model="phone"> </base-input>
+        </div>
+        <div class="col-sm-5">
+          <base-input
+            label="Email"
+            name="email"
+            v-validate="'required|email'"
+            :error="getError('email')"
+            v-model="email"
           >
-            <el-option
-              v-for="option in categoryChoices.status"
-              class="select-primary"
-              :value="option.value"
-              :label="option.label"
-              :key="option.label"
-            >
-            </el-option>
-          </el-select>
+          </base-input>
+        </div>
+        <div class="col-sm-5">
+          <base-input label="Website URL" v-model="website_url"> </base-input>
         </div>
         <div class="col-sm-10 mt-3">
           <label>Ad details</label>
-          <textarea
-            name="ad_details"
-            class="form-control"
-            v-model="ad_details"
-          >
+          <textarea name="ad_details" class="form-control" v-model="ad_details">
           </textarea>
         </div>
         <div class="col-sm-10 mt-3">
@@ -85,15 +81,6 @@ export default {
           required: true,
         },
       },
-      categoryChoices: {
-        placeholder: "",
-        status: [
-          { value: "company_name", label: "Company name" },
-          { value: "phone", label: "Phone" },
-          { value: "email_ad", label: "Email Ad" },
-          { value: "website_url", label: "Website url" },
-        ],
-      },
     };
   },
   methods: {
@@ -108,12 +95,36 @@ export default {
     },
   },
   computed: {
-    category: {
+    company_name: {
       get() {
-        return this.$store.getters["propertyDetail/category"];
+        return this.$store.getters["propertyDetail/company_name"];
       },
       set(value) {
-        this.setBasicStoreValue("category", value);
+        this.setBasicStoreValue("company_name", value);
+      },
+    },
+    phone: {
+      get() {
+        return this.$store.getters["propertyDetail/phone"];
+      },
+      set(value) {
+        this.setBasicStoreValue("phone", value);
+      },
+    },
+    email: {
+      get() {
+        return this.$store.getters["propertyDetail/email"];
+      },
+      set(value) {
+        this.setBasicStoreValue("email", value);
+      },
+    },
+    website_url: {
+      get() {
+        return this.$store.getters["propertyDetail/website_url"];
+      },
+      set(value) {
+        this.setBasicStoreValue("website_url", value);
       },
     },
     ad_details: {
@@ -151,8 +162,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-.category-choices {
-  margin-bottom: 10px;
-}
-</style>

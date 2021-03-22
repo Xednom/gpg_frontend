@@ -138,9 +138,6 @@ export default {
       } catch (err) {
         console.log(err.response.data);
         this.loading = false;
-        UIkit.notification("Error:" + err.response.data, {
-          status: "danger",
-        });
       }
     },
     errorMessage(variant = null, error) {
@@ -181,42 +178,38 @@ export default {
         this.loading = true;
         const clientPayload = {
           client: this.clientUser.id,
-          price_status: this.price_status,
           property_status: this.property_status,
-          category: this.category,
+          company_name: this.company_name,
+          phone: this.phone,
+          email: this.email,
+          website_url: this.website_url,
           apn: this.apn,
           county: this.county,
           state: this.state,
           size: this.size,
-          asking_price: this.asking_price,
-          cash_terms: this.cash_terms,
-          finance_terms: this.finance_terms,
-          other_terms: this.other_terms,
-          notes: this.notes,
           ad_details: this.ad_details,
           notes_client_side: this.notes_client_side,
           notes_va_side: this.notes_va_side,
           notes_management_side: this.notes_management_side,
+          property_price_statuses: this.property_price_statuses,
         };
 
         const staffPayload = {
           staff: this.staffUser.id,
-          price_status: this.price_status,
           property_status: this.property_status,
-          category: this.category,
+          company_name: this.company_name,
+          phone: this.phone,
+          email: this.email,
+          website_url: this.website_url,
           apn: this.apn,
           county: this.county,
           state: this.state,
           size: this.size,
-          asking_price: this.asking_price,
-          cash_terms: this.cash_terms,
-          finance_terms: this.finance_terms,
-          other_terms: this.other_terms,
-          notes: this.notes,
           ad_details: this.ad_details,
           notes_client_side: this.notes_client_side,
           notes_va_side: this.notes_va_side,
           notes_management_side: this.notes_management_side,
+          property_price_statuses: this.property_price_statuses,
         };
 
         if (this.$auth.user.designation_category == "staff") {
@@ -271,19 +264,20 @@ export default {
       "county",
       "state",
       "size",
-      "asking_price",
-      "cash_terms",
-      "finance_terms",
-      "other_terms",
-      "notes",
+      "company_name",
+      "phone",
+      "email",
+      "website_url",
       "ad_details",
       "notes_client_side",
       "notes_va_side",
       "notes_management_side",
+      "property_price_statuses",
     ]),
   },
   mounted() {
     this.fetchMe();
+    console.log(this.property_price_statuses);
   },
 };
 </script>

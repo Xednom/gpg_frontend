@@ -4,71 +4,56 @@
       <h5 class="info-text">
         Property Price
       </h5>
-      <div class="row justify-content-center mt-5">
-        <div class="col-sm-5">
-          <label>Asking price</label>
-          <textarea
-            class="form-control"
-            type="text"
-            v-model="askingPrice"
-            v-validate="'required'"
-            :error="getError('asking_price')"
+      <div
+        class="row justify-content-center mt-5"
+        v-for="(item, index) in this.propertyPriceStatuses"
+        :key="index"
+      >
+        <div class="col-sm-5 col-md-3">
+          <base-input
+            label="Asking price"
+            name="askingPrice"
             required
+            v-model="item.asking_price"
+            v-validate="modelValidations.askingPrice"
+            :error="getError('askingPrice')"
           >
-          </textarea>
+          </base-input>
         </div>
-        <div class="col-sm-5">
-          <label>Cash terms</label>
-          <textarea
-            class="form-control"
-            type="text"
-            v-model="cashTerms"
-            v-validate="'required'"
-            :error="getError('cash_terms')"
+        <div class="col-sm-5 col-md-3">
+          <base-input
+            label="Cash terms"
+            name="cashTerms"
             required
+            v-model="item.cash_terms"
+            v-validate="modelValidations.cashTerms"
+            :error="getError('cashTerms')"
           >
-          </textarea>
+          </base-input>
         </div>
-        <div class="col-sm-5 mt-3">
-          <label>Finance Terms</label>
-          <textarea
-            name="finance_terms"
-            class="form-control"
-            type="text"
-            v-model="financeTerms"
-            v-validate="'required'"
-            :error="getError('finance_terms')"
+        <div class="col-sm-5 col-md-3">
+          <base-input
+            label="Finance terms"
+            name="financeTerms"
             required
+            v-model="item.finance_terms"
+            v-validate="modelValidations.financeTerms"
+            :error="getError('financeTerms')"
           >
-          </textarea>
+          </base-input>
         </div>
-        <div class="col-sm-5 mt-3">
-          <label>Other terms</label>
-          <textarea
-            name="other_terms"
-            class="form-control"
-            type="text"
-            v-model="otherTerms"
-            v-validate="'required'"
-            :error="getError('other_terms')"
+        <div class="col-sm-5 col-md-3">
+          <base-input
+            label="Other terms"
+            name="otherTerms"
             required
+            v-model="item.other_terms"
+            v-validate="modelValidations.otherTerms"
+            :error="getError('otherTerms')"
           >
-          </textarea>
+          </base-input>
         </div>
-        <div class="col-sm-10 mt-3">
-          <label>Notes</label>
-          <textarea
-            name="notes"
-            class="form-control"
-            type="text"
-            v-model="notes"
-            v-validate="'required'"
-            :error="getError('notes')"
-            required
-          >
-          </textarea>
-        </div>
-        <div class="col-sm-10 status">
+        <div class="col-sm-12 status">
           <div class="row">
             <label>Price status</label>
           </div>
@@ -76,7 +61,7 @@
             class="select-primary"
             size="large"
             name="price_status"
-            v-model="priceStatus"
+            v-model="item.price_status"
           >
             <el-option
               v-for="option in priceStatusChoices.status"
@@ -87,6 +72,19 @@
             >
             </el-option>
           </el-select>
+        </div>
+        <div class="col-sm-12 mt-3">
+          <label>Notes</label>
+          <textarea
+            name="notes"
+            class="form-control"
+            type="text"
+            v-model="item.notes"
+            v-validate="'required'"
+            :error="getError('notes')"
+            required
+          >
+          </textarea>
         </div>
       </div>
     </card>
@@ -104,6 +102,17 @@ export default {
   },
   data() {
     return {
+      saving: false,
+      property_price_statuses: [
+        {
+          asking_price: "",
+          cash_terms: "",
+          finance_terms: "",
+          other_terms: "",
+          notes: "",
+          price_status: ""
+        }
+      ],
       modelValidations: {
         askingPrice: {
           required: true,
@@ -143,8 +152,37 @@ export default {
         return res;
       });
     },
+    addRow: function() {
+      this.propertyPriceStatuses.push({
+        asking_price: "",
+        cash_terms: "",
+        finance_terms: "",
+        other_terms: "",
+        price_status: "",
+        notes: "",
+      });
+      console.log(this.propertyPriceStatuses)
+    },
+    deleteRow: function(e, item) {
+      e.preventDefault();
+      var index = this.propertyPriceStatuses
+        .map(function(item) {
+          console.log(item.id);
+          return item.id;
+        })
+        .indexOf(item);
+      this.propertyPriceStatuses.splice(index, 1);
+    },
   },
   computed: {
+    propertyPriceStatuses: {
+      get() {
+        return this.$store.getters["propertyDetail/property_price_statuses"];
+      },
+      set(value) {
+        this.setBasicStoreValue("property_price_statuses", value);
+      },
+    },
     askingPrice: {
       get() {
         return this.$store.getters["propertyDetail/asking_price"];
@@ -194,11 +232,19 @@ export default {
       },
     },
   },
+  mounted() {
+    this.addRow();
+    console.log(this.propertyPriceStatuses);
+  },
 };
 </script>
 <style scoped>
 .status {
   margin-top: 20px;
   margin-bottom: 20px;
+}
+
+.property-add {
+  float: right;
 }
 </style>
