@@ -106,7 +106,6 @@
                     name="askingPrice"
                     required
                     v-model="item.asking_price"
-                    v-validate="modelValidations.askingPrice"
                     :error="getError('askingPrice')"
                   >
                   </base-input>
@@ -117,7 +116,6 @@
                     name="cashTerms"
                     required
                     v-model="item.cash_terms"
-                    v-validate="modelValidations.cashTerms"
                     :error="getError('cashTerms')"
                   >
                   </base-input>
@@ -128,7 +126,6 @@
                     name="financeTerms"
                     required
                     v-model="item.finance_terms"
-                    v-validate="modelValidations.financeTerms"
                     :error="getError('financeTerms')"
                   >
                   </base-input>
@@ -139,7 +136,6 @@
                     name="otherTerms"
                     required
                     v-model="item.other_terms"
-                    v-validate="modelValidations.otherTerms"
                     :error="getError('otherTerms')"
                   >
                   </base-input>
@@ -182,7 +178,7 @@
               </div>
               <div class="row justify-content-center property-add mt-3 mr-1">
                 <div class="col-xs-12">
-                  <button type="submit" class="btn btn-success" @click="addRow">
+                  <button class="btn btn-success" @click="addRow">
                     Add new Property price
                   </button>
                 </div>
@@ -194,25 +190,21 @@
                 Listing Ad Details
               </h5>
               <div class="row justify-content-center mt-5">
-                <div class="col-sm-10 category-choices">
-                  <div class="row">
-                    <label>Categroy</label>
-                  </div>
-                  <el-select
-                    class="select-primary"
-                    size="large"
-                    placeholder="Category"
-                    v-model="propertyDetail.category"
-                  >
-                    <el-option
-                      v-for="option in categoryChoices.status"
-                      class="select-primary"
-                      :value="option.value"
-                      :label="option.label"
-                      :key="option.label"
-                    >
-                    </el-option>
-                  </el-select>
+                <div class="col-sm-5">
+                  <base-input label="Company name" v-model="propertyDetail.company_name">
+                  </base-input>
+                </div>
+                <div class="col-sm-5">
+                  <base-input label="Phone" v-model="propertyDetail.phone">
+                  </base-input>
+                </div>
+                <div class="col-sm-5">
+                  <base-input label="Email" v-model="propertyDetail.email">
+                  </base-input>
+                </div>
+                <div class="col-sm-5 category-choices">
+                  <base-input label="Website url" v-model="propertyDetail.website_url">
+                  </base-input>
                 </div>
                 <div class="col-sm-10 mt-3">
                   <label>Ad Details</label>
@@ -518,6 +510,10 @@ export default {
           notes_client_side: this.propertyDetail.notes_client_side,
           notes_va_side: this.propertyDetail.notes_va_side,
           notes_management_side: this.propertyDetail.notes_management_side,
+          company_name: this.propertyDetail.company_name,
+          phone: this.propertyDetail.phone,
+          email: this.propertyDetail.email,
+          website_url: this.propertyDetail.website_url,
           property_price_statuses: this.propertyDetail.property_price_statuses,
         };
 
@@ -535,6 +531,10 @@ export default {
           notes_client_side: this.propertyDetail.notes_client_side,
           notes_va_side: this.propertyDetail.notes_va_side,
           notes_management_side: this.propertyDetail.notes_management_side,
+          company_name: this.propertyDetail.company_name,
+          phone: this.propertyDetail.phone,
+          email: this.propertyDetail.email,
+          website_url: this.propertyDetail.website_url,
           property_price_statuses: this.propertyDetail.property_price_statuses,
         };
 
@@ -580,6 +580,7 @@ export default {
       }
     },
     addRow: function() {
+      this.$validator.reset();
       this.propertyDetail.property_price_statuses.push({
         asking_price: "",
         cash_terms: "",
