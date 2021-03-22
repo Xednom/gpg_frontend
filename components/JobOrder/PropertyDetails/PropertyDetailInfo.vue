@@ -86,62 +86,65 @@
               <h5 class="info-text">
                 Property Price
               </h5>
-              <div class="row justify-content-center mt-5">
-                <div class="col-sm-5">
-                  <label>Asking Price</label>
-                  <textarea
-                    class="form-control"
-                    type="text"
-                    placeholder="Asking price"
-                    v-model="propertyDetail.asking_price"
-                    v-validate="'required'"
-                    :error="getError('asking_price')"
-                    required
+              <div
+                class="row justify-content-center mt-5"
+                v-for="(item, index) in this.propertyDetail
+                  .property_price_statuses"
+                :key="index"
+              >
+                <div class="col-sm-10 col-md-12">
+                  <button
+                    class="btn btn-link btn-danger pull-right"
+                    @click="deleteRow($event, item.id)"
                   >
-                  </textarea>
+                    <i class="tim-icons icon-simple-remove"></i>
+                  </button>
                 </div>
-                <div class="col-sm-5">
-                  <label>Cash terms</label>
-                  <textarea
-                    class="form-control"
-                    type="text"
-                    placeholder="Cash terms"
-                    v-model="propertyDetail.cash_terms"
-                    v-validate="'required'"
-                    :error="getError('cash_terms')"
+                <div class="col-sm-5 col-md-3">
+                  <base-input
+                    label="Asking price"
+                    name="askingPrice"
                     required
+                    v-model="item.asking_price"
+                    v-validate="modelValidations.askingPrice"
+                    :error="getError('askingPrice')"
                   >
-                  </textarea>
+                  </base-input>
                 </div>
-                <div class="col-sm-5 mt-3">
-                  <label>Finance terms</label>
-                  <textarea
-                    name="finance_terms"
-                    class="form-control"
-                    type="text"
-                    placeholder="Finance terms"
-                    v-model="propertyDetail.finance_terms"
-                    v-validate="'required'"
-                    :error="getError('finance_terms')"
+                <div class="col-sm-5 col-md-3">
+                  <base-input
+                    label="Cash terms"
+                    name="cashTerms"
                     required
+                    v-model="item.cash_terms"
+                    v-validate="modelValidations.cashTerms"
+                    :error="getError('cashTerms')"
                   >
-                  </textarea>
+                  </base-input>
                 </div>
-                <div class="col-sm-5 mt-3">
-                  <label>Other terms</label>
-                  <textarea
-                    name="other_terms"
-                    class="form-control"
-                    type="text"
-                    placeholder="Other terms"
-                    v-model="propertyDetail.other_terms"
-                    v-validate="'required'"
-                    :error="getError('other_terms')"
+                <div class="col-sm-5 col-md-3">
+                  <base-input
+                    label="Finance terms"
+                    name="financeTerms"
                     required
+                    v-model="item.finance_terms"
+                    v-validate="modelValidations.financeTerms"
+                    :error="getError('financeTerms')"
                   >
-                  </textarea>
+                  </base-input>
                 </div>
-                <div class="col-sm-10 status mt-3">
+                <div class="col-sm-5 col-md-3">
+                  <base-input
+                    label="Other terms"
+                    name="otherTerms"
+                    required
+                    v-model="item.other_terms"
+                    v-validate="modelValidations.otherTerms"
+                    :error="getError('otherTerms')"
+                  >
+                  </base-input>
+                </div>
+                <div class="col-sm-12 status mt-3">
                   <div class="row">
                     <label>Price Status</label>
                   </div>
@@ -151,7 +154,7 @@
                     size="large"
                     name="price_status"
                     placeholder="Price Status"
-                    v-model="propertyDetail.price_status"
+                    v-model="item.price_status"
                     v-validate="modelValidations.priceStatus"
                     :error="getError('price_status')"
                   >
@@ -165,19 +168,23 @@
                     </el-option>
                   </el-select>
                 </div>
-                <div class="col-sm-10 mt-3">
+                <div class="col-sm-12 mt-3">
                   <label>Notes</label>
                   <textarea
                     name="notes"
                     class="form-control"
                     type="text"
                     placeholder="Notes"
-                    v-model="propertyDetail.notes"
-                    v-validate="'required'"
-                    :error="getError('notes')"
-                    required
+                    v-model="item.notes"
                   >
                   </textarea>
+                </div>
+              </div>
+              <div class="row justify-content-center property-add mt-3 mr-1">
+                <div class="col-xs-12">
+                  <button type="submit" class="btn btn-success" @click="addRow">
+                    Add new Property price
+                  </button>
                 </div>
               </div>
             </card>
@@ -507,15 +514,11 @@ export default {
           county: this.propertyDetail.county,
           state: this.propertyDetail.state,
           size: this.propertyDetail.size,
-          asking_price: this.propertyDetail.asking_price,
-          cash_terms: this.propertyDetail.cash_terms,
-          finance_terms: this.propertyDetail.finance_terms,
-          other_terms: this.propertyDetail.other_terms,
-          notes: this.propertyDetail.notes,
           ad_details: this.propertyDetail.ad_details,
           notes_client_side: this.propertyDetail.notes_client_side,
           notes_va_side: this.propertyDetail.notes_va_side,
           notes_management_side: this.propertyDetail.notes_management_side,
+          property_price_statuses: this.propertyDetail.property_price_statuses,
         };
 
         const staffPayload = {
@@ -528,15 +531,11 @@ export default {
           county: this.propertyDetail.county,
           state: this.propertyDetail.state,
           size: this.propertyDetail.size,
-          asking_price: this.propertyDetail.asking_price,
-          cash_terms: this.propertyDetail.cash_terms,
-          finance_terms: this.propertyDetail.finance_terms,
-          other_terms: this.propertyDetail.other_terms,
-          notes: this.propertyDetail.notes,
           ad_details: this.propertyDetail.ad_details,
           notes_client_side: this.propertyDetail.notes_client_side,
           notes_va_side: this.propertyDetail.notes_va_side,
           notes_management_side: this.propertyDetail.notes_management_side,
+          property_price_statuses: this.propertyDetail.property_price_statuses,
         };
 
         if (this.$auth.user.designation_category == "staff") {
@@ -580,6 +579,23 @@ export default {
         this.reset();
       }
     },
+    addRow: function() {
+      this.propertyDetail.property_price_statuses.push({
+        asking_price: "",
+        cash_terms: "",
+        finance_terms: "",
+      });
+    },
+    deleteRow: function(e, item) {
+      e.preventDefault();
+      var index = this.propertyDetail.property_price_statuses
+        .map(function(item) {
+          console.log(item.id);
+          return item.id;
+        })
+        .indexOf(item);
+      this.propertyDetail.property_price_statuses.splice(index, 1);
+    },
   },
   mounted() {
     this.fetchMe();
@@ -587,3 +603,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.property-add {
+  float: right !important;
+}
+</style>
