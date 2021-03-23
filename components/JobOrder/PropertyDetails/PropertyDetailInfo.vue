@@ -106,6 +106,7 @@
                     name="askingPrice"
                     required
                     v-model="item.asking_price"
+                    :disabled="item.price_status == 'active'"
                     :error="getError('askingPrice')"
                   >
                   </base-input>
@@ -116,6 +117,7 @@
                     name="cashTerms"
                     required
                     v-model="item.cash_terms"
+                    :disabled="item.price_status == 'active'"
                     :error="getError('cashTerms')"
                   >
                   </base-input>
@@ -126,6 +128,7 @@
                     name="financeTerms"
                     required
                     v-model="item.finance_terms"
+                    :disabled="item.price_status == 'active'"
                     :error="getError('financeTerms')"
                   >
                   </base-input>
@@ -136,6 +139,7 @@
                     name="otherTerms"
                     required
                     v-model="item.other_terms"
+                    :disabled="item.price_status == 'active'"
                     :error="getError('otherTerms')"
                   >
                   </base-input>
@@ -151,6 +155,7 @@
                     name="price_status"
                     placeholder="Price Status"
                     v-model="item.price_status"
+                    :disabled="item.price_status == 'change'"
                     v-validate="modelValidations.priceStatus"
                     :error="getError('price_status')"
                   >
@@ -171,6 +176,7 @@
                     class="form-control"
                     type="text"
                     placeholder="Notes"
+                    :disabled="item.price_status == 'active'"
                     v-model="item.notes"
                   >
                   </textarea>
@@ -191,7 +197,10 @@
               </h5>
               <div class="row justify-content-center mt-5">
                 <div class="col-sm-5">
-                  <base-input label="Company name" v-model="propertyDetail.company_name">
+                  <base-input
+                    label="Company name"
+                    v-model="propertyDetail.company_name"
+                  >
                   </base-input>
                 </div>
                 <div class="col-sm-5">
@@ -203,7 +212,10 @@
                   </base-input>
                 </div>
                 <div class="col-sm-5 category-choices">
-                  <base-input label="Website url" v-model="propertyDetail.website_url">
+                  <base-input
+                    label="Website url"
+                    v-model="propertyDetail.website_url"
+                  >
                   </base-input>
                 </div>
                 <div class="col-sm-10 mt-3">
@@ -496,6 +508,20 @@ export default {
       let isValidForm = await this.$validator.validateAll();
       if (isValidForm) {
         this.loading = true;
+        this.propertyDetail.property_price_statuses.forEach((item) => {
+          console.log(item);
+          item.user = this.$auth.user.id;
+          item.updated_info =
+            "Updated by " +
+            this.$auth.user.first_name +
+            " " +
+            this.$auth.user.last_name +
+            ". Status was changed to " +
+            item.price_status +
+            ", date updated: " +
+            new Date().toLocaleString();
+        });
+
         const clientPayload = {
           ticket_number: this.propertyDetail.ticket_number,
           client: this.clientUser.id,
@@ -517,6 +543,8 @@ export default {
           property_price_statuses: this.propertyDetail.property_price_statuses,
         };
 
+        console.log(this.propertyDetail.property_price_statuses);
+
         const staffPayload = {
           ticket_number: this.propertyDetail.ticket_number,
           staff: this.staffUser.id,
@@ -537,6 +565,7 @@ export default {
           website_url: this.propertyDetail.website_url,
           property_price_statuses: this.propertyDetail.property_price_statuses,
         };
+
 
         if (this.$auth.user.designation_category == "staff") {
           try {
@@ -585,6 +614,15 @@ export default {
         asking_price: "",
         cash_terms: "",
         finance_terms: "",
+        other_terms: "",
+        price_status: "",
+        notes: "",
+        user: this.$auth.user,
+        updated_info:
+          "updated by " +
+          this.$auth.user.first_name +
+          " " +
+          this.$auth.user.last_name,
       });
     },
     deleteRow: function(e, item) {
