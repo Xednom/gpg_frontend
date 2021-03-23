@@ -6,7 +6,7 @@
       </h5>
       <div
         class="row justify-content-center mt-5"
-        v-for="(item, index) in this.propertyPriceStatuses"
+        v-for="(item, index) in this.property_price_statuses"
         :key="index"
       >
         <div class="col-sm-5 col-md-3">
@@ -103,16 +103,7 @@ export default {
   data() {
     return {
       saving: false,
-      property_price_statuses: [
-        {
-          asking_price: "",
-          cash_terms: "",
-          finance_terms: "",
-          other_terms: "",
-          notes: "",
-          price_status: ""
-        }
-      ],
+      property_price_statuses: [],
       modelValidations: {
         askingPrice: {
           required: true,
@@ -146,6 +137,10 @@ export default {
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
+    passPropertyPriceStatuses() {
+      this.property_price_statuses = this.propertyPriceStatuses;
+      console.log("hehe" + this.propertyPriceStatuses);
+    },
     validate() {
       return this.$validator.validateAll().then((res) => {
         this.$emit("on-validated", res, this.model);
@@ -153,7 +148,7 @@ export default {
       });
     },
     addRow: function() {
-      this.propertyPriceStatuses.push({
+      this.property_price_statuses.push({
         asking_price: "",
         cash_terms: "",
         finance_terms: "",
@@ -161,17 +156,16 @@ export default {
         price_status: "",
         notes: "",
       });
-      console.log(this.propertyPriceStatuses)
     },
     deleteRow: function(e, item) {
       e.preventDefault();
-      var index = this.propertyPriceStatuses
+      var index = this.property_price_statuses
         .map(function(item) {
           console.log(item.id);
           return item.id;
         })
         .indexOf(item);
-      this.propertyPriceStatuses.splice(index, 1);
+      this.property_price_statuses.splice(index, 1);
     },
   },
   computed: {
@@ -234,7 +228,7 @@ export default {
   },
   mounted() {
     this.addRow();
-    console.log(this.propertyPriceStatuses);
+    this.$emit('property-price', this.property_price_statuses)
   },
 };
 </script>

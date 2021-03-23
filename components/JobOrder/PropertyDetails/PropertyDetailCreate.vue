@@ -4,7 +4,94 @@
       <div class="col-md-10">
         <form @submit.prevent="save">
           <first-step></first-step>
-          <second-step></second-step>
+          <card>
+            <h5 class="info-text">
+              Property Price
+            </h5>
+            <div
+              class="row justify-content-center mt-5"
+              v-for="(item, index) in this.property_price_statuses"
+              :key="index"
+            >
+              <div class="col-sm-5 col-md-3">
+                <base-input
+                  label="Asking price"
+                  name="askingPrice"
+                  required
+                  v-model="item.asking_price"
+                  v-validate="modelValidations.askingPrice"
+                  :error="getError('askingPrice')"
+                >
+                </base-input>
+              </div>
+              <div class="col-sm-5 col-md-3">
+                <base-input
+                  label="Cash terms"
+                  name="cashTerms"
+                  required
+                  v-model="item.cash_terms"
+                  v-validate="modelValidations.cashTerms"
+                  :error="getError('cashTerms')"
+                >
+                </base-input>
+              </div>
+              <div class="col-sm-5 col-md-3">
+                <base-input
+                  label="Finance terms"
+                  name="financeTerms"
+                  required
+                  v-model="item.finance_terms"
+                  v-validate="modelValidations.financeTerms"
+                  :error="getError('financeTerms')"
+                >
+                </base-input>
+              </div>
+              <div class="col-sm-5 col-md-3">
+                <base-input
+                  label="Other terms"
+                  name="otherTerms"
+                  required
+                  v-model="item.other_terms"
+                  v-validate="modelValidations.otherTerms"
+                  :error="getError('otherTerms')"
+                >
+                </base-input>
+              </div>
+              <div class="col-sm-12 status">
+                <div class="row">
+                  <label>Price status</label>
+                </div>
+                <el-select
+                  class="select-primary"
+                  size="large"
+                  name="price_status"
+                  v-model="item.price_status"
+                >
+                  <el-option
+                    v-for="option in priceStatusChoices.status"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  >
+                  </el-option>
+                </el-select>
+              </div>
+              <div class="col-sm-12 mt-3">
+                <label>Notes</label>
+                <textarea
+                  name="notes"
+                  class="form-control"
+                  type="text"
+                  v-model="item.notes"
+                  v-validate="'required'"
+                  :error="getError('notes')"
+                  required
+                >
+                </textarea>
+              </div>
+            </div>
+          </card>
           <third-step></third-step>
           <div class="pull-right">
             <base-button
@@ -45,15 +132,47 @@ import ThirdStep from "@/components/JobOrder/PropertyDetails/PropertyDetailThird
 import swal from "sweetalert2";
 import { SimpleWizard, WizardTab } from "@/components";
 
+import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
+import { Select, Option } from "element-ui";
+
 export default {
+  mixins: [CreatePropertyDetailMixin],
   name: "wizard-form",
   data() {
     return {
+      property_price_statuses: [],
       wizardModel: {},
       loading: false,
       saving: false,
       clientUser: {},
       staffUser: {},
+      priceStatusChoices: {
+        placeholder: "",
+        status: [
+          { value: "change", label: "Change" },
+          { value: "active", label: "Active" },
+        ],
+      },
+      modelValidations: {
+        askingPrice: {
+          required: true,
+        },
+        cashTerms: {
+          required: true,
+        },
+        financeTerms: {
+          required: true,
+        },
+        otherTerms: {
+          required: true,
+        },
+        notes: {
+          required: true,
+        },
+        priceStatus: {
+          required: true,
+        },
+      },
       error: {
         client: "",
         staff: "",
@@ -76,6 +195,8 @@ export default {
     ThirdStep,
     SimpleWizard,
     WizardTab,
+    [Select.name]: Select,
+    [Option.name]: Option,
   },
   provide() {
     return {
@@ -84,9 +205,37 @@ export default {
   },
   methods: {
     ...mapActions("propertyDetail", ["savePropertyDetail", "reset"]),
+    getError(fieldName) {
+      return this.errors.first(fieldName);
+    },
     validateStep(ref) {
       return this.$refs[ref].validate();
     },
+    addRow: function() {
+      this.property_price_statuses.push({
+        asking_price: "",
+        cash_terms: "",
+        finance_terms: "",
+        other_terms: "",
+        price_status: "",
+        notes: "",
+      });
+    },
+    deleteRow: function(e, item) {
+      e.preventDefault();
+      var index = this.property_price_statuses
+        .map(function(item) {
+          console.log(item.id);
+          return item.id;
+        })
+        .indexOf(item);
+      this.property_price_statuses.splice(index, 1);
+    },
+    // receivePropertyPriceStatuses(value) {
+    //   this.property_price_statuses = value;
+    //   console.log(this.property_price_statuses);
+    //   return this.property_price_statuses;
+    // },
     onStepValidated(validated, model) {
       this.wizardModel = { ...this.wizardModel, ...model };
     },
@@ -212,6 +361,8 @@ export default {
           property_price_statuses: this.property_price_statuses,
         };
 
+        console.log(clientPayload);
+
         if (this.$auth.user.designation_category == "staff") {
           try {
             this.saving = true;
@@ -272,12 +423,13 @@ export default {
       "notes_client_side",
       "notes_va_side",
       "notes_management_side",
-      "property_price_statuses",
+      // "property_price_statuses"
     ]),
   },
   mounted() {
     this.fetchMe();
-    console.log(this.property_price_statuses);
+    this.addRow();
+    // this.receivePropertyPriceStatuses();
   },
 };
 </script>
