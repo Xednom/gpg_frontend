@@ -24,10 +24,15 @@
         <div class="col-sm-5">
           <base-input label="Website URL" v-model="website_url"> </base-input>
         </div>
-        <div class="col-sm-10 mt-3">
-          <label>Ad details</label>
-          <textarea name="ad_details" class="form-control" v-model="ad_details">
-          </textarea>
+        <div class="col-sm-5 mt-3">
+          <a href="https://form.jotform.com/210818766251458" target="_blank">Logo(Please attached file)</a>
+        </div>
+        <div class="col-sm-5">
+          <base-input
+            label="Logo(If you're using file storage such as Gdrive, Dropbox, etc..)"
+            v-model="file_storage"
+          >
+          </base-input>
         </div>
         <div class="col-sm-10 mt-3">
           <label>Notes</label>
@@ -127,12 +132,12 @@ export default {
         this.setBasicStoreValue("website_url", value);
       },
     },
-    ad_details: {
+    file_storage: {
       get() {
-        return this.$store.getters["propertyDetail/ad_details"];
+        return this.$store.getters["propertyDetail/file_storage"];
       },
       set(value) {
-        this.setBasicStoreValue("ad_details", value);
+        this.setBasicStoreValue("file_storage", value);
       },
     },
     notes_client_side: {
