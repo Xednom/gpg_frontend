@@ -1,5 +1,6 @@
 const blankState = {
     ticket_number: "",
+    property_detail: null,
     client: null,
     staff: null,
     category: "",
@@ -7,17 +8,19 @@ const blankState = {
     due_date: "",
     date_completed: "",
     job_description: "",
-    completed_url_work: "",
+    url_of_the_completed_jo: "",
     notes_va: "",
     notes_management: "",
     total_time_consumed: "",
     comment: "",
+    deadline: "",
   };
   
   export const state = () => ({
     ...blankState,
     jobOrderCategories: [],
     apnCategories: [],
+    deadlines: [],
     jobOrderCategory: {},
     jobOrderCategoriesPagination: {
       offset: 0,
@@ -30,13 +33,14 @@ const blankState = {
   export const getters = {
     ticket_number: (state) => state.ticket_number,
     client: (state) => state.client,
+    property_detail: (state) => state.property_detail,
     staff: (state) => state.staff,
     category: (state) => state.category,
     status: (state) => state.status,
     due_date: (state) => state.due_date,
     date_completed: (state) => state.date_completed,
     job_description: (state) => state.job_description,
-    completed_url_work: (state) => state.completed_url_work,
+    url_of_the_completed_jo: (state) => state.url_of_the_completed_jo,
     notes_va: (state) => state.notes_va,
     notes_management: (state) => state.notes_management,
     total_time_consumed: (state) => state.total_time_consumed,
@@ -44,6 +48,8 @@ const blankState = {
     jobOrderCategoriesPagination: (state) => state.jobOrderCategoriesPagination,
     jobOrderCategories: (state) => state.jobOrderCategories,
     apnCategories: (state) => state.apnCategories,
+    deadline: (state) => state.deadline,
+    deadlines: (state) => state.deadlines,
     jobOrderCategory: (state) => {
       return state.jobOrderCategory;
     },
@@ -61,6 +67,9 @@ const blankState = {
     },
     setCategories(state, payload) {
       state.apnCategories = payload.apnCategories;
+    },
+    setDeadlines(state, payload) {
+      state.deadlines = payload.deadlines
     },
     setBasicField(state, { field, value }) {
       state[field] = value;
@@ -115,6 +124,17 @@ const blankState = {
         .get(endpoint)
         .then((res) => {
           commit("setCategories", { apnCategories: res.data.results });
+        })
+        .catch((e) => {
+          throw e;
+        });
+    },
+    async fetchDeadline({ commit, dispatch }) {
+      let endpoint = `/api/v1/deadline/`;
+      return await this.$axios
+        .get(endpoint)
+        .then((res) => {
+          commit("setDeadlines", { deadlines: res.data.results });
         })
         .catch((e) => {
           throw e;
