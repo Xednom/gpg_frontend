@@ -108,7 +108,7 @@ export default {
         },
         size: {
           required: true,
-          numeric: true,
+          decimal: true
         },
         propertyStatus: {
           required: true,
