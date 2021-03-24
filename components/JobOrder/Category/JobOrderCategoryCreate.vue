@@ -37,6 +37,52 @@
           </div>
         </div>
         <div class="col-sm-12 col-md-12 mt-3">
+          <div class="col-sm-12">
+            <div class="row">
+              <label>Per APN</label>
+            </div>
+            <el-select
+              class="select-primary"
+              size="large"
+              name="status"
+              placeholder="Status"
+              v-model="perApn"
+            >
+              <el-option
+                v-for="option in propertyDetails"
+                class="select-primary"
+                :value="option.apn"
+                :label="option.apn"
+                :key="option.id"
+              >
+              </el-option>
+            </el-select>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-12 mt-3">
+          <div class="col-sm-12">
+            <div class="row">
+              <label>Deadline</label>
+            </div>
+            <el-select
+              class="select-primary"
+              size="large"
+              name="deadline"
+              placeholder="Deadline"
+              v-model="deadline"
+            >
+              <el-option
+                v-for="option in deadlines"
+                class="select-primary"
+                :value="option.deadline"
+                :label="option.deadline"
+                :key="option.id"
+              >
+              </el-option>
+            </el-select>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-12 mt-3">
           <div class="col-sm-10">
             <div class="row">
               <label>Status</label>
@@ -63,27 +109,16 @@
             >
           </div>
         </div>
-        <div class="col-sm-12 col-md-12 mt-3" v-if="$auth.user.designation_category == 'staff'">
-          <base-input
-            label="Completed url work"
-            v-validate="'required'"
-            :error="getError('completedUrlWork')"
-            name="completedUrlWork"
-            v-model="completedUrlWork"
-          >
-          </base-input>
-        </div>
         <div class="col-sm-12 col-md-12 mt3">
           <base-input
             label="Total time consumed"
             v-model="totalTimeConsumed"
+            v-if="$auth.user.designation_category == 'staff'"
           >
           </base-input>
         </div>
         <div class="col-sm-12 col-md-12 mt-3">
-          <base-input
-            label="Due date"
-          >
+          <base-input label="Due date">
             <el-date-picker
               v-model="dueDate"
               type="date"
@@ -110,6 +145,15 @@
             </el-date-picker>
           </base-input>
         </div>
+      </div>
+
+      <div
+        class="form-row mt-3"
+        v-if="$auth.user.designation_category == 'staff'"
+      >
+        <label>URL of the completed JO</label>
+        <textarea class="form-control" v-model="urlOfTheCompletedJo" required>
+        </textarea>
       </div>
 
       <div class="form-row mt-3">
@@ -213,6 +257,7 @@ export default {
           { value: "follow_up", label: "Follow up" },
           { value: "dispute", label: "Dispute" },
           { value: "complete", label: "Complete" },
+          { value: "under_quality_review", label: "Under Quality Review" },
         ],
       },
     };
@@ -225,6 +270,12 @@ export default {
     async fetchCategory() {
       await this.$store.dispatch("jobOrderCategory/fetchCategory");
     },
+    async fetchPropertyDetailApn() {
+      await this.$store.dispatch("propertyDetail/fetchPropertyDetails");
+    },
+    async fetchDeadline() {
+      await this.$store.dispatch("jobOrderCategory/fetchDeadline")
+    },
     async save() {
       let isValidForm = await this.$validator.validateAll();
       if (isValidForm) {
@@ -236,6 +287,10 @@ export default {
         ) {
           const payload = {
             client: this.client.id,
+            category: this.category,
+            property_detail: this.perApn,
+            deadline: this.deadline,
+            status: this.status,
             due_date: this.dueDate,
             category: this.category,
             job_description: this.jobDescription,
@@ -259,14 +314,16 @@ export default {
         } else {
           const payload = {
             category: this.category,
+            property_detail: this.perApn,
             status: this.status,
             staff: this.staff.id,
+            deadline: this.deadline,
             due_date: this.dueDate,
             date_completed: this.dateCompleted,
             total_time_consumed: this.totalTimeConsumed,
-            completed_url_work: this.completedUrlWork,
+            url_of_the_completed_jo: this.urlOfTheCompletedJo,
             job_description: this.jobDescription,
-            notes_va: this.notesVa
+            notes_va: this.notesVa,
           };
           await this.saveJobOrderCategory(payload);
           this.loading = false;
@@ -284,6 +341,8 @@ export default {
         return "Request date: " + this.error.request_date;
       } else if (error.due_date) {
         return "due_date: " + this.error.due_date;
+      } else if (error.property_detail) {
+        return "Property detail: " + this.error.property_detail;
       } else if (error.job_title) {
         return "Job title: " + this.error.job_title;
       } else if (error.job_description) {
@@ -296,6 +355,8 @@ export default {
   computed: {
     ...mapGetters({
       apnCategories: "jobOrderCategory/apnCategories",
+      deadlines: "jobOrderCategory/deadlines",
+      propertyDetails: "propertyDetail/propertyDetails",
     }),
     category: {
       get() {
@@ -303,6 +364,22 @@ export default {
       },
       set(value) {
         this.setBasicStoreValue("category", value);
+      },
+    },
+    perApn: {
+      get() {
+        return this.$store.getters["jobOrderCategory/property_detail"];
+      },
+      set(value) {
+        this.setBasicStoreValue("property_detail", value);
+      },
+    },
+    deadline: {
+      get() {
+        return this.$store.getters["jobOrderCategory/deadline"];
+      },
+      set(value) {
+        this.setBasicStoreValue("deadline", value);
       },
     },
     status: {
@@ -337,12 +414,12 @@ export default {
         this.setBasicStoreValue("job_description", value);
       },
     },
-    completedUrlWork: {
+    urlOfTheCompletedJo: {
       get() {
-        return this.$store.getters["jobOrderCategory/completed_url_work"];
+        return this.$store.getters["jobOrderCategory/url_of_the_completed_jo"];
       },
       set(value) {
-        this.setBasicStoreValue("completed_url_work", value);
+        this.setBasicStoreValue("url_of_the_completed_jo", value);
       },
     },
     notesVa: {
@@ -372,6 +449,8 @@ export default {
   },
   mounted() {
     this.fetchCategory();
+    this.fetchPropertyDetailApn();
+    this.fetchDeadline();
   },
 };
 </script>
