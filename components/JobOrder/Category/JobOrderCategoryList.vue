@@ -127,8 +127,9 @@
                   >
                     <i class="tim-icons icon-align-center"></i>
                   </base-button>
-
-                  <base-button
+                  <!-- TODO: commented this out so that the user cannot delete
+                       why: so in the future we can just uncomment this out if needed -->
+                  <!-- <base-button
                     type="danger"
                     icon
                     size="sm"
@@ -136,7 +137,7 @@
                     @click="handleDelete(row.item.ticket_number)"
                   >
                     <i class="tim-icons icon-simple-remove"></i>
-                  </base-button>
+                  </base-button> -->
                 </template>
 
                 <template #row-details="row">
@@ -299,7 +300,7 @@ export default {
         { key: "status", sortable: true },
         { key: "due_date", sortable: true },
         { key: "date_completed", sortable: true },
-        { key: "completed_url_work", sortable: true },
+        { key: "url_of_the_completed_jo", sortable: true },
         { key: "actions", label: "Actions" },
       ],
       totalRows: 1,
