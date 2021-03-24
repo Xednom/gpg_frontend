@@ -127,7 +127,7 @@ export default {
       priceStatusChoices: {
         placeholder: "",
         status: [
-          { value: "change", label: "Change" },
+          { value: "deactivate", label: "Deactivate" },
           { value: "active", label: "Active" },
         ],
       },
