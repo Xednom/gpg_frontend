@@ -35,29 +35,7 @@
                 >
                 </base-input>
               </div>
-              <div class="col-sm-5 col-md-3">
-                <base-input
-                  label="Finance terms"
-                  name="financeTerms"
-                  required
-                  v-model="item.finance_terms"
-                  v-validate="modelValidations.financeTerms"
-                  :error="getError('financeTerms')"
-                >
-                </base-input>
-              </div>
-              <div class="col-sm-5 col-md-3">
-                <base-input
-                  label="Other terms"
-                  name="otherTerms"
-                  required
-                  v-model="item.other_terms"
-                  v-validate="modelValidations.otherTerms"
-                  :error="getError('otherTerms')"
-                >
-                </base-input>
-              </div>
-              <div class="col-sm-12 status">
+              <div class="col-sm-5 col-md-3 status">
                 <div class="row">
                   <label>Price status</label>
                 </div>
@@ -76,6 +54,28 @@
                   >
                   </el-option>
                 </el-select>
+              </div>
+              <div class="col-sm-12 col-md-12 mt-3">
+                <label>Finance Terms</label>
+                <textarea
+                  name=""
+                  id=""
+                  cols="30"
+                  rows="10"
+                  class="form-control"
+                  v-model="item.finance_terms"
+                ></textarea>
+              </div>
+              <div class="col-sm-12 col-md-12 mt-3">
+                <label>Other Terms</label>
+                <textarea
+                  name=""
+                  id=""
+                  cols="30"
+                  rows="10"
+                  class="form-control"
+                  v-model="item.other_terms"
+                ></textarea>
               </div>
               <div class="col-sm-12 mt-3">
                 <label>Notes</label>
@@ -149,7 +149,7 @@ export default {
       priceStatusChoices: {
         placeholder: "",
         status: [
-          { value: "change", label: "Change" },
+          { value: "deactivate", label: "Deactivate" },
           { value: "active", label: "Active" },
         ],
       },
@@ -332,11 +332,11 @@ export default {
           phone: this.phone,
           email: this.email,
           website_url: this.website_url,
+          file_storage: this.file_storage,
           apn: this.apn,
           county: this.county,
           state: this.state,
           size: this.size,
-          ad_details: this.ad_details,
           notes_client_side: this.notes_client_side,
           notes_va_side: this.notes_va_side,
           notes_management_side: this.notes_management_side,
@@ -350,11 +350,11 @@ export default {
           phone: this.phone,
           email: this.email,
           website_url: this.website_url,
+          file_storage: this.file_storage,
           apn: this.apn,
           county: this.county,
           state: this.state,
           size: this.size,
-          ad_details: this.ad_details,
           notes_client_side: this.notes_client_side,
           notes_va_side: this.notes_va_side,
           notes_management_side: this.notes_management_side,
@@ -419,7 +419,7 @@ export default {
       "phone",
       "email",
       "website_url",
-      "ad_details",
+      "file_storage",
       "notes_client_side",
       "notes_va_side",
       "notes_management_side",
