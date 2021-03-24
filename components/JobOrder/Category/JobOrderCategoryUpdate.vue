@@ -9,7 +9,7 @@
                 Job Order by Category Information
               </h5>
               <div class="row justify-content-center mt-5">
-                <div class="col-sm-5 col-md-5">
+                <div class="col-sm-4 col-md-5">
                   <div class="row">
                     <label>Category</label>
                   </div>
@@ -19,6 +19,7 @@
                     name="status"
                     placeholder="Status"
                     v-model="jobOrderCategory.category"
+                    disabled
                   >
                     <el-option
                       v-for="option in apnCategories"
@@ -30,7 +31,7 @@
                     </el-option>
                   </el-select>
                 </div>
-                <div class="col-sm-5 col-md-5">
+                <div class="col-sm-4 col-md-5">
                   <div class="row">
                     <label>Status</label>
                   </div>
@@ -56,6 +57,14 @@
                     <strong>N/A</strong></small
                   >
                   </div>
+                </div>
+                <div class="col-sm-10 col-md-5">
+                  <base-input
+                    label="APN"
+                    v-model="jobOrderCategory.property_detail"
+                    disabled
+                  >
+                  </base-input>
                 </div>
                 <div class="col-sm-5 col-md-5">
                   <base-input label="Due date">
@@ -92,10 +101,10 @@
                   >
                   </base-input>
                 </div>
-                <div class="col-sm-5 col-md-5">
+                <div class="col-sm-5 col-md-10">
                   <base-input
-                    label="Completed url work"
-                    v-model="jobOrderCategory.completed_url_work"
+                    label="URL of the completed Job order"
+                    v-model="jobOrderCategory.url_of_the_completed_jo"
                     :disabled="isDisabled"
                   >
                   </base-input>
@@ -199,7 +208,7 @@ export default {
         due_date: "",
         date_completed: "",
         total_time_consumed: "",
-        completed_url_work: "",
+        url_of_the_completed_jo: "",
         job_description: "",
         notes_va: "",
         notes_management: "",
@@ -218,6 +227,7 @@ export default {
           { value: "follow_up", label: "Follow up" },
           { value: "dispute", label: "Dispute" },
           { value: "complete", label: "Complete" },
+          { value: "under_quality_review", label: "Under Quality Review" },
         ],
       },
       propertyStatusChoices: {
@@ -401,8 +411,8 @@ export default {
           ? "Date completed: " + this.error.date_completed
           : this.error.total_time_consumed
           ? "Total time consumed: " + this.error.total_time_consumed
-          : this.error.completed_url_Work
-          ? "Completed url work: " + this.error.completed_url_Work
+          : this.error.url_of_the_completed_jo
+          ? "URL of the completed Job order: " + this.error.url_of_the_completed_jo
           : this.error.job_description
           ? "Job description: " + this.error.job_description
           : this.error.notes_va
@@ -436,11 +446,12 @@ export default {
           ticket_number: this.jobOrderCategory.ticket_number,
           staff: this.staffUser.id,
           category: this.jobOrderCategory.category,
+          property_detail: this.jobOrderCategory.property_detail,
           status: this.jobOrderCategory.status,
           due_date: this.jobOrderCategory.due_date,
           date_completed: this.jobOrderCategory.date_completed,
           total_time_consumed: this.jobOrderCategory.total_time_consumed,
-          completed_url_work: this.jobOrderCategory.completed_url_work,
+          url_of_the_completed_jo: this.jobOrderCategory.url_of_the_completed_jo,
           job_description: this.jobOrderCategory.job_description,
           notes_va: this.jobOrderCategory.notes_va,
           notes_management: this.jobOrderCategory.notes_management,
