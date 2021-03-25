@@ -46,7 +46,7 @@
         </div>
       </div>
       <div class="form-row">
-        <div class="col-sm-12 col-md-12">
+        <div class="col-sm-12 col-md-12" v-if="this.$auth.user.designation_category == 'staff'">
           <label>Client Code</label>
           <vue-typeahead-bootstrap
             class="mb-4"
@@ -58,7 +58,6 @@
             :disabledValues="selectedClientCode ? [selectedClientCode.client_code] : []"
             placeholder="Search client code"
             @input="getClientCode"
-            v-if="this.$auth.user.designation_category == 'staff'"
           />
         </div>
       </div>
