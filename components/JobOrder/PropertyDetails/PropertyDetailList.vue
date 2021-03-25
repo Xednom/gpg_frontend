@@ -87,7 +87,7 @@
                   >
                 </template>
 
-                <template #cell(actions)="row">
+                <!-- <template #cell(actions)="row"> -->
                   <!-- <b-button
                     size="sm"
                     @click="
@@ -111,7 +111,7 @@
                     "
                     >Comments</b-button
                   > -->
-                  <base-button
+                  <!-- <base-button
                     type="danger"
                     icon
                     size="sm"
@@ -120,7 +120,7 @@
                   >
                     <i class="tim-icons icon-simple-remove"></i>
                   </base-button>
-                </template>
+                </template> -->
 
                 <template #row-details="row">
                   <b-card>
@@ -250,7 +250,7 @@ export default {
         { key: "state", sortable: true },
         { key: "size", sortable: true },
         { key: "property_status", sortable: true },
-        { key: "actions", label: "Actions" },
+        // { key: "actions", label: "Actions" },
       ],
       totalRows: 1,
       currentPage: 1,

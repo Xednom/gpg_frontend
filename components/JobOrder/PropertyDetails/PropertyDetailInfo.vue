@@ -92,21 +92,20 @@
                   .property_price_statuses"
                 :key="index"
               >
-                <div class="col-sm-10 col-md-12">
+                <!-- <div class="col-sm-10 col-md-12">
                   <button
                     class="btn btn-link btn-danger pull-right"
                     @click="deleteRow($event, item.id)"
                   >
                     <i class="tim-icons icon-simple-remove"></i>
                   </button>
-                </div>
+                </div> -->
                 <div class="col-sm-5 col-md-3">
                   <base-input
                     label="Asking price"
                     name="askingPrice"
                     required
                     v-model="item.asking_price"
-                    :disabled="item.price_status == 'active'"
                     :error="getError('askingPrice')"
                   >
                   </base-input>
@@ -117,7 +116,6 @@
                     name="cashTerms"
                     required
                     v-model="item.cash_terms"
-                    :disabled="item.price_status == 'active'"
                     :error="getError('cashTerms')"
                   >
                   </base-input>
@@ -134,7 +132,6 @@
                     name="price_status"
                     placeholder="Price Status"
                     v-model="item.price_status"
-                    :disabled="item.price_status == 'change'"
                     v-validate="modelValidations.priceStatus"
                     :error="getError('price_status')"
                   >
@@ -177,7 +174,6 @@
                     class="form-control"
                     type="text"
                     placeholder="Notes"
-                    :disabled="item.price_status == 'active'"
                     v-model="item.notes"
                   >
                   </textarea>
@@ -435,6 +431,7 @@ export default {
       let endpoint = `/api/v1/client/${id}/`;
       try {
         await this.$axios.get(endpoint).then((res) => {
+          console.log(res)
           this.clientUser = res.data;
           this.loading = false;
         });
