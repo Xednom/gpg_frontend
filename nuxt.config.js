@@ -76,6 +76,7 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/auth-next',
     'bootstrap-vue/nuxt',
+    '@nuxtjs/dotenv',
     'nuxt-i18n'
   ],
   bootstrapVue: {
@@ -147,6 +148,9 @@ export default {
   */
   build: {
     transpile: [/^element-ui/],
+    transpile: [
+      ({ isServer }) => 'vue-typeahead-bootstrap'
+    ],
     /*
     ** You can extend webpack config here
     */

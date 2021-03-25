@@ -27,6 +27,7 @@
     "es6-promise": "^4.1.1",
     "fuse.js": "^3.2.0",
     "google-maps": "^3.2.1",
+    "lodash": "^4.17.21",
     "nouislider": "^12.1.0",
     "nuxt": "^2.9.1",
     "nuxt-i18n": "^6.1.0",
@@ -37,10 +38,12 @@
     "vee-validate": "^2.0.5",
     "vue-chartjs": "^3.4.0",
     "vue-i18n": "^8.0.0",
+    "vue-typeahead-bootstrap": "^2.8.0",
     "vue2-google-maps": "^0.8.4",
     "vue2-transitions": "^0.2.3"
   },
   "devDependencies": {
+    "@nuxtjs/dotenv": "^1.4.1",
     "babel-plugin-component": "^1.1.1",
     "node-sass": "^4.12.0",
     "sass-loader": "^7.3.1"

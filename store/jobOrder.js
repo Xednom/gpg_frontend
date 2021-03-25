@@ -10,7 +10,8 @@ const blankState = {
     total_time_consumed: "",
     client: {},
     va_assigned: {},
-    comment: ""
+    comment: "",
+    query: ""
   };
   
   export const state = () => ({
@@ -40,6 +41,7 @@ const blankState = {
     jobOrdersPagination: state => state.jobOrdersPagination,
     jobOrders: state => state.jobOrders,
     comment: state => state.comment,
+    query: state => state.query,
     jobOrder: state => {
         return state.jobOrder
     }
