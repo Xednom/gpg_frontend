@@ -32,7 +32,7 @@
       </div>
       <div class="form-row">
         <div class="col-sm-12 col-md-12">
-          <base-input label="Status" v-model="job.status_name" disabled>
+          <base-input label="Status" v-model="job.status_" disabled>
           </base-input>
         </div>
 
