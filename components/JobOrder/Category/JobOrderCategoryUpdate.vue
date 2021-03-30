@@ -435,7 +435,10 @@ export default {
         this.loading = true;
         const clientPayload = {
           ticket_number: this.jobOrderCategory.ticket_number,
+          property_detail: this.jobOrderCategory.property_detail,
           client: this.clientUser.id,
+          client_email: this.$auth.user.email,
+          deadline: this.jobOrderCategory.deadline,
           category: this.jobOrderCategory.category,
           status: this.jobOrderCategory.status,
           due_date: this.jobOrderCategory.due_date,
@@ -444,7 +447,10 @@ export default {
 
         const staffPayload = {
           ticket_number: this.jobOrderCategory.ticket_number,
+          property_detail: this.jobOrderCategory.property_detail,
           staff: this.staffUser.id,
+          staff_email: this.$auth.user.email,
+          deadline: this.jobOrderCategory.deadline,
           category: this.jobOrderCategory.category,
           property_detail: this.jobOrderCategory.property_detail,
           status: this.jobOrderCategory.status,
