@@ -83,20 +83,16 @@
                 <template #cell(name)="row">
                   {{ row.value.first }} {{ row.value.last }}
                 </template>
+                <template #cell(ticket_number)="row">
+                  <nuxt-link
+                    :to="'/job-order/general/' + row.item.ticket_number"
+                    @click="fetchJobOrder(row.item.id)"
+                  >
+                    {{ row.item.ticket_number }}</nuxt-link
+                  >
+                </template>
 
                 <template #cell(actions)="row">
-                  <b-button
-                    size="sm"
-                    @click="
-                      {
-                        fetchJobOrder(row.item.id), (modals.info = true);
-                      }
-                    "
-                    class="mr-1"
-                  >
-                    Info
-                  </b-button>
-
                   <b-button
                     size="sm"
                     variant="success"

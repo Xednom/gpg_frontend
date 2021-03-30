@@ -147,14 +147,12 @@ const blankState = {
       }
     },
     async updateJobOrder({ commit }, payload) {
-      let url = `/api/v1/job-order/${payload}`;
-      try {
-        return await this.$axios.post(url, payload).then(() => {
-          commit("setBasicField", payload);
-        })
-      } catch(err) {
-        console.log(err)
-      }
+      let url = `/api/v1/job-order/${payload.ticket_number}/`;
+      let method = "put";
+      console.log(payload);
+      return await this.$axios[method](url, payload).then((res) => {
+        return res.data;
+      });
     },
     reset({commit}) {
       commit("reset");
