@@ -46,7 +46,10 @@
         </div>
       </div>
       <div class="form-row">
-        <div class="col-sm-12 col-md-12" v-if="this.$auth.user.designation_category == 'staff'">
+        <div
+          class="col-sm-12 col-md-12"
+          v-if="this.$auth.user.designation_category == 'staff'"
+        >
           <label>Client Code</label>
           <vue-typeahead-bootstrap
             class="mb-4"
@@ -55,7 +58,9 @@
             :data="clientCodes"
             :serializer="(item) => item.client_code"
             @hit="selectedClientCode = $event"
-            :disabledValues="selectedClientCode ? [selectedClientCode.client_code] : []"
+            :disabledValues="
+              selectedClientCode ? [selectedClientCode.client_code] : []
+            "
             placeholder="Search client code"
             @input="getClientCode"
           />
@@ -153,6 +158,7 @@ export default {
       success: false,
       query: "",
       selectedClientCode: "",
+      clientUser: {},
       clientCodes: [],
       job: {
         request_date: "",
@@ -170,14 +176,27 @@ export default {
       return this.errors.first(fieldName);
     },
     getClientCode: debounce(function() {
-      this.$axios.get(`/api/v1/client-code/?search=${this.query}`)
+      this.$axios
+        .get(`/api/v1/client-code/?search=${this.query}`)
         .then((res) => {
           this.clientCodes = res.data.results;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
-        })
+        });
     }, 700),
+    async fetchClient(id) {
+      this.loading = true;
+      let endpoint = `/api/v1/client/${id}/`;
+      try {
+        await this.$axios.get(endpoint).then((res) => {
+          this.clientUser = res.data;
+          this.loading = false;
+        });
+      } catch (err) {
+        console.error(err.response.data);
+      }
+    },
     async save() {
       let isValidForm = await this.$validator.validateAll();
       if (isValidForm) {
@@ -188,7 +207,7 @@ export default {
           this.$auth.user.designation_category == "affiliate_partner"
         ) {
           const payload = {
-            client: this.client.id,
+            client: this.clientUser.client_code,
             request_date: this.request_date,
             due_date: this.due_date,
             job_title: this.job_title,
@@ -278,6 +297,15 @@ export default {
         this.setBasicStoreValue("job_description", value);
       },
     },
+  },
+  mounted() {
+    if (
+      this.$auth.user.designation_category == "new_client" ||
+      this.$auth.user.designation_category == "current_client" ||
+      this.$auth.user.designation_category == "affiliate_partner"
+    ) {
+      this.fetchClient(this.$auth.user.id);
+    }
   },
 };
 </script>
