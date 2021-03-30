@@ -431,7 +431,6 @@ export default {
       let endpoint = `/api/v1/client/${id}/`;
       try {
         await this.$axios.get(endpoint).then((res) => {
-          console.log(res)
           this.clientUser = res.data;
           this.loading = false;
         });
@@ -458,7 +457,6 @@ export default {
         await this.$axios.get(endpoint).then((res) => {
           this.user = res.data;
           this.loading = false;
-          console.log(this.user);
           if (
             this.user.designation_category == "new_client" ||
             this.user.designation_category == "current_client" ||
@@ -545,11 +543,12 @@ export default {
           property_price_statuses: this.propertyDetail.property_price_statuses,
         };
 
-        console.log(this.propertyDetail.property_price_statuses);
+        // console.log(this.propertyDetail.property_price_statuses);
 
         const staffPayload = {
           ticket_number: this.propertyDetail.ticket_number,
           staff: this.staffUser.id,
+          staff_email: this.$auth.user.email,
           price_status: this.propertyDetail.price_status,
           property_status: this.propertyDetail.property_status,
           category: this.propertyDetail.category,

@@ -327,6 +327,7 @@ export default {
         this.loading = true;
         const clientPayload = {
           client: this.clientUser.id,
+          client_email: this.$auth.user.email,
           property_status: this.property_status,
           company_name: this.company_name,
           phone: this.phone,
@@ -345,6 +346,7 @@ export default {
 
         const staffPayload = {
           staff: this.staffUser.id,
+          staff_email: this.$auth.user.email,
           property_status: this.property_status,
           company_name: this.company_name,
           phone: this.phone,
