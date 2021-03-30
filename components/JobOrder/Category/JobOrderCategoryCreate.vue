@@ -287,6 +287,7 @@ export default {
         ) {
           const payload = {
             client: this.client.id,
+            client_email: this.$auth.user.email,
             category: this.category,
             property_detail: this.perApn,
             deadline: this.deadline,
@@ -317,6 +318,7 @@ export default {
             property_detail: this.perApn,
             status: this.status,
             staff: this.staff.id,
+            staff_email: this.$auth.user.email,
             deadline: this.deadline,
             due_date: this.dueDate,
             date_completed: this.dateCompleted,
