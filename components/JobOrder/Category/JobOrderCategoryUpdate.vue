@@ -48,14 +48,15 @@
                       :value="option.value"
                       :label="option.label"
                       :key="option.label"
+                      :disabled="option.isDisabled"
                     >
                     </el-option>
                   </el-select>
                   <div class="col-sm-5 col-md-12">
-                      <small class="text-muted"
-                    >If you don't set the status. The default value will be
-                    <strong>N/A</strong></small
-                  >
+                    <small class="text-muted"
+                      >If you don't set the status. The default value will be
+                      <strong>N/A</strong></small
+                    >
                   </div>
                 </div>
                 <div class="col-sm-10 col-md-5">
@@ -74,7 +75,7 @@
                       format="yyyy-MM-dd"
                       value-format="yyyy-MM-dd"
                       placeholder="Choose date"
-                      :disabled="isDisabled"
+                      :disabled="staffDisable"
                     >
                     </el-date-picker>
                   </base-input>
@@ -412,7 +413,8 @@ export default {
           : this.error.total_time_consumed
           ? "Total time consumed: " + this.error.total_time_consumed
           : this.error.url_of_the_completed_jo
-          ? "URL of the completed Job order: " + this.error.url_of_the_completed_jo
+          ? "URL of the completed Job order: " +
+            this.error.url_of_the_completed_jo
           : this.error.job_description
           ? "Job description: " + this.error.job_description
           : this.error.notes_va
@@ -517,6 +519,13 @@ export default {
         return false;
       }
     },
+    staffDisable() {
+      if (this.$auth.user.designation_category == "staff") {
+        return true;
+      } else {
+        return false;
+      }
+    }
   },
   mounted() {
     this.fetchMe();
