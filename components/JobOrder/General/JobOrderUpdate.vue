@@ -61,23 +61,44 @@
         </div>
         <div class="form-row">
           <div class="col-sm-12 col-md-6">
-            <base-input label="Status" v-model="jobOrder.status_"> </base-input>
+            <div class="col-sm-10">
+              <div class="row">
+                <label>Status</label>
+              </div>
+              <el-select
+                class="select-primary"
+                size="large"
+                name="status"
+                placeholder="Status"
+                v-model="jobOrder.status"
+              >
+                <el-option
+                  v-for="option in StatusChoices.status"
+                  class="select-primary"
+                  :value="option.value"
+                  :label="option.label"
+                  :key="option.label"
+                >
+                </el-option>
+              </el-select>
+            </div>
           </div>
 
           <div class="col-sm-12 col-md-6">
-            <base-input label="Job title" v-model="jobOrder.job_title">
+            <base-input label="Job title" v-model="jobOrder.job_title"
+              :disabled="staffDisable">
             </base-input>
           </div>
         </div>
-        <div class="form-row"></div>
 
-        <div class="form-row">
+        <div class="form-row mt-3">
           <div class="col-sm-12 col-md-12">
             <label>Job Description</label>
             <textarea
               class="form-control"
               placeholder="Job description"
               v-model="jobOrder.job_description"
+              :disabled="staffDisable"
             >
             </textarea>
           </div>
@@ -116,12 +137,13 @@
 
 <script>
 import { mapActions } from "vuex";
-import { DatePicker, Select } from "element-ui";
+import { DatePicker, Select, Option } from "element-ui";
 
 export default {
   components: {
     [DatePicker.name]: DatePicker,
     [Select.name]: Select,
+    [Option.name]: Option
   },
   data() {
     return {
@@ -131,6 +153,22 @@ export default {
       clientUser: {},
       staffUser: {},
       jobOrder: {},
+      StatusChoices: {
+        placeholder: "",
+        status: [
+          { value: "na", label: "N/A" },
+          { value: "job_order_request", label: "Job order request" },
+          { value: "va_processing", label: "VA Processing" },
+          { value: "management_processing", label: "Management Processing" },
+          { value: "verified_job_order", label: "Verified Job Order" },
+          { value: "on_hold", label: "On Hold" },
+          { value: "canceled", label: "Canceled" },
+          { value: "follow_up", label: "Follow up" },
+          { value: "dispute", label: "Dispute" },
+          { value: "complete", label: "Complete" },
+          { value: "under_quality_review", label: "Under Quality Review" },
+        ],
+      },
     };
   },
   methods: {
@@ -217,6 +255,7 @@ export default {
         va_assigned: this.staffUser.id,
         staff_email: this.$auth.user.email,
         request_date: this.jobOrder.request_date,
+        date_completed: this.jobOrder.date_completed,
         status: this.jobOrder.status,
         due_date: this.jobOrder.due_date,
         job_title: this.jobOrder.job_title,
@@ -276,6 +315,13 @@ export default {
         return false;
       }
     },
+    staffDisable() {
+      if (this.$auth.user.designation_category == "staff") {
+        return true;
+      } else {
+        return false;
+      }
+    }
   },
   mounted() {
     this.fetchClient(this.$auth.user.id);
