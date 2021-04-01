@@ -80,10 +80,10 @@
                     <strong>Loading...</strong>
                   </div>
                 </template>
-                <template #cell(ticket_number)="row">
+                <template #cell(apn)="row">
                   <nuxt-link
-                    :to="'/job-order/property-detail/' + row.item.ticket_number"
-                    >{{ row.item.ticket_number }}</nuxt-link
+                    :to="'/job-order/property-detail/' + row.item.apn"
+                    >{{ row.item.apn }}</nuxt-link
                   >
                 </template>
 
@@ -243,9 +243,8 @@ export default {
         non_field_errors: "",
       },
       fields: [
-        { key: "ticket_number", sortable: true },
-        { key: "client_code", sortable: true, requiredStaff: true },
         { key: "apn", sortable: true },
+        { key: "client_code", sortable: true, requiredStaff: true },
         { key: "county", sortable: true },
         { key: "state", sortable: true },
         { key: "size", sortable: true },
