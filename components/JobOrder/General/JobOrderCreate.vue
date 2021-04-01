@@ -1,7 +1,7 @@
 <template>
   <div class="col-md-12">
     <form @submit.prevent="save">
-      <h4 class="card-title">Create job order</h4>
+      <h4 class="card-title">Create job order general</h4>
       <base-alert v-if="success" type="success" dismissible>
         <span>
           {{ successMessage() }}
