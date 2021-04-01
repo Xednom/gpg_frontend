@@ -25,19 +25,19 @@
         >
         <sidebar-item
             :link="{
-              name: 'Category',
+              name: 'Per APN Job Order',
               path: '/job-order/category',
             }"
           ></sidebar-item>
           <sidebar-item
             :link="{
-              name: 'General',
+              name: 'Job Order General',
               path: '/job-order/general',
             }"
           ></sidebar-item>
           <sidebar-item
             :link="{
-              name: 'Per APN',
+              name: 'APN Inventory',
               path: '/job-order/property-detail',
             }"
           ></sidebar-item>
