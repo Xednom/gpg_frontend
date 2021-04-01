@@ -151,6 +151,13 @@
                 </div>
               </div>
             </card>
+
+            <div class="col-sm-5 mt-3">
+              Any attachments please send it
+              <a href="https://form.jotform.com/210818766251458" target="_blank"
+                >here</a
+              >
+            </div>
           </div>
           <div class="pull-right">
             <base-button
@@ -186,7 +193,10 @@
           }}</strong>
         </h4>
 
-        <job-order-cat-comment :job="jobOrderCategory" :fetch="refresh"></job-order-cat-comment>
+        <job-order-cat-comment
+          :job="jobOrderCategory"
+          :fetch="refresh"
+        ></job-order-cat-comment>
       </div>
     </div>
   </div>

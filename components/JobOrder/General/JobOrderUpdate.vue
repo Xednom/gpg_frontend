@@ -107,6 +107,11 @@
               </textarea>
             </div>
           </div>
+          <div class="col-sm-5 mt-3">
+            Any attachments please send it <a href="https://form.jotform.com/210818766251458" target="_blank"
+              >here</a
+            >
+          </div>
           <div slot="footer">
             <div class="pull-right mt-5">
               <base-button
@@ -137,9 +142,14 @@
         </form>
       </div>
       <div class="col-md-6">
-        <h4 class="card-title">Comment section of #<strong>{{ jobOrder.ticket_number }}</strong></h4>
+        <h4 class="card-title">
+          Comment section of #<strong>{{ jobOrder.ticket_number }}</strong>
+        </h4>
         <div class="row">
-          <job-order-comment :job="jobOrder" :fetch="refresh"></job-order-comment>
+          <job-order-comment
+            :job="jobOrder"
+            :fetch="refresh"
+          ></job-order-comment>
         </div>
       </div>
     </div>
@@ -157,7 +167,7 @@ export default {
     [DatePicker.name]: DatePicker,
     [Select.name]: Select,
     [Option.name]: Option,
-    JobOrderComment
+    JobOrderComment,
   },
   data() {
     return {
@@ -317,7 +327,7 @@ export default {
     },
     refresh() {
       this.fetchJobOrder(this.$route.params.ticket_number);
-    }
+    },
   },
   computed: {
     isDisabled() {
