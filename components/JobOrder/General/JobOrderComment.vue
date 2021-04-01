@@ -1,10 +1,7 @@
 <template>
-  <div class="white-content">
+  <div id="comment-section">
     <div class="col-md-12">
       <form @submit.prevent="save">
-        <h4 class="card-title">
-          Job order: <b>{{ job.job_title }}</b> comments
-        </h4>
         <base-alert v-if="error" type="danger" dismissible>
           <span>
             {{ errorMessage(error) }}
@@ -136,7 +133,7 @@ export default {
                 this.success = true;
                 this.comment = "";
                 this.fetch();
-                this.refresh(this.job.id);
+                // this.refresh(this.job.id);
               });
           } catch (err) {
             console.log(err);
@@ -161,7 +158,7 @@ export default {
               this.success = true;
               this.comment = "";
               this.fetch();
-              this.refresh(this.job.id);
+              // this.refresh(this.job.id);
             });
           this.reset();
           this.fetch();
@@ -194,6 +191,9 @@ export default {
 </script>
 
 <style scoped>
+#comment-section {
+  width: 100%;
+}
 .modal-body {
   margin-top: 35px !important;
 }

@@ -92,20 +92,6 @@
                   >
                 </template>
 
-                <template #cell(actions)="row">
-                  <b-button
-                    size="sm"
-                    variant="success"
-                    v-b-modal.job-order-comments
-                    @click="
-                      {
-                        fetchJobOrder(row.item.id), (modals.comments = true);
-                      }
-                    "
-                    >Comments</b-button
-                  >
-                </template>
-
                 <template #row-details="row">
                   <b-card>
                     <ul>
@@ -263,8 +249,7 @@ export default {
         { key: "job_title", sortable: true },
         { key: "status_", sortable: true },
         { key: "date_completed", sortable: true },
-        { key: "total_time_consumed", sortable: true },
-        { key: "actions", label: "Actions" },
+        { key: "total_time_consumed", sortable: true }
       ],
       totalRows: 1,
       currentPage: 1,

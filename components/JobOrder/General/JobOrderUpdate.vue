@@ -1,136 +1,147 @@
 <template>
-  <div class="container">
-    <div class="col-md-12">
-      <form @submit.prevent="save">
-        <h4 class="card-title">
-          Job order informations: Ticket #<b>{{ jobOrder.ticket_number }}</b>
-        </h4>
-        <div class="form-row">
-          <div class="col-sm-12 col-md-6">
-            <base-input label="Request date">
-              <el-date-picker
-                v-model="jobOrder.request_date"
-                v-validate="'required'"
-                type="date"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd"
-                placeholder="Choose date"
-                :disabled="isDisabled"
-              >
-              </el-date-picker>
-            </base-input>
-          </div>
-          <div class="col-sm-12 col-md-6">
-            <base-input label="Due date">
-              <el-date-picker
-                v-model="jobOrder.due_date"
-                v-validate="'required'"
-                type="date"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd"
-                placeholder="Choose date"
-                :disabled="isDisabled"
-              >
-              </el-date-picker>
-            </base-input>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="col-sm-12 col-md-6">
-            <base-input label="Date completed">
-              <el-date-picker
-                v-model="jobOrder.date_completed"
-                v-validate="'required'"
-                type="date"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd"
-                placeholder="Choose date"
-                :disabled="isDisabled"
-              >
-              </el-date-picker>
-            </base-input>
-          </div>
-          <div class="col-sm-12 col-md-6">
-            <base-input
-              label="Total time consumed"
-              v-model="jobOrder.total_time_consumed"
-              :disabled="isDisabled"
-            >
-            </base-input>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="col-sm-12 col-md-6">
-            <div class="col-sm-10">
-              <div class="row">
-                <label>Status</label>
-              </div>
-              <el-select
-                class="select-primary"
-                size="large"
-                name="status"
-                placeholder="Status"
-                v-model="jobOrder.status"
-              >
-                <el-option
-                  v-for="option in StatusChoices.status"
-                  class="select-primary"
-                  :value="option.value"
-                  :label="option.label"
-                  :key="option.label"
+  <div>
+    <div class="row">
+      <div class="col-md-6">
+        <form @submit.prevent="save">
+          <h4 class="card-title">
+            Job order informations: Ticket #<b>{{ jobOrder.ticket_number }}</b>
+          </h4>
+          <div class="form-row">
+            <div class="col-sm-12 col-md-6">
+              <base-input label="Request date">
+                <el-date-picker
+                  v-model="jobOrder.request_date"
+                  v-validate="'required'"
+                  type="date"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd"
+                  placeholder="Choose date"
+                  :disabled="isDisabled"
                 >
-                </el-option>
-              </el-select>
+                </el-date-picker>
+              </base-input>
+            </div>
+            <div class="col-sm-12 col-md-6">
+              <base-input label="Due date">
+                <el-date-picker
+                  v-model="jobOrder.due_date"
+                  v-validate="'required'"
+                  type="date"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd"
+                  placeholder="Choose date"
+                  :disabled="isDisabled"
+                >
+                </el-date-picker>
+              </base-input>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-sm-12 col-md-6">
+              <base-input label="Date completed">
+                <el-date-picker
+                  v-model="jobOrder.date_completed"
+                  v-validate="'required'"
+                  type="date"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd"
+                  placeholder="Choose date"
+                  :disabled="isDisabled"
+                >
+                </el-date-picker>
+              </base-input>
+            </div>
+            <div class="col-sm-12 col-md-6">
+              <base-input
+                label="Total time consumed"
+                v-model="jobOrder.total_time_consumed"
+                :disabled="isDisabled"
+              >
+              </base-input>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-sm-12 col-md-6">
+              <div class="col-sm-10">
+                <div class="row">
+                  <label>Status</label>
+                </div>
+                <el-select
+                  class="select-primary"
+                  size="large"
+                  name="status"
+                  placeholder="Status"
+                  v-model="jobOrder.status"
+                >
+                  <el-option
+                    v-for="option in StatusChoices.status"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  >
+                  </el-option>
+                </el-select>
+              </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6">
+              <base-input
+                label="Job title"
+                v-model="jobOrder.job_title"
+                :disabled="staffDisable"
+              >
+              </base-input>
             </div>
           </div>
 
-          <div class="col-sm-12 col-md-6">
-            <base-input label="Job title" v-model="jobOrder.job_title"
-              :disabled="staffDisable">
-            </base-input>
+          <div class="form-row mt-3">
+            <div class="col-sm-12 col-md-12">
+              <label>Job Description</label>
+              <textarea
+                class="form-control"
+                placeholder="Job description"
+                v-model="jobOrder.job_description"
+                :disabled="staffDisable"
+              >
+              </textarea>
+            </div>
           </div>
-        </div>
-
-        <div class="form-row mt-3">
-          <div class="col-sm-12 col-md-12">
-            <label>Job Description</label>
-            <textarea
-              class="form-control"
-              placeholder="Job description"
-              v-model="jobOrder.job_description"
-              :disabled="staffDisable"
-            >
-            </textarea>
+          <div slot="footer">
+            <div class="pull-right mt-5">
+              <base-button
+                v-if="!saving"
+                native-type="submit"
+                slot="footer"
+                type="submit"
+                round
+                block
+                size="lg"
+              >
+                Save
+              </base-button>
+              <base-button
+                v-else
+                native-type="submit"
+                slot="footer"
+                type="primary"
+                round
+                block
+                size="lg"
+                disabled
+              >
+                Saving...
+              </base-button>
+            </div>
           </div>
+        </form>
+      </div>
+      <div class="col-md-6">
+        <h4 class="card-title">Comment section of #<strong>{{ jobOrder.ticket_number }}</strong></h4>
+        <div class="row">
+          <job-order-comment :job="jobOrder" :fetch="refresh"></job-order-comment>
         </div>
-        <div slot="footer">
-          <div class="pull-right mt-5">
-            <base-button
-              v-if="!saving"
-              native-type="submit"
-              slot="footer"
-              type="submit"
-              round
-              block
-              size="lg"
-            >
-              Save
-            </base-button>
-            <base-button
-              v-else
-              native-type="submit"
-              slot="footer"
-              type="primary"
-              round
-              block
-              size="lg"
-              disabled
-            >
-              Saving...
-            </base-button>
-          </div>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
 </template>
@@ -138,12 +149,15 @@
 <script>
 import { mapActions } from "vuex";
 import { DatePicker, Select, Option } from "element-ui";
+import JobOrderComment from "~/components/JobOrder/General/JobOrderComment";
+import Card from "~/components/Cards/Card.vue";
 
 export default {
   components: {
     [DatePicker.name]: DatePicker,
     [Select.name]: Select,
-    [Option.name]: Option
+    [Option.name]: Option,
+    JobOrderComment
   },
   data() {
     return {
@@ -269,7 +283,6 @@ export default {
           await this.updateJobOrder(staffPayload)
             .then(() => {
               this.saving = false;
-              this.$router.push("/job-order/general");
             })
             .catch((e) => {
               this.saving = false;
@@ -302,6 +315,9 @@ export default {
       }
       this.saving = false;
     },
+    refresh() {
+      this.fetchJobOrder(this.$route.params.ticket_number);
+    }
   },
   computed: {
     isDisabled() {
@@ -321,7 +337,7 @@ export default {
       } else {
         return false;
       }
-    }
+    },
   },
   mounted() {
     this.fetchClient(this.$auth.user.id);
