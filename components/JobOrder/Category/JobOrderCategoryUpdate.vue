@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="row d-flex justify-content-center">
-      <div class="col-md-10">
+      <div class="col-md-6">
         <form @submit.prevent="save">
           <div class="col-sm-12 col-md-12">
             <card>
@@ -179,17 +179,33 @@
           </div>
         </form>
       </div>
+      <div class="col-md-6">
+        <h4 class="card-title">
+          Comment section of #<strong>{{
+            jobOrderCategory.ticket_number
+          }}</strong>
+        </h4>
+
+        <job-order-cat-comment :job="jobOrderCategory" :fetch="refresh"></job-order-cat-comment>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { DatePicker, Select, Option } from "element-ui";
+import JobOrderCatComment from "~/components/JobOrder/Category/JobOrderCategoryComment";
 
 import CreateJobOrderCategoryMixin from "@/mixins/CreateJobOrderCategoryMixin.js";
 
 export default {
   name: "wizard-form",
+  components: {
+    [DatePicker.name]: DatePicker,
+    [Select.name]: Select,
+    [Option.name]: Option,
+    JobOrderCatComment,
+  },
   mixins: ["CreateJobOrderCategoryMixin"],
   data() {
     return {
@@ -297,11 +313,6 @@ export default {
         },
       },
     };
-  },
-  components: {
-    [DatePicker.name]: DatePicker,
-    [Select.name]: Select,
-    [Option.name]: Option,
   },
   provide() {
     return {
@@ -459,7 +470,8 @@ export default {
           due_date: this.jobOrderCategory.due_date,
           date_completed: this.jobOrderCategory.date_completed,
           total_time_consumed: this.jobOrderCategory.total_time_consumed,
-          url_of_the_completed_jo: this.jobOrderCategory.url_of_the_completed_jo,
+          url_of_the_completed_jo: this.jobOrderCategory
+            .url_of_the_completed_jo,
           job_description: this.jobOrderCategory.job_description,
           notes_va: this.jobOrderCategory.notes_va,
           notes_management: this.jobOrderCategory.notes_management,
@@ -506,6 +518,9 @@ export default {
         this.reset();
       }
     },
+    refresh() {
+      this.fetchJobOrderCategory(this.$route.params.ticket_number);
+    },
   },
   computed: {
     isDisabled() {
@@ -525,7 +540,7 @@ export default {
       } else {
         return false;
       }
-    }
+    },
   },
   mounted() {
     this.fetchMe();

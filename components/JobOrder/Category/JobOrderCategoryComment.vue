@@ -1,10 +1,7 @@
 <template>
-  <div class="white-content">
+  <div id="comment-section">
     <div class="col-md-12">
       <form @submit.prevent="save">
-        <h4 class="card-title">
-          Job order: <b>{{ job.ticket_number }}</b> comments
-        </h4>
         <base-alert v-if="error" type="danger" dismissible>
           <span>
             {{ errorMessage(error) }}
@@ -187,6 +184,9 @@ export default {
 </script>
 
 <style scoped>
+#comment-section { 
+  width: 100%;
+}
 .modal-body {
   margin-top: 35px !important;
 }
