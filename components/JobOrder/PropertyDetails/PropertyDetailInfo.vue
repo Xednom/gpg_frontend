@@ -83,17 +83,14 @@
             </card>
 
             <card>
-              <h4 slot="header" class="card-title">List of Property Prices of APN <strong>{{ propertyDetail.apn }}</strong></h4>
+              <h4 slot="header" class="card-title">
+                List of Property Prices for APN
+                <strong>{{ propertyDetail.apn }}</strong>
+              </h4>
               <property-price-list
                 :propertyPrices="this.propertyDetail.property_price_statuses"
+                :propertyDetail="this.propertyDetail.id"
               ></property-price-list>
-              <div class="row justify-content-center property-add mt-3 mr-1">
-                <div class="col-xs-12">
-                  <button class="btn btn-success" @click="addRow">
-                    Add new Property price
-                  </button>
-                </div>
-              </div>
             </card>
 
             <card>
@@ -196,11 +193,18 @@
         </form>
       </div>
     </div>
+    <modal
+      :show.sync="modals.create"
+      headerClasses="justify-content-center"
+      class="white-content"
+    >
+    </modal>
   </div>
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
 
+import { Modal } from "@/components";
 import { Select, Option } from "element-ui";
 import PropertyPriceList from "~/components/JobOrder/PropertyDetails/PropertyPriceList";
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
@@ -210,12 +214,16 @@ export default {
   mixins: ["CreatePropertyDetailMixin"],
   data() {
     return {
+      property_price_statuses: [],
       wizardModel: {},
       loading: false,
       saving: false,
       clientUser: {},
       staffUser: {},
       propertyDetail: {},
+      modals: {
+        create: false,
+      },
       error: {
         client: "",
         staff: "",
@@ -301,6 +309,7 @@ export default {
     [Select.name]: Select,
     [Option.name]: Option,
     PropertyPriceList,
+    Modal,
   },
   provide() {
     return {
@@ -519,7 +528,7 @@ export default {
     },
     addRow: function() {
       this.$validator.reset();
-      this.propertyDetail.property_price_statuses.push({
+      this.property_price_statuses.push({
         asking_price: "",
         cash_terms: "",
         finance_terms: "",
@@ -547,6 +556,7 @@ export default {
   },
   mounted() {
     this.fetchMe();
+    this.addRow();
     this.fetchPropertyDetail(this.$route.params.ticket_number);
   },
 };

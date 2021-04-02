@@ -4,7 +4,6 @@
       <div class="col-12">
         <card card-body-classes="table-full-width">
           <div>
-            <!-- {{ propertyPriceFiltered }} -->
             <b-container fluid>
               <!-- <b-row> -->
               <b-col sm="12" md="4" lg="4" class="my-1 pull-right">
@@ -81,61 +80,20 @@
                   >
                 </template>
 
-                <!-- <template #cell(actions)="row"> -->
-                <!-- <b-button
+                <template #cell(actions)="row">
+                  <b-button
                     size="sm"
                     @click="
                       {
-                        fetchPropertyDetail(row.item.id), (modals.info = true);
+                        fetchPropertyPrice(row.item.id), (modals.info = true);
                       }
                     "
                     class="mr-1"
                   >
                     Info
-                  </b-button> -->
-
-                <!-- <b-button
-                    size="sm"
-                    variant="success"
-                    v-b-modal.job-order-comments
-                    @click="
-                      {
-                        fetchPropertyDetail(row.item.id), (modals.comments = true);
-                      }
-                    "
-                    >Comments</b-button
-                  > -->
-                <!-- <base-button
-                    type="danger"
-                    icon
-                    size="sm"
-                    class="btn-link"
-                    @click="handleDelete(row.item.ticket_number)"
-                  >
-                    <i class="tim-icons icon-simple-remove"></i>
-                  </base-button>
-                </template> -->
-
-                <template #row-details="row">
-                  <b-card>
-                    <ul>
-                      <li v-for="(value, key) in row.item" :key="key">
-                        {{ key }}: {{ value }}
-                      </li>
-                    </ul>
-                  </b-card>
+                  </b-button>
                 </template>
               </b-table>
-
-              <!-- Info modal -->
-              <b-modal
-                :id="infoModal.id"
-                :title="infoModal.title"
-                ok-only
-                @hide="resetInfoModal"
-              >
-                <pre>{{ infoModal.content }}</pre>
-              </b-modal>
             </b-container>
           </div>
           <div
@@ -157,10 +115,22 @@
         </card>
       </div>
     </div>
+    <!-- info modal -->
+    <modal
+      :show.sync="modals.info"
+      headerClasses="justify-content-center"
+      class="white-content"
+    >
+      <property-price-detail
+        :price="propertyPrice"
+        :fetch="refresh"
+      ></property-price-detail>
+    </modal>
   </div>
 </template>
 <script>
 import { Table, TableColumn, Select, Option } from "element-ui";
+import PropertyPriceDetail from "~/components/JobOrder/PropertyDetails/PropertyPriceUpdate";
 import { Modal } from "@/components";
 import users from "../../../util/mock-users";
 import Fuse from "fuse.js";
@@ -175,10 +145,11 @@ export default {
     [Option.name]: Option,
     [Table.name]: Table,
     [TableColumn.name]: TableColumn,
+    PropertyPriceDetail,
   },
   props: {
-    propertyPrices: {
-      Type: Array,
+    propertyDetail: {
+      Type: Number,
     },
   },
   computed: {
@@ -216,17 +187,14 @@ export default {
         return this.propertyPrices.length;
       }
     },
-    // propertyPriceFiltered() {
-    //   return this.propertyPrices.filter((item) => {
-    //     return item.price_status.some((stat) => stat.price_status === "active");
-    //   });
-    // },
   },
   data() {
     return {
       searchQuery: "",
       tableData: users,
       searchedData: [],
+      propertyPrice: {},
+      propertyPrices: [],
       fuseSearch: null,
       isBusy: false,
       error: {
@@ -247,7 +215,7 @@ export default {
         { key: "asking_price", sortable: true },
         { key: "cash_terms", sortable: true },
         { key: "price_status", sortable: true },
-        // { key: "actions", label: "Actions" },
+        { key: "actions", label: "Actions" },
       ],
       totalRows: 1,
       currentPage: 1,
@@ -264,6 +232,7 @@ export default {
       },
       modals: {
         classic: false,
+        create: false,
         comments: false,
         info: false,
       },
@@ -304,6 +273,32 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
+    async fetchPropertyPrice(id) {
+      let endpoint = `/api/v1/property-price/${id}/`;
+      return await this.$axios
+        .get(endpoint)
+        .then((res) => {
+          this.propertyPrice = res.data;
+        })
+        .catch((e) => {
+          throw e;
+        });
+    },
+    fetchPropertyPrices() {
+      let endpoint = `/api/v1/property-price/?search=${this.propertyDetail}`;
+      return this.$axios
+        .get(endpoint)
+        .then((res) => {
+          console.log(this.propertyDetail);
+          this.propertyPrices = res.data.results;
+        })
+        .catch((e) => {
+          throw e;
+        });
+    },
+    refresh() {
+      this.fetchPropertyPrices();
+    },
     errorMessage(variant = null, error) {
       this.$bvToast.toast(
         error.apn
@@ -336,42 +331,10 @@ export default {
         }
       );
     },
-    handleDelete(row) {
-      swal({
-        title: "Are you sure?",
-        text: `You won't be able to revert this!`,
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonClass: "btn btn-success btn-fill",
-        cancelButtonClass: "btn btn-danger btn-fill",
-        confirmButtonText: "Yes, delete it!",
-        buttonsStyling: false,
-      }).then((result) => {
-        console.log(row);
-        if (result.value) {
-          console.log(row);
-          this.deletePropertyDetail(row);
-          let url = `/api/v1/property-detail/${row}/`;
-          try {
-            this.$axios.delete(url);
-            this.fetchPropertyDetails();
-          } catch (err) {
-            console.error(err);
-            this.error = err.response.data;
-            this.errorMessage("danger", this.error);
-          }
-          swal({
-            title: "Deleted!",
-            text: `You deleted ${row}`,
-            type: "success",
-            confirmButtonClass: "btn btn-success btn-fill",
-            buttonsStyling: false,
-          });
-        }
-      });
-    },
   },
-  mounted() {},
+  mounted() {
+    setTimeout(() => this.fetchPropertyPrices(), 1000);
+  },
 };
 </script>
 <style scoped>

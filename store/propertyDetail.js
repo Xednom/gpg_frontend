@@ -24,6 +24,7 @@ export const state = () => ({
   ...blankState,
   propertyDetails: [],
   propertyDetail: {},
+  propertyPrice: {},
   propertyDetailsPagination: {
     offset: 0,
     count: 0,
@@ -59,6 +60,9 @@ export const getters = {
   propertyDetails: (state) => state.propertyDetails,
   comment: (state) => state.comment,
   property_price_statuses: (state) => state.property_price_statuses,
+  propertyPrice: (state) => {
+    return state.propertyPrice
+  },
   propertyDetail: (state) => {
     return state.propertyDetail;
   },
@@ -67,6 +71,9 @@ export const getters = {
 export const mutations = {
   setPropertyDetail(state, payload) {
     state.propertyDetail = payload.propertyDetail;
+  },
+  setPropertyPrice(state, payload) {
+    state.propertyPrice = payload.propertyPrice;
   },
   setPropertyDetails(state, payload) {
     state.propertyDetails = payload.propertyDetails;
@@ -132,6 +139,17 @@ export const actions = {
         throw e;
       });
   },
+  async fetchPropertyPriceDetail({ commit, dispatch }, payload) {
+    let endpoint = `/api/v1/property-price/${payload}/`;
+    return await this.$axios
+      .get(endpoint)
+      .then((res) => {
+        commit("setPropertyPrice", { propertyPrice: res.data });
+      })
+      .catch((e) => {
+        throw e;
+      });
+  },
   async fetchAdminUser({ commit, dispatch }, payload) {
     let endpoint = `/auth/admin-users-list/${payload}/`;
     return await this.$axios
@@ -172,6 +190,14 @@ export const actions = {
     let url = `/api/v1/property-detail/${payload.ticket_number}/`;
     let method = "put";
     console.log(payload);
+    return await this.$axios[method](url, payload).then((res) => {
+      return res.data;
+    });
+  },
+  async updatePropertyPrice({ commit }, payload) {
+    console.log(payload);
+    let url = `/api/v1/property-price/${payload.id}/`;
+    let method = "put";
     return await this.$axios[method](url, payload).then((res) => {
       return res.data;
     });
