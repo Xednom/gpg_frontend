@@ -31,7 +31,7 @@
           ></sidebar-item>
           <sidebar-item
             :link="{
-              name: 'Job Order General',
+              name: 'General Request',
               path: '/job-order/general',
             }"
           ></sidebar-item>
