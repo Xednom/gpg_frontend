@@ -83,102 +83,10 @@
             </card>
 
             <card>
-              <h5 class="info-text">
-                Property Price
-              </h5>
-              <div
-                class="row justify-content-center mt-5"
-                v-for="(item, index) in this.propertyDetail
-                  .property_price_statuses"
-                :key="index"
-              >
-                <!-- <div class="col-sm-10 col-md-12">
-                  <button
-                    class="btn btn-link btn-danger pull-right"
-                    @click="deleteRow($event, item.id)"
-                  >
-                    <i class="tim-icons icon-simple-remove"></i>
-                  </button>
-                </div> -->
-                <div class="col-sm-5 col-md-3">
-                  <base-input
-                    label="Asking price"
-                    name="askingPrice"
-                    required
-                    v-model="item.asking_price"
-                    :error="getError('askingPrice')"
-                  >
-                  </base-input>
-                </div>
-                <div class="col-sm-5 col-md-3">
-                  <base-input
-                    label="Cash terms"
-                    name="cashTerms"
-                    required
-                    v-model="item.cash_terms"
-                    :error="getError('cashTerms')"
-                  >
-                  </base-input>
-                </div>
-
-                <div class="col-sm-5 status">
-                  <div class="row">
-                    <label>Price Status</label>
-                  </div>
-                  <el-select
-                    class="select-primary"
-                    reqiured
-                    size="large"
-                    name="price_status"
-                    placeholder="Price Status"
-                    v-model="item.price_status"
-                    v-validate="modelValidations.priceStatus"
-                    :error="getError('price_status')"
-                  >
-                    <el-option
-                      v-for="option in priceStatusChoices.status"
-                      class="select-primary"
-                      :value="option.value"
-                      :label="option.label"
-                      :key="option.label"
-                    >
-                    </el-option>
-                  </el-select>
-                </div>
-                <div class="col-sm-12 col-md-12 mt-3">
-                  <label>Finance Terms</label>
-                  <textarea
-                    name=""
-                    id=""
-                    cols="30"
-                    rows="10"
-                    class="form-control"
-                    v-model="item.finance_terms"
-                  ></textarea>
-                </div>
-                <div class="col-sm-12 col-md-12 mt-3">
-                  <label>Other Terms</label>
-                  <textarea
-                    name=""
-                    id=""
-                    cols="30"
-                    rows="10"
-                    class="form-control"
-                    v-model="item.other_terms"
-                  ></textarea>
-                </div>
-                <div class="col-sm-12 mt-3">
-                  <label>Notes</label>
-                  <textarea
-                    name="notes"
-                    class="form-control"
-                    type="text"
-                    placeholder="Notes"
-                    v-model="item.notes"
-                  >
-                  </textarea>
-                </div>
-              </div>
+              <h4 slot="header" class="card-title">List of Property Prices of APN <strong>{{ propertyDetail.apn }}</strong></h4>
+              <property-price-list
+                :propertyPrices="this.propertyDetail.property_price_statuses"
+              ></property-price-list>
               <div class="row justify-content-center property-add mt-3 mr-1">
                 <div class="col-xs-12">
                   <button class="btn btn-success" @click="addRow">
@@ -294,7 +202,7 @@
 import { mapGetters, mapActions } from "vuex";
 
 import { Select, Option } from "element-ui";
-
+import PropertyPriceList from "~/components/JobOrder/PropertyDetails/PropertyPriceList";
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
 
 export default {
@@ -392,6 +300,7 @@ export default {
   components: {
     [Select.name]: Select,
     [Option.name]: Option,
+    PropertyPriceList,
   },
   provide() {
     return {
