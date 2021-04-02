@@ -60,12 +60,15 @@
                   </div>
                 </div>
                 <div class="col-sm-10 col-md-5">
-                  <base-input
-                    label="APN"
-                    v-model="jobOrderCategory.property_detail"
-                    disabled
+                  <label>APN: </label> <br>
+                  <nuxt-link
+                    :to="
+                      '/job-order/property-detail/' +
+                        jobOrderCategory.property_detail
+                    "
+                    target="_blank"
+                    >{{ jobOrderCategory.property_detail }}</nuxt-link
                   >
-                  </base-input>
                 </div>
                 <div class="col-sm-5 col-md-5">
                   <base-input label="Due date">

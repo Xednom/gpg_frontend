@@ -4,7 +4,7 @@
       <div class="col-12">
         <card card-body-classes="table-full-width">
           <h4 slot="header" class="card-title">
-            Job Order by Category details
+            Per APN Job Order
           </h4>
           <div>
             <b-container fluid>
@@ -89,55 +89,12 @@
                   >
                 </template>
 
-                <template #cell(actions)="row">
-                  <!-- <b-button
-                    size="sm"
-                    @click="
-                      {
-                        fetchjobOrderCategoryCategory(row.item.id), (modals.info = true);
-                      }
-                    "
-                    class="mr-1"
+                <template #cell(property_detail)="row">
+                  <nuxt-link
+                    :to="'/job-order/property-detail/' + row.item.property_detail"
+                    target="_blank"
+                    >{{ row.item.property_detail }}</nuxt-link
                   >
-                    Info
-                  </b-button> -->
-
-                  <!-- <b-button
-                    size="sm"
-                    variant="success"
-                    v-b-modal.job-order-comments
-                    @click="
-                      {
-                        fetchjobOrderCategory(row.item.id), (modals.comments = true);
-                      }
-                    "
-                    >Comments</b-button
-                  > -->
-                  <base-button
-                    type="info"
-                    icon
-                    size="sm"
-                    class="btn-link"
-                    @click="
-                      {
-                        fetchJobOrderCategory(row.item.ticket_number),
-                          (modals.comments = true);
-                      }
-                    "
-                  >
-                    <i class="tim-icons icon-align-center"></i>
-                  </base-button>
-                  <!-- TODO: commented this out so that the user cannot delete
-                       why: so in the future we can just uncomment this out if needed -->
-                  <!-- <base-button
-                    type="danger"
-                    icon
-                    size="sm"
-                    class="btn-link"
-                    @click="handleDelete(row.item.ticket_number)"
-                  >
-                    <i class="tim-icons icon-simple-remove"></i>
-                  </base-button> -->
                 </template>
 
                 <template #row-details="row">
@@ -295,6 +252,7 @@ export default {
       },
       fields: [
         { key: "ticket_number", sortable: true },
+        { key: "property_detail", label: "APN", sortable: true},
         { key: "client_code", sortable: true, requiredStaff: true },
         { key: "category_", sortable: true },
         { key: "status", sortable: true },
