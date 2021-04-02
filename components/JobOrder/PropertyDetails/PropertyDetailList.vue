@@ -3,7 +3,7 @@
     <div class="row mt-5">
       <div class="col-12">
         <card card-body-classes="table-full-width">
-          <h4 slot="header" class="card-title">Job order per APN</h4>
+          <h4 slot="header" class="card-title">APN Inventory</h4>
           <div>
             <b-container fluid>
               <!-- <b-row> -->
