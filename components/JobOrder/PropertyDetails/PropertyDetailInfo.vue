@@ -5,9 +5,7 @@
         <form @submit.prevent="save">
           <div class="col-sm-12 col-md-12">
             <card>
-              <h5 class="info-text">
-                Property Details
-              </h5>
+              <h5 class="info-text">Property Details</h5>
               <div class="row justify-content-center mt-5">
                 <div class="col-sm-5">
                   <base-input
@@ -89,7 +87,7 @@
               </h4>
               <property-price-list
                 :propertyPrices="this.propertyDetail.property_price_statuses"
-                :propertyDetail="this.propertyDetail.id"
+                :propertyDetail="this.propertyDetail"
               ></property-price-list>
             </card>
 
@@ -198,6 +196,11 @@
       headerClasses="justify-content-center"
       class="white-content"
     >
+      <!-- <property-price-create
+        :price="propertyDetail"
+        :user="user"
+        :fetch="refresh"
+      ></property-price-create> -->
     </modal>
   </div>
 </template>
@@ -207,6 +210,7 @@ import { mapGetters, mapActions } from "vuex";
 import { Modal } from "@/components";
 import { Select, Option } from "element-ui";
 import PropertyPriceList from "~/components/JobOrder/PropertyDetails/PropertyPriceList";
+import PropertyPriceCreate from "~/components/JobOrder/PropertyDetails/PropertyPriceCreate";
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
 
 export default {
@@ -215,6 +219,7 @@ export default {
   data() {
     return {
       property_price_statuses: [],
+      user: {},
       wizardModel: {},
       loading: false,
       saving: false,
@@ -310,6 +315,7 @@ export default {
     [Option.name]: Option,
     PropertyPriceList,
     Modal,
+    PropertyPriceCreate,
   },
   provide() {
     return {
@@ -318,6 +324,21 @@ export default {
   },
   methods: {
     ...mapActions("propertyDetail", ["updatePropertyDetail", "reset"]),
+    fetchPropertyPrices() {
+      let endpoint = `/api/v1/property-price/?search=${this.propertyDetail}`;
+      return this.$axios
+        .get(endpoint)
+        .then((res) => {
+          console.log(this.propertyDetail);
+          this.propertyPrices = res.data.results;
+        })
+        .catch((e) => {
+          throw e;
+        });
+    },
+    refresh() {
+      this.fetchPropertyPrices();
+    },
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
@@ -526,37 +547,9 @@ export default {
         this.reset();
       }
     },
-    addRow: function() {
-      this.$validator.reset();
-      this.property_price_statuses.push({
-        asking_price: "",
-        cash_terms: "",
-        finance_terms: "",
-        other_terms: "",
-        price_status: "",
-        notes: "",
-        user: this.$auth.user,
-        updated_info:
-          "updated by " +
-          this.$auth.user.first_name +
-          " " +
-          this.$auth.user.last_name,
-      });
-    },
-    deleteRow: function(e, item) {
-      e.preventDefault();
-      var index = this.propertyDetail.property_price_statuses
-        .map(function(item) {
-          console.log(item.id);
-          return item.id;
-        })
-        .indexOf(item);
-      this.propertyDetail.property_price_statuses.splice(index, 1);
-    },
   },
   mounted() {
     this.fetchMe();
-    this.addRow();
     this.fetchPropertyDetail(this.$route.params.ticket_number);
   },
 };

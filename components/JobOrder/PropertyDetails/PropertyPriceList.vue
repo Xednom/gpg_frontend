@@ -4,6 +4,9 @@
       <div class="col-12">
         <card card-body-classes="table-full-width">
           <div>
+            <b-button variant="success" @click="modals.create = true"
+              >Add Property Price</b-button
+            >
             <b-container fluid>
               <!-- <b-row> -->
               <b-col sm="12" md="4" lg="4" class="my-1 pull-right">
@@ -126,11 +129,24 @@
         :fetch="refresh"
       ></property-price-detail>
     </modal>
+
+    <modal
+      :show.sync="modals.create"
+      headerClasses="justify-content-center"
+      class="white-content"
+    >
+      <property-price-create
+        :price="propertyDetail"
+        :user="user"
+        :fetch="refresh"
+      ></property-price-create>
+    </modal>
   </div>
 </template>
 <script>
 import { Table, TableColumn, Select, Option } from "element-ui";
 import PropertyPriceDetail from "~/components/JobOrder/PropertyDetails/PropertyPriceUpdate";
+import PropertyPriceCreate from "~/components/JobOrder/PropertyDetails/PropertyPriceCreate";
 import { Modal } from "@/components";
 import users from "../../../util/mock-users";
 import Fuse from "fuse.js";
@@ -146,10 +162,11 @@ export default {
     [Table.name]: Table,
     [TableColumn.name]: TableColumn,
     PropertyPriceDetail,
+    PropertyPriceCreate,
   },
   props: {
     propertyDetail: {
-      Type: Number,
+      Type: Object,
     },
   },
   computed: {
@@ -194,6 +211,7 @@ export default {
       tableData: users,
       searchedData: [],
       propertyPrice: {},
+      user: {},
       propertyPrices: [],
       fuseSearch: null,
       isBusy: false,
@@ -240,6 +258,19 @@ export default {
   },
   methods: {
     // ...mapActions("propertyDetail", ["deletePropertyDetail"]),
+    async fetchMe() {
+      this.loading = true;
+      try {
+        let endpoint = `/auth/users/me/`;
+        await this.$axios.get(endpoint).then((res) => {
+          this.user = res.data;
+          this.loading = false;
+        });
+      } catch (err) {
+        console.log(err.response.data);
+        this.loading = false;
+      }
+    },
     handleLike(index, row) {
       swal({
         title: `You liked ${row.name}`,
@@ -285,7 +316,7 @@ export default {
         });
     },
     fetchPropertyPrices() {
-      let endpoint = `/api/v1/property-price/?search=${this.propertyDetail}`;
+      let endpoint = `/api/v1/property-price/?search=${this.propertyDetail.id}`;
       return this.$axios
         .get(endpoint)
         .then((res) => {
@@ -333,6 +364,7 @@ export default {
     },
   },
   mounted() {
+    this.fetchMe();
     setTimeout(() => this.fetchPropertyPrices(), 1000);
   },
 };
