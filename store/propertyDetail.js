@@ -18,6 +18,14 @@ const blankState = {
   notes_management_side: "",
   comment: "",
   property_price_statuses: [],
+  property_detail: "",
+  user: null,
+  asking_price: "",
+  cash_terms: "",
+  finance_terms: "",
+  other_terms: "",
+  price_status: "",
+  notes: ""
 };
 
 export const state = () => ({
@@ -48,6 +56,8 @@ export const getters = {
   county: (state) => state.county,
   state: (state) => state.state,
   size: (state) => state.size,
+  property_detail: (state) => state.property_detail,
+  user: (state) => state.user,
   asking_price: (state) => state.asking_price,
   cash_terms: (state) => state.cash_terms,
   finance_terms: (state) => state.finance_terms,
@@ -61,7 +71,7 @@ export const getters = {
   comment: (state) => state.comment,
   property_price_statuses: (state) => state.property_price_statuses,
   propertyPrice: (state) => {
-    return state.propertyPrice
+    return state.propertyPrice;
   },
   propertyDetail: (state) => {
     return state.propertyDetail;
@@ -198,6 +208,14 @@ export const actions = {
     console.log(payload);
     let url = `/api/v1/property-price/${payload.id}/`;
     let method = "put";
+    return await this.$axios[method](url, payload).then((res) => {
+      return res.data;
+    });
+  },
+  async createPropertyPrice({ commit }, payload) {
+    console.log(payload);
+    let url = `/api/v1/property-price/`;
+    let method = "post";
     return await this.$axios[method](url, payload).then((res) => {
       return res.data;
     });
