@@ -17,28 +17,48 @@
           >
           </base-input>
 
-          <base-input
-            label="County"
-            name="county"
-            required
-            placeholder="County"
+          <div class="row">
+            <label>County</label>
+          </div>
+          <el-select
+            class="select-primary"
+            size="large"
+            placeholder="Select a County"
             v-model="county"
-            v-validate="modelValidations.county"
-            :error="getError('county')"
           >
-          </base-input>
+            <template v-if="!this.state">Please select a State first</template>
+            <template v-else>
+            <el-option
+              v-for="option in counties"
+              class="select-primary"
+              :value="option.name"
+              :label="option.label"
+              :key="option.label"
+            >
+            </el-option>
+            </template>
+          </el-select>
         </div>
         <div class="col-sm-5">
-          <base-input
-            label="State"
-            name="state"
-            required
-            placeholder="State"
+          <div class="row">
+            <label>State</label>
+          </div>
+          <el-select
+            class="select-primary"
+            size="large"
+            placeholder="Select a State"
             v-model="state"
-            v-validate="modelValidations.state"
-            :error="getError('state')"
+            @change="fetchCounties"
           >
-          </base-input>
+            <el-option
+              v-for="option in states"
+              class="select-primary"
+              :value="option.name"
+              :label="option.label"
+              :key="option.label"
+            >
+            </el-option>
+          </el-select>
 
           <base-input
             label="Size(Acreage)"
@@ -89,6 +109,8 @@ export default {
   inject: ["$validator"],
   data() {
     return {
+      counties: [],
+      states: [],
       property: {
         apn: "",
         county: "",
@@ -108,7 +130,7 @@ export default {
         },
         size: {
           required: true,
-          decimal: true
+          decimal: true,
         },
         propertyStatus: {
           required: true,
@@ -136,6 +158,31 @@ export default {
         this.$emit("on-validated", res, this.model);
         return res;
       });
+    },
+    async fetchCounties() {
+      this.loading = true;
+      let endpoint = `/api/v1/county/?search=${this.state}`;
+      try {
+        await this.$axios.get(endpoint).then((res) => {
+          this.counties = res.data.results;
+          this.loading = false;
+        });
+      } catch (err) {
+        this.loading = false;
+      }
+    },
+    async fetchStates() {
+      this.loading = true;
+      let endpoint = `/api/v1/state/`;
+      try {
+        await this.$axios.get(endpoint).then((res) => {
+          this.states = res.data.results;
+          this.loading = false;
+        });
+      } catch (err) {
+        this.loading = false;
+        console.error(err);
+      }
     },
   },
   computed: {
@@ -179,6 +226,9 @@ export default {
         this.setBasicStoreValue("property_status", value);
       },
     },
+  },
+  mounted() {
+    this.fetchStates();
   },
 };
 </script>

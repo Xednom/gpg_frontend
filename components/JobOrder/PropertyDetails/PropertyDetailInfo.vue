@@ -19,28 +19,50 @@
                   >
                   </base-input>
 
-                  <base-input
-                    label="County"
-                    name="county"
-                    required
-                    placeholder="County"
+                  <div class="row">
+                    <label>County</label>
+                  </div>
+                  <el-select
+                    class="select-primary"
+                    size="large"
+                    placeholder="Select a County"
                     v-model="propertyDetail.county"
-                    v-validate="modelValidations.county"
-                    :error="getError('county')"
                   >
-                  </base-input>
+                    <template v-if="!this.propertyDetail.state"
+                      >Please select a State first</template
+                    >
+                    <template v-else>
+                      <el-option
+                        v-for="option in counties"
+                        class="select-primary"
+                        :value="option.name"
+                        :label="option.label"
+                        :key="option.label"
+                      >
+                      </el-option>
+                    </template>
+                  </el-select>
                 </div>
                 <div class="col-sm-5">
-                  <base-input
-                    label="State"
-                    name="state"
-                    required
-                    placeholder="State"
+                  <div class="row">
+                    <label>State</label>
+                  </div>
+                  <el-select
+                    class="select-primary"
+                    size="large"
+                    placeholder="Select a State"
                     v-model="propertyDetail.state"
-                    v-validate="modelValidations.state"
-                    :error="getError('state')"
+                    @change="changeFetchCounties"
                   >
-                  </base-input>
+                    <el-option
+                      v-for="option in states"
+                      class="select-primary"
+                      :value="option.name"
+                      :label="option.label"
+                      :key="option.label"
+                    >
+                    </el-option>
+                  </el-select>
 
                   <base-input
                     label="Size"
@@ -196,11 +218,6 @@
       headerClasses="justify-content-center"
       class="white-content"
     >
-      <!-- <property-price-create
-        :price="propertyDetail"
-        :user="user"
-        :fetch="refresh"
-      ></property-price-create> -->
     </modal>
   </div>
 </template>
@@ -226,6 +243,8 @@ export default {
       clientUser: {},
       staffUser: {},
       propertyDetail: {},
+      states: [],
+      counties: [],
       modals: {
         create: false,
       },
@@ -329,7 +348,6 @@ export default {
       return this.$axios
         .get(endpoint)
         .then((res) => {
-          console.log(this.propertyDetail);
           this.propertyPrices = res.data.results;
         })
         .catch((e) => {
@@ -338,6 +356,47 @@ export default {
     },
     refresh() {
       this.fetchPropertyPrices();
+    },
+    async fetchCounties(state) {
+      this.loading = true;
+      let endpoint = `/api/v1/county/?search=${state}`;
+      try {
+        await this.$axios.get(endpoint).then((res) => {
+          this.counties = res.data.results;
+          this.loading = false;
+        });
+      } catch (err) {
+        this.loading = false;
+      }
+    },
+    async changeFetchCounties(state) {
+      this.loading = true;
+      let endpoint = `/api/v1/county/?search=${state}`;
+      try {
+        await this.$axios.get(endpoint).then((res) => {
+          this.counties = res.data.results;
+          this.reset();
+          this.loading = false;
+        });
+      } catch (err) {
+        this.loading = false;
+      }
+    },
+    async fetchStates() {
+      this.loading = true;
+      let endpoint = `/api/v1/state/`;
+      try {
+        await this.$axios.get(endpoint).then((res) => {
+          this.states = res.data.results;
+          this.loading = false;
+        });
+      } catch (err) {
+        this.loading = false;
+        console.error(err);
+      }
+    },
+    reset() {
+      this.propertyDetail.county = null;
     },
     getError(fieldName) {
       return this.errors.first(fieldName);
@@ -482,8 +541,6 @@ export default {
           property_price_statuses: this.propertyDetail.property_price_statuses,
         };
 
-        // console.log(this.propertyDetail.property_price_statuses);
-
         const staffPayload = {
           ticket_number: this.propertyDetail.ticket_number,
           staff: this.staffUser.id,
@@ -551,6 +608,8 @@ export default {
   mounted() {
     this.fetchMe();
     this.fetchPropertyDetail(this.$route.params.ticket_number);
+    this.fetchStates();
+    setTimeout(() => this.fetchCounties(this.propertyDetail.state), 1000)
   },
 };
 </script>
