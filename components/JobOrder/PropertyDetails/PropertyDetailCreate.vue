@@ -231,11 +231,6 @@ export default {
         .indexOf(item);
       this.property_price_statuses.splice(index, 1);
     },
-    // receivePropertyPriceStatuses(value) {
-    //   this.property_price_statuses = value;
-    //   console.log(this.property_price_statuses);
-    //   return this.property_price_statuses;
-    // },
     onStepValidated(validated, model) {
       this.wizardModel = { ...this.wizardModel, ...model };
     },
