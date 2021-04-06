@@ -8,14 +8,15 @@
       :title="$t('sidebar.title')"
     >
       <template slot-scope="props" slot="links">
-        <sidebar-item
+        <!-- TODO: uncomment this if the necessary features are integrated already -->
+        <!-- <sidebar-item
           :link="{
             name: $t('sidebar.dashboard'),
             icon: 'tim-icons icon-chart-pie-36',
             path: '/',
           }"
         >
-        </sidebar-item>
+        </sidebar-item> -->
         <sidebar-item
           :link="{
             name: ('Job order'),
@@ -42,108 +43,10 @@
             }"
           ></sidebar-item>
         </sidebar-item>
-        <sidebar-item
-          :link="{
-            name: $t('sidebar.components'),
-            icon: 'tim-icons icon-molecule-40',
-          }"
-        >
-          <sidebar-item :link="{ name: $t('sidebar.multiLevelCollapse') }">
-            <sidebar-item
-              :link="{
-                name: $t('sidebar.example'),
-                isRoute: false,
-                path: 'https://google.com',
-                target: '_blank',
-              }"
-            ></sidebar-item>
-          </sidebar-item>
-
-          <sidebar-item
-            :link="{ name: $t('sidebar.buttons'), path: '/components/buttons' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{
-              name: $t('sidebar.gridSystem'),
-              path: '/components/grid-system',
-            }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: $t('sidebar.panels'), path: '/components/panels' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{
-              name: $t('sidebar.sweetAlert'),
-              path: '/components/sweet-alert',
-            }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{
-              name: $t('sidebar.notifications'),
-              path: '/components/notifications',
-            }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: $t('sidebar.icons'), path: '/components/icons' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{
-              name: $t('sidebar.typography'),
-              path: '/components/typography',
-            }"
-          ></sidebar-item>
-        </sidebar-item>
-        <sidebar-item
-          :link="{ name: $t('sidebar.forms'), icon: 'tim-icons icon-notes' }"
-        >
-          <sidebar-item
-            :link="{ name: $t('sidebar.regularForms'), path: '/forms/regular' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{
-              name: $t('sidebar.extendedForms'),
-              path: '/forms/extended',
-            }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{
-              name: $t('sidebar.validationForms'),
-              path: '/forms/validation',
-            }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: $t('sidebar.wizard'), path: '/forms/wizard' }"
-          ></sidebar-item>
-        </sidebar-item>
-        <sidebar-item
-          :link="{
-            name: $t('sidebar.tables'),
-            icon: 'tim-icons icon-puzzle-10',
-          }"
-        >
-          <sidebar-item
-            :link="{
-              name: $t('sidebar.regularTables'),
-              path: '/table-list/regular',
-            }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{
-              name: $t('sidebar.extendedTables'),
-              path: '/table-list/extended',
-            }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{
-              name: $t('sidebar.paginatedTables'),
-              path: '/table-list/paginated',
-            }"
-          ></sidebar-item>
-        </sidebar-item>
       </template>
     </side-bar>
     <!--Share plugin (for demo purposes). You can remove it if don't plan on using it-->
-    <sidebar-share :background-color.sync="sidebarBackground"> </sidebar-share>
+    <!-- <sidebar-share :background-color.sync="sidebarBackground"> </sidebar-share> -->
     <div class="main-panel" :data="sidebarBackground">
       <dashboard-navbar></dashboard-navbar>
       <router-view name="header"></router-view>
