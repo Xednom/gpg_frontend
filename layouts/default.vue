@@ -9,14 +9,14 @@
     >
       <template slot-scope="props" slot="links">
         <!-- TODO: uncomment this if the necessary features are integrated already -->
-        <!-- <sidebar-item
+        <sidebar-item
           :link="{
             name: $t('sidebar.dashboard'),
             icon: 'tim-icons icon-chart-pie-36',
             path: '/',
           }"
         >
-        </sidebar-item> -->
+        </sidebar-item>
         <sidebar-item
           :link="{
             name: ('Job order'),
@@ -46,7 +46,7 @@
       </template>
     </side-bar>
     <!--Share plugin (for demo purposes). You can remove it if don't plan on using it-->
-    <!-- <sidebar-share :background-color.sync="sidebarBackground"> </sidebar-share> -->
+    <sidebar-share :background-color.sync="sidebarBackground"> </sidebar-share>
     <div class="main-panel" :data="sidebarBackground">
       <dashboard-navbar></dashboard-navbar>
       <router-view name="header"></router-view>
