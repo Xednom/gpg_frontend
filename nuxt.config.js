@@ -44,6 +44,9 @@ export default {
     middleware: ["auth"],
     linkExactActiveClass: 'active'
   },
+  publicRuntimeConfig: {
+    baseURL: process.env.NODE_ENV === 'production' ? process.env.API_URL : 'http://127.0.0.1:8000/'
+  },
   /*
   ** Customize the progress-bar color
   */
@@ -76,7 +79,6 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/auth-next',
     'bootstrap-vue/nuxt',
-    '@nuxtjs/dotenv',
     'nuxt-i18n'
   ],
   bootstrapVue: {
@@ -94,23 +96,23 @@ export default {
 				scheme: "refresh",
 				endpoints: {
 					login: {
-						url: "auth/jwt/create/",
+						url: "auth/dj-rest-auth/login/",
 						method: "post",
-						propertyName: "access"
+						propertyName: "access_token"
 					},
 					user: {
-						url: "auth/users/me/",
+						url: "auth/dj-rest-auth/user/",
 						method: "get",
 						propertyName: false
 					},
 					refresh: {
-						url: "auth/jwt/refresh/",
+						url: "auth/dj-rest-auth/token/refresh/",
 						method: "post"
 					},
 					logout: false
 				},
 				token: {
-					property: "access",
+					property: "access_token",
 					type: "jwt",
 					maxAge: 60 * 5 // 5 minutes
 				},
@@ -118,7 +120,7 @@ export default {
 					property: ""
 				},
 				refreshToken: {
-					property: "refresh",
+					property: "refresh_token",
 					data: "refresh",
 					maxAge: 60 * 60 * 24
 				},
