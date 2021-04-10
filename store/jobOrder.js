@@ -133,7 +133,7 @@ const blankState = {
           commit("setBasicField", payload);
         })
       } catch(err) {
-        console.log(err)
+        console.error(err)
       }
     },
     async JobOrderComment({ commit }, payload, id) {
@@ -143,13 +143,12 @@ const blankState = {
           commit("setBasicField", payload);
         })
       } catch(err) {
-        console.log(err)
+        console.error(err)
       }
     },
     async updateJobOrder({ commit }, payload) {
       let url = `/api/v1/job-order/${payload.ticket_number}/`;
       let method = "put";
-      console.log(payload);
       return await this.$axios[method](url, payload).then((res) => {
         return res.data;
       });
