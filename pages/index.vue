@@ -1,7 +1,8 @@
 <template>
   <div class="row">
+    <h5>This page is under construction</h5>
     <!-- Big Chart -->
-    <div class="col-12">
+    <!-- <div class="col-12">
       <card type="chart">
         <template slot="header">
           <div class="row">
@@ -50,9 +51,9 @@
           </line-chart>
         </div>
       </card>
-    </div>
+    </div> -->
     <!-- Stats Cards -->
-    <div class="col-lg-3 col-md-6" v-for="card in statsCards" :key="card.title">
+    <!-- <div class="col-lg-3 col-md-6" v-for="card in statsCards" :key="card.title">
       <stats-card
         :title="card.title"
         :sub-title="card.subTitle"
@@ -61,10 +62,10 @@
       >
         <div slot="footer" v-html="card.footer"></div>
       </stats-card>
-    </div>
+    </div> -->
 
     <!-- Small charts -->
-    <div class="col-lg-4" :class="{ 'text-right': isRTL }">
+    <!-- <div class="col-lg-4" :class="{ 'text-right': isRTL }">
       <card type="chart">
         <template slot="header">
           <h5 class="card-category">Total Shipments</h5>
@@ -150,7 +151,7 @@
         <div class="table-responsive"><user-table></user-table></div>
       </card>
     </div>
-    <div class="col-lg-12"><country-map-card></country-map-card></div>
+    <div class="col-lg-12"><country-map-card></country-map-card></div> -->
   </div>
 </template>
 <script>
@@ -333,21 +334,21 @@ export default {
     }
   },
   methods: {
-    initBigChart (index) {
-      let chartData = {
-        datasets: [{
-          ...bigChartDatasetOptions,
-          data: bigChartData[index]
-        }],
-        labels: bigChartLabels
-      };
-      this.$refs.bigChart.updateGradients(chartData);
-      this.bigLineChart.chartData = chartData;
-      this.bigLineChart.activeIndex = index;
-    }
+    // initBigChart (index) {
+    //   let chartData = {
+    //     datasets: [{
+    //       ...bigChartDatasetOptions,
+    //       data: bigChartData[index]
+    //     }],
+    //     labels: bigChartLabels
+    //   };
+    //   this.$refs.bigChart.updateGradients(chartData);
+    //   this.bigLineChart.chartData = chartData;
+    //   this.bigLineChart.activeIndex = index;
+    // }
   },
   mounted () {
-    this.initBigChart(0);
+    // this.initBigChart(0);
   }
 }
 </script>
