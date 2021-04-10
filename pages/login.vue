@@ -115,6 +115,7 @@ export default {
             data: data,
           })
           .then((res) => {
+            console.log(res);
             this.loading = false;
             this.$router.push("/");
           })

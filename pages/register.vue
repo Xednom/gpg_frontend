@@ -222,7 +222,7 @@ export default {
       if (isValidForm) {
         this.loading = true;
         await this.$axios
-          .post(`/auth/users/`, this.register)
+          .post(`auth/dj-rest-auth/registration/`, this.register)
           .then(async (res) => {
             this.loading = false;
             // instead of showing a success page, we should automatically login the user.
