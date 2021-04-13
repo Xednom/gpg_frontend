@@ -96,23 +96,23 @@ export default {
 				scheme: "refresh",
 				endpoints: {
 					login: {
-						url: "auth/dj-rest-auth/login/",
+						url: "auth/jwt/create/",
 						method: "post",
-						propertyName: "access_token"
+						propertyName: "access"
 					},
 					user: {
-						url: "auth/dj-rest-auth/user/",
+						url: "auth/users/me/",
 						method: "get",
 						propertyName: false
 					},
 					refresh: {
-						url: "auth/dj-rest-auth/token/refresh/",
+						url: "auth/jwt/refresh/",
 						method: "post"
 					},
 					logout: false
 				},
 				token: {
-					property: "access_token",
+					property: "access",
 					type: "jwt",
 					maxAge: 60 * 5 // 5 minutes
 				},
@@ -120,7 +120,7 @@ export default {
 					property: ""
 				},
 				refreshToken: {
-					property: "refresh_token",
+					property: "refresh",
 					data: "refresh",
 					maxAge: 60 * 60 * 24
 				},
