@@ -197,7 +197,7 @@ export const actions = {
   },
   async updatePropertyDetail({ commit }, payload) {
     console.log(payload);
-    let url = `/api/v1/property-detail/${payload.ticket_number}/`;
+    let url = `/api/v1/property-detail/${payload.apn}/`;
     let method = "put";
     console.log(payload);
     return await this.$axios[method](url, payload).then((res) => {
