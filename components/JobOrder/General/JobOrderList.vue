@@ -294,7 +294,7 @@ export default {
           this.loading = false;
         });
       } catch (err) {
-        console.log(err.response.data);
+        console.error(err.response.data);
       }
     },
     async fetchStaff(id) {
@@ -323,7 +323,7 @@ export default {
           }
         });
       } catch (err) {
-        console.log(err.response.data);
+        console.error(err.response.data);
         this.loading = false;
       }
     },
