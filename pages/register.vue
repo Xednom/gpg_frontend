@@ -16,7 +16,7 @@
             <div class="col-sm-12 col-md-6">
               <base-input
                 v-validate="'required'"
-                :error="getError('First name')"
+                :error="getError('First Name')"
                 v-model="register.first_name"
                 name="First Name"
                 placeholder="First Name"
@@ -62,7 +62,7 @@
           </div>
 
           <div class="form-row">
-            <div class="col-sm-12 col-md-6">
+            <div class="col-sm-12 col-md-12">
               <base-input
                 v-validate="'required'"
                 :error="getError('username')"
@@ -74,6 +74,8 @@
               >
               </base-input>
             </div>
+          </div>
+          <div class="form-row">
             <div class="col-sm-12 col-md-6">
               <base-input
                 v-validate="'required|min:8'"
@@ -82,6 +84,20 @@
                 name="password"
                 type="password"
                 placeholder="Password"
+                autocomplete="current-password"
+                addon-left-icon="tim-icons icon-lock-circle"
+              >
+              </base-input>
+            </div>
+
+            <div class="col-sm-12 col-md-6">
+              <base-input
+                v-validate="'required|min:8'"
+                :error="getError('confirm password')"
+                v-model="register.re_password"
+                name="confirm password"
+                type="password"
+                placeholder="Confirm Password"
                 autocomplete="current-password"
                 addon-left-icon="tim-icons icon-lock-circle"
               >
@@ -184,12 +200,13 @@ export default {
     return {
       error: "",
       loading: false,
+      confirm_password: "",
       register: {
         username: "",
         password: "",
         first_name: "",
         last_name: "",
-        email_address: "",
+        email: "",
         phone: "",
         designation_category: "",
         company_category: "",
@@ -222,7 +239,7 @@ export default {
       if (isValidForm) {
         this.loading = true;
         await this.$axios
-          .post(`auth/dj-rest-auth/registration/`, this.register)
+          .post(`auth/users/`, this.register)
           .then(async (res) => {
             this.loading = false;
             // instead of showing a success page, we should automatically login the user.
