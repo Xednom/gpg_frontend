@@ -50,6 +50,7 @@
                 >
                   <b-form-select
                     id="per-page-select"
+                    class="page-number"
                     v-model="perPage"
                     :options="pageOptions"
                     size="sm"
@@ -438,5 +439,9 @@ export default {
 }
 #job-order-comments .modal-dialog {
   transform: none !important;
+}
+.page-number {
+  color: black !important;
+  background-color: white !important;
 }
 </style>

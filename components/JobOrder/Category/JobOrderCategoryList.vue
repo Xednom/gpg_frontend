@@ -52,6 +52,7 @@
                 >
                   <b-form-select
                     id="per-page-select"
+                    class="page-number"
                     v-model="perPage"
                     :options="pageOptions"
                     size="sm"
@@ -258,8 +259,7 @@ export default {
         { key: "status", sortable: true },
         { key: "due_date", sortable: true },
         { key: "date_completed", sortable: true },
-        { key: "url_of_the_completed_jo", sortable: true },
-        { key: "actions", label: "Actions" },
+        { key: "url_of_the_completed_jo", sortable: true }
       ],
       totalRows: 1,
       currentPage: 1,
@@ -448,5 +448,9 @@ export default {
 }
 #job-order-comments .modal-dialog {
   transform: none !important;
+}
+.page-number {
+  color: black !important;
+  background-color: white !important;
 }
 </style>
