@@ -4,8 +4,8 @@
       <form @submit.prevent="login">
         <card class="card-login card-white">
           <template slot="header">
-            <img src="img//card-primary.png" alt="" />
-            <h1 class="card-title">Log in</h1>
+            <img class="company-logo" src="img//gpg_corp.png" alt="" />
+            <h4 class="card-title">GPG Corp. Management App</h4>
           </template>
           <base-alert v-if="error" type="danger" dismissible>
             <span>
@@ -181,5 +181,19 @@ export default {
 .navbar-nav .nav-item p {
   line-height: inherit;
   margin-left: 5px;
+}
+.company-logo {
+  padding: 40px 40px 60px 40px;
+}
+.card-title {
+  color: #222a42 !important;
+  font-size: 25px !important;
+  text-transform: none !important;
+  padding-left: 10px;
+}
+@media only screen and (max-width: 767.98px) {
+  .login-page .card-login .card-header img {
+    width: 100%;
+  }
 }
 </style>

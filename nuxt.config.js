@@ -13,6 +13,9 @@
 
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  */
+
+import { style } from "d3-selection";
+
  let apiUrl = "";
  if (process.env.NODE_ENV === "production") {
    apiUrl = process.env.API_URL;
@@ -32,7 +35,7 @@ export default {
       { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' },
+      { rel: 'icon', type: 'image/x-icon', href: '/gpg_corp.ico' },
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800'},
       { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css'}
     ],
