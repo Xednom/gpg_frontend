@@ -2,8 +2,7 @@
   <footer class="footer">
     <div class="container-fluid">
       <div class="copyright">
-        &copy; GPG Corporation {{ year }}, made with <i class="tim-icons icon-heart-2"></i> by
-        <a href="https://psalmsglobal.com/" rel="noopener" target="_blank">Psalms Global</a>
+        &copy; Powered by GPG corporation, Psalms Global, Landmaster, Call.Me {{ year }}, made with <i class="tim-icons icon-heart-2"></i>
       </div>
     </div>
   </footer>
