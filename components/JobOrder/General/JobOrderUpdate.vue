@@ -2,155 +2,204 @@
   <div>
     <div class="row">
       <div class="col-md-6">
-        <form @submit.prevent="save">
-          <h4 class="card-title">
-            Job order informations: Ticket #<b>{{ jobOrder.ticket_number }}</b>
-          </h4>
-          <div class="form-row">
-            <div class="col-sm-12 col-md-6">
-              <base-input label="Request date">
-                <el-date-picker
-                  v-model="jobOrder.request_date"
-                  v-validate="'required'"
-                  type="date"
-                  format="yyyy-MM-dd"
-                  value-format="yyyy-MM-dd"
-                  placeholder="Choose date"
-                  :disabled="isDisabled"
-                >
-                </el-date-picker>
-              </base-input>
-            </div>
-            <div class="col-sm-12 col-md-6">
-              <base-input label="Due date">
-                <el-date-picker
-                  v-model="jobOrder.due_date"
-                  v-validate="'required'"
-                  type="date"
-                  format="yyyy-MM-dd"
-                  value-format="yyyy-MM-dd"
-                  placeholder="Choose date"
-                  :disabled="isDisabled"
-                >
-                </el-date-picker>
-              </base-input>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="col-sm-12 col-md-6">
-              <base-input label="Date completed">
-                <el-date-picker
-                  v-model="jobOrder.date_completed"
-                  v-validate="'required'"
-                  type="date"
-                  format="yyyy-MM-dd"
-                  value-format="yyyy-MM-dd"
-                  placeholder="Choose date"
-                  :disabled="isDisabled"
-                >
-                </el-date-picker>
-              </base-input>
-            </div>
-            <div class="col-sm-12 col-md-6">
-              <base-input
-                label="Total time consumed"
-                v-model="jobOrder.total_time_consumed"
-                :disabled="isDisabled"
-              >
-              </base-input>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="col-sm-12 col-md-6">
-              <div class="col-sm-10">
-                <div class="row">
-                  <label>Status</label>
+        <b-skeleton-wrapper :loading="loading">
+          <template #loading>
+            <b-card>
+              <h4 class="card-title"><b-skeleton width="85%"></b-skeleton></h4>
+              <div class="form-row mt-3">
+                <div class="col-sm-12 col-md-6">
+                  <b-skeleton width="85%"></b-skeleton>
                 </div>
-                <el-select
-                  class="select-primary"
-                  size="large"
-                  name="status"
-                  placeholder="Status"
-                  v-model="jobOrder.status"
-                >
-                  <el-option
-                    v-for="option in StatusChoices.status"
-                    class="select-primary"
-                    :value="option.value"
-                    :label="option.label"
-                    :key="option.label"
+                <div class="col-sm-12 col-md-6">
+                  <b-skeleton width="85%"></b-skeleton>
+                </div>
+              </div>
+              <div class="form-row mt-3">
+                <div class="col-sm-12 col-md-6">
+                  <b-skeleton width="85%"></b-skeleton>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                  <b-skeleton width="85%"></b-skeleton>
+                </div>
+              </div>
+              <div class="form-row mt-3">
+                <div class="col-sm-12 col-md-6">
+                  <b-skeleton width="85%"></b-skeleton>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                  <b-skeleton width="85%"></b-skeleton>
+                </div>
+              </div>
+              <div class="form-row mt-3">
+                <div class="col-sm-12 col-md-6">
+                  <b-skeleton width="85%"></b-skeleton>
+                </div>
+              </div>
+            </b-card>
+          </template>
+          <form @submit.prevent="save">
+            <h4 class="card-title">
+              Job order informations: Ticket #<b>{{
+                jobOrder.ticket_number
+              }}</b>
+            </h4>
+            <div class="form-row">
+              <div class="col-sm-12 col-md-6">
+                <base-input label="Request date">
+                  <el-date-picker
+                    v-model="jobOrder.request_date"
+                    v-validate="'required'"
+                    type="date"
+                    format="yyyy-MM-dd"
+                    value-format="yyyy-MM-dd"
+                    placeholder="Choose date"
+                    :disabled="isDisabled"
                   >
-                  </el-option>
-                </el-select>
+                  </el-date-picker>
+                </base-input>
+              </div>
+              <div class="col-sm-12 col-md-6">
+                <base-input label="Due date">
+                  <el-date-picker
+                    v-model="jobOrder.due_date"
+                    v-validate="'required'"
+                    type="date"
+                    format="yyyy-MM-dd"
+                    value-format="yyyy-MM-dd"
+                    placeholder="Choose date"
+                    :disabled="isDisabled"
+                  >
+                  </el-date-picker>
+                </base-input>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-sm-12 col-md-6">
+                <base-input label="Date completed">
+                  <el-date-picker
+                    v-model="jobOrder.date_completed"
+                    v-validate="'required'"
+                    type="date"
+                    format="yyyy-MM-dd"
+                    value-format="yyyy-MM-dd"
+                    placeholder="Choose date"
+                    :disabled="isDisabled"
+                  >
+                  </el-date-picker>
+                </base-input>
+              </div>
+              <div class="col-sm-12 col-md-6">
+                <base-input
+                  label="Total time consumed"
+                  v-model="jobOrder.total_time_consumed"
+                  :disabled="isDisabled"
+                >
+                </base-input>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-sm-12 col-md-6">
+                <div class="col-sm-10">
+                  <div class="row">
+                    <label>Status</label>
+                  </div>
+                  <el-select
+                    class="select-primary"
+                    size="large"
+                    name="status"
+                    placeholder="Status"
+                    v-model="jobOrder.status"
+                  >
+                    <el-option
+                      v-for="option in StatusChoices.status"
+                      class="select-primary"
+                      :value="option.value"
+                      :label="option.label"
+                      :key="option.label"
+                    >
+                    </el-option>
+                  </el-select>
+                </div>
+              </div>
+
+              <div class="col-sm-12 col-md-6">
+                <base-input
+                  label="Job title"
+                  v-model="jobOrder.job_title"
+                  :disabled="staffDisable"
+                >
+                </base-input>
               </div>
             </div>
 
-            <div class="col-sm-12 col-md-6">
-              <base-input
-                label="Job title"
-                v-model="jobOrder.job_title"
-                :disabled="staffDisable"
-              >
-              </base-input>
+            <div class="form-row mt-3">
+              <div class="col-sm-12 col-md-12">
+                <label>Job Description</label>
+                <textarea
+                  class="form-control"
+                  placeholder="Job description"
+                  v-model="jobOrder.job_description"
+                  :disabled="staffDisable"
+                >
+                </textarea>
+              </div>
             </div>
-          </div>
-
-          <div class="form-row mt-3">
-            <div class="col-sm-12 col-md-12">
-              <label>Job Description</label>
-              <textarea
-                class="form-control"
-                placeholder="Job description"
-                v-model="jobOrder.job_description"
-                :disabled="staffDisable"
+            <div class="col-sm-5 mt-3">
+              Any attachments please send it
+              <a href="https://form.jotform.com/210818766251458" target="_blank"
+                >here</a
               >
-              </textarea>
             </div>
-          </div>
-          <div class="col-sm-5 mt-3">
-            Any attachments please send it <a href="https://form.jotform.com/210818766251458" target="_blank"
-              >here</a
-            >
-          </div>
-          <div slot="footer">
-            <div class="pull-right mt-5">
-              <base-button
-                v-if="!saving"
-                native-type="submit"
-                slot="footer"
-                type="submit"
-                round
-                block
-                size="lg"
-              >
-                Save
-              </base-button>
-              <base-button
-                v-else
-                native-type="submit"
-                slot="footer"
-                type="primary"
-                round
-                block
-                size="lg"
-                disabled
-              >
-                Saving...
-              </base-button>
+            <div slot="footer">
+              <div class="pull-right mt-5">
+                <base-button
+                  v-if="!saving"
+                  native-type="submit"
+                  slot="footer"
+                  type="submit"
+                  round
+                  block
+                  size="lg"
+                >
+                  Save
+                </base-button>
+                <base-button
+                  v-else
+                  native-type="submit"
+                  slot="footer"
+                  type="primary"
+                  round
+                  block
+                  size="lg"
+                  disabled
+                >
+                  Saving...
+                </base-button>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </b-skeleton-wrapper>
       </div>
       <div class="col-md-6">
-        <h4 class="card-title">
-          Comment section of #<strong>{{ jobOrder.ticket_number }}</strong>
-        </h4>
-        <div class="row">
-          <job-order-comment
-            :job="jobOrder"
-            :fetch="refresh"
-          ></job-order-comment>
-        </div>
+        <b-skeleton-wrapper :loading="loading">
+          <template #loading>
+            <b-card>
+              <h4 class="card-title"><b-skeleton width="85%"></b-skeleton></h4>
+              <div class="row">
+                <b-skeleton width="85%"></b-skeleton>
+              </div>
+            </b-card>
+          </template>
+          <h4 class="card-title">
+            Comment section of #<strong>{{ jobOrder.ticket_number }}</strong>
+          </h4>
+          <div class="row">
+            <job-order-comment
+              :job="jobOrder"
+              :fetch="refresh"
+            ></job-order-comment>
+          </div>
+        </b-skeleton-wrapper>
       </div>
     </div>
   </div>
@@ -198,13 +247,16 @@ export default {
   methods: {
     ...mapActions("jobOrder", ["updateJobOrder"]),
     async fetchJobOrder(payload) {
+      this.loading = true;
       let endpoint = `/api/v1/job-order/${payload}/`;
       return await this.$axios
         .get(endpoint)
         .then((res) => {
+          this.loading = false;
           this.jobOrder = res.data;
         })
         .catch((e) => {
+          this.loading = false;
           throw e;
         });
     },

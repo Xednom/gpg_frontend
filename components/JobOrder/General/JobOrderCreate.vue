@@ -232,7 +232,7 @@ export default {
           }
         } else {
           const payload = {
-            va_assigned: this.staff.id,
+            va_assigned: [this.staff.id],
             client: this.query,
             request_date: this.request_date,
             due_date: this.due_date,

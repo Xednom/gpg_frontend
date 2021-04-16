@@ -5,6 +5,7 @@
         Property Details
       </h5>
       <div class="row justify-content-center mt-5">
+        <div class="form-row"></div>
         <div class="col-sm-5">
           <base-input
             label="APN"
@@ -26,16 +27,18 @@
             placeholder="Select a County"
             v-model="county"
           >
-            <template v-if="!this.state">Please select a State first</template>
-            <template v-else>
-            <el-option
-              v-for="option in counties"
-              class="select-primary"
-              :value="option.name"
-              :label="option.label"
-              :key="option.label"
+            <template v-if="!this.state"
+              >Please select a State first</template
             >
-            </el-option>
+            <template v-else>
+              <el-option
+                v-for="option in counties"
+                class="select-primary"
+                :value="option.name"
+                :label="option.label"
+                :key="option.label"
+              >
+              </el-option>
             </template>
           </el-select>
         </div>
@@ -62,6 +65,7 @@
 
           <base-input
             label="Size(Acreage)"
+            class="mt-2"
             name="size"
             required
             placeholder="Size(Acreage)"
@@ -71,7 +75,7 @@
           >
           </base-input>
         </div>
-        <div class="col-sm-10">
+        <div class="col-sm-5">
           <div class="row">
             <label>Property Status</label>
           </div>
@@ -92,6 +96,24 @@
             </el-option>
           </el-select>
         </div>
+        <div class="col-sm-5">
+          <div v-if="this.$auth.user.designation_category == 'staff'">
+            <label>Client Code</label>
+            <vue-typeahead-bootstrap
+              class="mb-4"
+              v-model="query"
+              :ieCloseFix="false"
+              :data="clientCodes"
+              :serializer="(item) => item.client_code"
+              @hit="selectedClientCode = $event"
+              :disabledValues="
+                selectedClientCode ? [selectedClientCode.client_code] : []
+              "
+              placeholder="Search client code"
+              @input="getClientCode"
+            />
+          </div>
+        </div>
       </div>
     </card>
   </div>
@@ -99,16 +121,21 @@
 <script>
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
 import { Select, Option } from "element-ui";
+import VueTypeaheadBootstrap from "vue-typeahead-bootstrap";
+import { debounce } from "lodash";
 import Card from "~/components/Cards/Card.vue";
 export default {
   mixins: [CreatePropertyDetailMixin],
   components: {
     [Select.name]: Select,
     [Option.name]: Option,
+    VueTypeaheadBootstrap,
   },
   inject: ["$validator"],
   data() {
     return {
+      selectedClientCode: "",
+      clientCodes: [],
       counties: [],
       states: [],
       property: {
@@ -145,6 +172,9 @@ export default {
           { value: "in_contract", label: "In Contract" },
           { value: "ready_to_purchase", label: "Ready to Purchase" },
           { value: "canceled_transaction", label: "Canceled Transaction" },
+          { value: "interested_to_purchase", label: "Interested to purchase" },
+          { value: "need_of_research", label: "In need of research" },
+          { value: "not_applicable", label: "Not applicable" },
         ],
       },
     };
@@ -159,6 +189,16 @@ export default {
         return res;
       });
     },
+    getClientCode: debounce(function() {
+      this.$axios
+        .get(`/api/v1/client-code/?search=${this.query}`)
+        .then((res) => {
+          this.clientCodes = res.data.results;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }, 700),
     async fetchCounties() {
       this.loading = true;
       let endpoint = `/api/v1/county/?search=${this.state}`;
@@ -192,6 +232,14 @@ export default {
       },
       set(value) {
         this.setBasicStoreValue("apn", value);
+      },
+    },
+    query: {
+      get() {
+        return this.$store.getters["propertyDetail/client"];
+      },
+      set(value) {
+        this.setBasicStoreValue("client", value);
       },
     },
     county: {

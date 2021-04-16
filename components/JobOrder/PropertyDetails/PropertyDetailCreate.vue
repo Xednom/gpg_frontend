@@ -321,7 +321,7 @@ export default {
       if (isValidForm) {
         this.loading = true;
         const clientPayload = {
-          client: this.clientUser.id,
+          client: this.clientUser.client_code,
           client_email: this.$auth.user.email,
           property_status: this.property_status,
           company_name: this.company_name,
@@ -340,7 +340,8 @@ export default {
         };
 
         const staffPayload = {
-          staff: this.staffUser.id,
+          client: this.client,
+          staff: [this.staffUser.id],
           staff_email: this.$auth.user.email,
           property_status: this.property_status,
           company_name: this.company_name,
@@ -409,6 +410,7 @@ export default {
       "property_status",
       "category",
       "apn",
+      "client",
       "county",
       "state",
       "size",

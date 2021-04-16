@@ -13,6 +13,27 @@
         </span>
       </base-alert>
       <div class="form-row">
+        <div
+          class="col-sm-12 col-md-12"
+          v-if="this.$auth.user.designation_category == 'staff'"
+        >
+          <label>Client Code</label>
+          <vue-typeahead-bootstrap
+            class="mb-4"
+            v-model="query"
+            :ieCloseFix="false"
+            :data="clientCodes"
+            :serializer="(item) => item.client_code"
+            @hit="selectedClientCode = $event"
+            :disabledValues="
+              selectedClientCode ? [selectedClientCode.client_code] : []
+            "
+            placeholder="Search client code"
+            @input="getClientCode"
+          />
+        </div>
+      </div>
+      <div class="form-row">
         <div class="col-sm-12 col-md-12">
           <div class="col-sm-12">
             <div class="row">
@@ -208,14 +229,18 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import CreateJobMixin from "@/mixins/CreateJobOrderCategoryMixin.js";
+import VueTypeaheadBootstrap from "vue-typeahead-bootstrap";
 import { DatePicker, Select, Option } from "element-ui";
 import { BaseAlert } from "@/components";
+import { debounce } from "lodash";
+
 export default {
   components: {
     BaseAlert,
     [DatePicker.name]: DatePicker,
     [Select.name]: Select,
     [Option.name]: Option,
+    VueTypeaheadBootstrap
   },
   mixins: [CreateJobMixin],
   props: {
@@ -236,6 +261,9 @@ export default {
       loading: false,
       saving: false,
       success: false,
+      query: "",
+      selectedClientCode: "",
+      clientCodes: [],
       error: "",
       job: {
         request_date: "",
@@ -267,6 +295,16 @@ export default {
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
+    getClientCode: debounce(function() {
+      this.$axios
+        .get(`/api/v1/client-code/?search=${this.query}`)
+        .then((res) => {
+          this.clientCodes = res.data.results;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }, 700),
     async fetchCategory() {
       await this.$store.dispatch("jobOrderCategory/fetchCategory");
     },
@@ -274,7 +312,7 @@ export default {
       await this.$store.dispatch("propertyDetail/fetchPropertyDetails");
     },
     async fetchDeadline() {
-      await this.$store.dispatch("jobOrderCategory/fetchDeadline")
+      await this.$store.dispatch("jobOrderCategory/fetchDeadline");
     },
     async save() {
       let isValidForm = await this.$validator.validateAll();
@@ -286,7 +324,7 @@ export default {
           this.$auth.user.designation_category == "affiliate_partner"
         ) {
           const payload = {
-            client: this.client.id,
+            client: this.clientUser.client_code,
             client_email: this.$auth.user.email,
             category: this.category,
             property_detail: this.perApn,
@@ -317,7 +355,8 @@ export default {
             category: this.category,
             property_detail: this.perApn,
             status: this.status,
-            staff: this.staff.id,
+            client: this.query,
+            staff: [this.staff.id],
             staff_email: this.$auth.user.email,
             deadline: this.deadline,
             due_date: this.dueDate,

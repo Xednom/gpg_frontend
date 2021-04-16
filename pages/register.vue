@@ -222,7 +222,7 @@ export default {
       companies: {
         categories: [
           { value: "gpg_corporation", label: "GPG Corporation" },
-          { value: "land_master", label: "Land master" },
+          { value: "land_master", label: "Landmaster.us" },
           { value: "call_me_ph", label: "CallMe.com.ph" },
           { value: "psalms_global", label: "Psalmsglobal.com" },
           { value: "affiliate_partner", label: "Affiliate Partner" },

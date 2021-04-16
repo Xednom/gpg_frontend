@@ -72,7 +72,7 @@
           <div class="col-sm-12 col-md-12">
             <textarea
               class="form-control"
-              placeholder="Lead information"
+              placeholder="Where did you hear about our company"
               v-model="clientUser.lead_information"
             >
             </textarea>
@@ -117,7 +117,7 @@
               :key="index"
             >
               <div class="row">
-                <div class="col-sm-12 col-md-3">
+                <div class="col-sm-12 col-md-5">
                   <base-input
                     type="text"
                     label="File name"
@@ -126,21 +126,12 @@
                   >
                   </base-input>
                 </div>
-                <div class="col-xs-12 col-md-4">
+                <div class="col-xs-12 col-md-6">
                   <base-input
                     type="text"
                     label="URL"
                     placeholder="URL"
                     v-model="item.url"
-                  >
-                  </base-input>
-                </div>
-                <div class="col-sm-12 col-md-4">
-                  <base-input
-                    type="text"
-                    label="Description"
-                    placeholder="Description"
-                    v-model="item.description"
                   >
                   </base-input>
                 </div>
@@ -152,6 +143,15 @@
                     <i class="tim-icons icon-simple-remove"></i>
                   </button>
                 </div>
+                <div class="col-sm-12 col-md-12">
+                  <textarea
+                    class="form-control"
+                    placeholder="Description"
+                    v-model="item.description"
+                  >
+                  </textarea>
+                </div>
+                
               </div>
             </div>
             <div class="row">

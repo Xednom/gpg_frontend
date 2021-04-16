@@ -75,7 +75,20 @@
                   >
                   </base-input>
                 </div>
-                <div class="col-sm-10">
+                <div class="col-sm-5">
+                  <base-input
+                    label="Client code"
+                    name="client_code"
+                    required
+                    placeholder="Client code"
+                    v-model="propertyDetail.client"
+                    v-validate="modelValidations.client_code"
+                    :error="getError('client_code')"
+                    disabled
+                  >
+                  </base-input>
+                </div>
+                <div class="col-sm-5">
                   <div class="row">
                     <label>Property Status </label>
                   </div>
@@ -271,6 +284,9 @@ export default {
           { value: "in_contract", label: "In Contract" },
           { value: "ready_to_purchase", label: "Ready to Purchase" },
           { value: "canceled_transaction", label: "Canceled Transaction" },
+          { value: "interested_to_purchase", label: "Interested to purchase" },
+          { value: "need_of_research", label: "In need of research" },
+          { value: "not_applicable", label: "Not applicable" },
         ],
       },
       priceStatusChoices: {
@@ -522,7 +538,7 @@ export default {
 
         const clientPayload = {
           ticket_number: this.propertyDetail.ticket_number,
-          client: this.clientUser.id,
+          client: this.clientUser.client_code,
           price_status: this.propertyDetail.price_status,
           property_status: this.propertyDetail.property_status,
           category: this.propertyDetail.category,
@@ -543,7 +559,8 @@ export default {
 
         const staffPayload = {
           ticket_number: this.propertyDetail.ticket_number,
-          staff: this.staffUser.id,
+          staff: [this.staffUser.id],
+          client: this.propertyDetail.client,
           staff_email: this.$auth.user.email,
           price_status: this.propertyDetail.price_status,
           property_status: this.propertyDetail.property_status,
@@ -609,7 +626,7 @@ export default {
     this.fetchMe();
     this.fetchPropertyDetail(this.$route.params.ticket_number);
     this.fetchStates();
-    setTimeout(() => this.fetchCounties(this.propertyDetail.state), 1000)
+    setTimeout(() => this.fetchCounties(this.propertyDetail.state), 1000);
   },
 };
 </script>
