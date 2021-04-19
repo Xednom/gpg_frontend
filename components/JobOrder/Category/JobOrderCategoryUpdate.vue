@@ -157,7 +157,10 @@
                   <div class="col-sm-5 col-md-10">
                     <base-input
                       label="URL of the completed Job order"
+                      name="URL of the completed Job order"
                       v-model="jobOrderCategory.url_of_the_completed_jo"
+                      v-validate="'required|url'"
+                      :error="getError('URL of the completed Job order')"
                       :disabled="isDisabled"
                     >
                     </base-input>
