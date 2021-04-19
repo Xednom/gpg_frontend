@@ -1,8 +1,8 @@
 {
-  "name": "nuxt-black-dashboard-pro",
-  "version": "1.0.0",
-  "description": "Nuxt Black Dashboard PRO",
-  "author": "cristijora",
+  "name": "gpg-corp-management-app",
+  "version": "2.0.0",
+  "description": "GPG Corp. Management App",
+  "author": "xed",
   "private": true,
   "scripts": {
     "dev": "nuxt",
