@@ -303,23 +303,19 @@ export default {
       });
     },
     async fetchClient(id) {
-      this.loading = true;
       try {
         await this.$store.dispatch("user/fetchClientUser", id).then(() => {
-          this.loading = false;
         });
       } catch (err) {
         console.log(err.response.data);
       }
     },
     async fetchStaff(id) {
-      this.loading = true;
       try {
         await this.$store.dispatch("user/fetchStaff", id).then(() => {
-          this.loading = false;
         });
       } catch (err) {
-        this.loading = false;
+        console.erro(err);
       }
     },
     async fetchMe() {
