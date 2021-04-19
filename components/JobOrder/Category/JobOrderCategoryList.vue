@@ -109,7 +109,7 @@
                 </template>
 
                 <template #cell(url_of_the_completed_jo)="row">
-                  <a :href="'//' + row.item.url_of_the_completed_jo" target="_blank">link here</a>
+                  <a :href="row.item.url_of_the_completed_jo" target="_blank">link here</a>
                 </template>
               </b-table>
 
