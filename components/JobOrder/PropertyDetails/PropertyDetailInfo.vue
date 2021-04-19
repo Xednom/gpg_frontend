@@ -2,228 +2,297 @@
   <div>
     <div class="row d-flex justify-content-center">
       <div class="col-md-10">
-        <form @submit.prevent="save">
-          <div class="col-sm-12 col-md-12">
+        <b-skeleton-wrapper :loading="loading">
+          <template #loading>
             <card>
-              <h5 class="info-text">Property Details</h5>
+              <h5 class="info-text"><b-skeleton width="25%"></b-skeleton></h5>
               <div class="row justify-content-center mt-5">
                 <div class="col-sm-5">
-                  <base-input
-                    label="APN"
-                    name="apn"
-                    required
-                    placeholder="APN"
-                    v-model="propertyDetail.apn"
-                    v-validate="modelValidations.apn"
-                    :error="getError('apn')"
-                  >
-                  </base-input>
+                  <b-skeleton width="85%"></b-skeleton>
+                </div>
+                <div class="col-sm-5">
+                  <b-skeleton width="85%"></b-skeleton>
+                </div>
+                <div class="col-sm-5">
+                  <b-skeleton width="85%"></b-skeleton>
+                </div>
+                <div class="col-sm-5">
+                  <b-skeleton width="85%"></b-skeleton>
+                </div>
+                <div class="col-sm-5">
+                  <b-skeleton width="85%"></b-skeleton>
+                </div>
+                <div class="col-sm-5">
+                  <b-skeleton width="85%"></b-skeleton>
+                </div>
+              </div>
+            </card>
+            <card>
+              <h4 class="card-title">
+                <b-skeleton width="25%"></b-skeleton>
+              </h4>
+              <div class="property-price-list">
+                <b-skeleton width="85%"></b-skeleton>
+              </div>
+            </card>
 
-                  <div class="row">
-                    <label>County</label>
-                  </div>
-                  <el-select
-                    class="select-primary"
-                    size="large"
-                    placeholder="Select a County"
-                    v-model="propertyDetail.county"
-                  >
-                    <template v-if="!this.propertyDetail.state"
-                      >Please select a State first</template
+            <card>
+              <h5 class="info-text">
+                <b-skeleton width="25%"></b-skeleton>
+              </h5>
+              <div class="row justify-content-center mt-5">
+                <div class="col-sm-5">
+                  <b-skeleton width="85%"></b-skeleton>
+                </div>
+                <div class="col-sm-5">
+                  <b-skeleton width="85%"></b-skeleton>
+                </div>
+                <div class="col-sm-5">
+                  <b-skeleton width="85%"></b-skeleton>
+                </div>
+                <div class="col-sm-5">
+                  <b-skeleton width="85%"></b-skeleton>
+                </div>
+                <div class="col-sm-5">
+                  <b-skeleton width="85%"></b-skeleton>
+                </div>
+                <div class="col-sm-5">
+                  <b-skeleton width="85%"></b-skeleton>
+                </div>
+                <div class="col-sm-10">
+                  <b-skeleton width="85%"></b-skeleton>
+                </div>
+              </div>
+            </card>
+          </template>
+
+          <form @submit.prevent="save">
+            <div class="col-sm-12 col-md-12">
+              <card>
+                <h5 class="info-text">Property Details</h5>
+                <div class="row justify-content-center mt-5">
+                  <div class="col-sm-5">
+                    <base-input
+                      label="APN"
+                      name="apn"
+                      required
+                      placeholder="APN"
+                      v-model="propertyDetail.apn"
+                      v-validate="modelValidations.apn"
+                      :error="getError('apn')"
                     >
-                    <template v-else>
+                    </base-input>
+
+                    <div class="row">
+                      <label>County</label>
+                    </div>
+                    <el-select
+                      class="select-primary"
+                      size="large"
+                      placeholder="Select a County"
+                      v-model="propertyDetail.county"
+                    >
+                      <template v-if="!this.propertyDetail.state"
+                        >Please select a State first</template
+                      >
+                      <template v-else>
+                        <el-option
+                          v-for="option in counties"
+                          class="select-primary"
+                          :value="option.name"
+                          :label="option.label"
+                          :key="option.label"
+                        >
+                        </el-option>
+                      </template>
+                    </el-select>
+                  </div>
+                  <div class="col-sm-5">
+                    <div class="row">
+                      <label>State</label>
+                    </div>
+                    <el-select
+                      class="select-primary"
+                      size="large"
+                      placeholder="Select a State"
+                      v-model="propertyDetail.state"
+                      @change="changeFetchCounties"
+                    >
                       <el-option
-                        v-for="option in counties"
+                        v-for="option in states"
                         class="select-primary"
                         :value="option.name"
                         :label="option.label"
                         :key="option.label"
                       >
                       </el-option>
-                    </template>
-                  </el-select>
-                </div>
-                <div class="col-sm-5">
-                  <div class="row">
-                    <label>State</label>
-                  </div>
-                  <el-select
-                    class="select-primary"
-                    size="large"
-                    placeholder="Select a State"
-                    v-model="propertyDetail.state"
-                    @change="changeFetchCounties"
-                  >
-                    <el-option
-                      v-for="option in states"
-                      class="select-primary"
-                      :value="option.name"
-                      :label="option.label"
-                      :key="option.label"
+                    </el-select>
+
+                    <base-input
+                      label="Size"
+                      name="size"
+                      required
+                      placeholder="Size(Acreage)"
+                      v-model="propertyDetail.size"
+                      v-validate="modelValidations.size"
+                      :error="getError('size')"
                     >
-                    </el-option>
-                  </el-select>
-
-                  <base-input
-                    label="Size"
-                    name="size"
-                    required
-                    placeholder="Size(Acreage)"
-                    v-model="propertyDetail.size"
-                    v-validate="modelValidations.size"
-                    :error="getError('size')"
-                  >
-                  </base-input>
-                </div>
-                <div class="col-sm-5">
-                  <base-input
-                    label="Client code"
-                    name="client_code"
-                    required
-                    placeholder="Client code"
-                    v-model="propertyDetail.client"
-                    v-validate="modelValidations.client_code"
-                    :error="getError('client_code')"
-                    disabled
-                  >
-                  </base-input>
-                </div>
-                <div class="col-sm-5">
-                  <div class="row">
-                    <label>Property Status </label>
+                    </base-input>
                   </div>
-                  <el-select
-                    class="select-primary"
-                    reqiured
-                    size="large"
-                    name="propertyStatus"
-                    placeholder="Property Status"
-                    v-model="propertyDetail.property_status"
-                    v-validate="modelValidations.propertyStatus"
-                    :error="getError('propertyStatus')"
-                  >
-                    <el-option
-                      v-for="option in propertyStatusChoices.status"
-                      class="select-primary"
-                      :value="option.value"
-                      :label="option.label"
-                      :key="option.label"
+                  <div class="col-sm-5">
+                    <base-input
+                      label="Client code"
+                      name="client_code"
+                      required
+                      placeholder="Client code"
+                      v-model="propertyDetail.client"
+                      v-validate="modelValidations.client_code"
+                      :error="getError('client_code')"
+                      disabled
                     >
-                    </el-option>
-                  </el-select>
+                    </base-input>
+                  </div>
+                  <div class="col-sm-5">
+                    <div class="row">
+                      <label>Property Status </label>
+                    </div>
+                    <el-select
+                      class="select-primary"
+                      reqiured
+                      size="large"
+                      name="propertyStatus"
+                      placeholder="Property Status"
+                      v-model="propertyDetail.property_status"
+                      v-validate="modelValidations.propertyStatus"
+                      :error="getError('propertyStatus')"
+                    >
+                      <el-option
+                        v-for="option in propertyStatusChoices.status"
+                        class="select-primary"
+                        :value="option.value"
+                        :label="option.label"
+                        :key="option.label"
+                      >
+                      </el-option>
+                    </el-select>
+                  </div>
                 </div>
-              </div>
-            </card>
+              </card>
 
-            <card>
-              <h4 slot="header" class="card-title">
-                List of Property Prices for APN
-                <strong>{{ propertyDetail.apn }}</strong>
-              </h4>
-              <property-price-list
-                :propertyPrices="this.propertyDetail.property_price_statuses"
-                :propertyDetail="this.propertyDetail"
-              ></property-price-list>
-            </card>
+              <card>
+                <h4 slot="header" class="card-title">
+                  List of Property Prices for APN
+                  <strong>{{ propertyDetail.apn }}</strong>
+                </h4>
+                <div class="property-price-list">
+                  <property-price-list
+                    :propertyPrices="
+                      this.propertyDetail.property_price_statuses
+                    "
+                    :propertyDetail="this.propertyDetail"
+                  ></property-price-list>
+                </div>
+              </card>
 
-            <card>
-              <h5 class="info-text">
-                Listing Ad Details
-              </h5>
-              <div class="row justify-content-center mt-5">
-                <div class="col-sm-5">
-                  <base-input
-                    label="Company name"
-                    v-model="propertyDetail.company_name"
-                  >
-                  </base-input>
-                </div>
-                <div class="col-sm-5">
-                  <base-input label="Phone" v-model="propertyDetail.phone">
-                  </base-input>
-                </div>
-                <div class="col-sm-5">
-                  <base-input label="Email" v-model="propertyDetail.email">
-                  </base-input>
-                </div>
-                <div class="col-sm-5 category-choices">
-                  <base-input
-                    label="Website url"
-                    v-model="propertyDetail.website_url"
-                  >
-                  </base-input>
-                </div>
-                <div class="col-sm-5 mt-3">
-                  <a
-                    href="https://form.jotform.com/210818766251458"
-                    target="_blank"
-                    >Logo(Please attached file)</a
-                  >
-                </div>
-                <div class="col-sm-5">
-                  <base-input
-                    label="Logo(If you're using file storage such as Gdrive, Dropbox, etc..)"
-                    v-model="propertyDetail.file_storage"
-                  >
-                  </base-input>
-                </div>
-                <div class="col-sm-10 mt-3">
-                  <label>Notes</label>
-                  <textarea
-                    name="notes_client_side"
-                    class="form-control"
-                    placeholder="Notes from the Client"
-                    v-model="propertyDetail.notes_client_side"
-                  >
-                  </textarea>
+              <card>
+                <h5 class="info-text">
+                  Listing Ad Details
+                </h5>
+                <div class="row justify-content-center mt-5">
+                  <div class="col-sm-5">
+                    <base-input
+                      label="Company name"
+                      v-model="propertyDetail.company_name"
+                    >
+                    </base-input>
+                  </div>
+                  <div class="col-sm-5">
+                    <base-input label="Phone" v-model="propertyDetail.phone">
+                    </base-input>
+                  </div>
+                  <div class="col-sm-5">
+                    <base-input label="Email" v-model="propertyDetail.email">
+                    </base-input>
+                  </div>
+                  <div class="col-sm-5 category-choices">
+                    <base-input
+                      label="Website url"
+                      v-model="propertyDetail.website_url"
+                    >
+                    </base-input>
+                  </div>
+                  <div class="col-sm-5 mt-3">
+                    <a
+                      href="https://form.jotform.com/210818766251458"
+                      target="_blank"
+                      >Logo(Please attached file)</a
+                    >
+                  </div>
+                  <div class="col-sm-5">
+                    <base-input
+                      label="Logo(If you're using file storage such as Gdrive, Dropbox, etc..)"
+                      v-model="propertyDetail.file_storage"
+                    >
+                    </base-input>
+                  </div>
+                  <div class="col-sm-10 mt-3">
+                    <label>Notes</label>
+                    <textarea
+                      name="notes_client_side"
+                      class="form-control"
+                      placeholder="Notes from the Client"
+                      v-model="propertyDetail.notes_client_side"
+                    >
+                    </textarea>
 
-                  <textarea
-                    v-if="this.$auth.user.designation_category == 'staff'"
-                    name="notes_va_side"
-                    class="form-control"
-                    placeholder="Notes from VA"
-                    v-model="propertyDetail.notes_va_side"
-                  >
-                  </textarea>
+                    <textarea
+                      v-if="this.$auth.user.designation_category == 'staff'"
+                      name="notes_va_side"
+                      class="form-control"
+                      placeholder="Notes from VA"
+                      v-model="propertyDetail.notes_va_side"
+                    >
+                    </textarea>
 
-                  <textarea
-                    v-if="this.$auth.user.designation_category == 'staff'"
-                    name="notes_management_side"
-                    class="form-control"
-                    placeholder="Notes - Management side"
-                    v-model="propertyDetail.notes_management_side"
-                  >
-                  </textarea>
+                    <textarea
+                      v-if="this.$auth.user.designation_category == 'staff'"
+                      name="notes_management_side"
+                      class="form-control"
+                      placeholder="Notes - Management side"
+                      v-model="propertyDetail.notes_management_side"
+                    >
+                    </textarea>
+                  </div>
                 </div>
-              </div>
-            </card>
-          </div>
-          <div class="pull-right">
-            <base-button
-              v-if="!saving"
-              native-type="submit"
-              slot="footer"
-              type="submit"
-              round
-              block
-              size="lg"
-            >
-              Save
-            </base-button>
-            <base-button
-              v-else
-              native-type="submit"
-              slot="footer"
-              type="primary"
-              round
-              block
-              size="lg"
-              disabled
-            >
-              Saving...
-            </base-button>
-          </div>
-        </form>
+              </card>
+            </div>
+            <div class="pull-right">
+              <base-button
+                v-if="!saving"
+                native-type="submit"
+                slot="footer"
+                type="submit"
+                round
+                block
+                size="lg"
+              >
+                Save
+              </base-button>
+              <base-button
+                v-else
+                native-type="submit"
+                slot="footer"
+                type="primary"
+                round
+                block
+                size="lg"
+                disabled
+              >
+                Saving...
+              </base-button>
+            </div>
+          </form>
+        </b-skeleton-wrapper>
       </div>
     </div>
     <modal
@@ -374,15 +443,13 @@ export default {
       this.fetchPropertyPrices();
     },
     async fetchCounties(state) {
-      this.loading = true;
       let endpoint = `/api/v1/county/?search=${state}`;
       try {
         await this.$axios.get(endpoint).then((res) => {
           this.counties = res.data.results;
-          this.loading = false;
         });
       } catch (err) {
-        this.loading = false;
+        console.error(err);
       }
     },
     async changeFetchCounties(state) {
@@ -399,15 +466,12 @@ export default {
       }
     },
     async fetchStates() {
-      this.loading = true;
       let endpoint = `/api/v1/state/`;
       try {
         await this.$axios.get(endpoint).then((res) => {
           this.states = res.data.results;
-          this.loading = false;
         });
       } catch (err) {
-        this.loading = false;
         console.error(err);
       }
     },
@@ -430,47 +494,45 @@ export default {
       this.wizardModel = { ...this.wizardModel, ...model };
     },
     async fetchPropertyDetail(payload) {
+      this.loading = true;
       let endpoint = `/api/v1/property-detail/${payload}/`;
       return await this.$axios
         .get(endpoint)
         .then((res) => {
+          this.loading = false;
           this.propertyDetail = res.data;
         })
         .catch((e) => {
+          this.loading = false;
+          console.error(e);
           throw e;
         });
     },
     async fetchClient(id) {
-      this.loading = true;
       let endpoint = `/api/v1/client/${id}/`;
       try {
         await this.$axios.get(endpoint).then((res) => {
           this.clientUser = res.data;
-          this.loading = false;
         });
       } catch (err) {
         console.error(err.response.data);
       }
     },
     async fetchStaff(id) {
-      this.loading = true;
       let endpoint = `/api/v1/staff/${id}`;
       try {
         await this.$axios.get(endpoint).then((res) => {
           this.staffUser = res.data;
-          this.loading = false;
         });
       } catch (err) {
-        this.loading = false;
+        console.error(err);
       }
     },
     async fetchMe() {
-      this.loading = true;
       try {
         let endpoint = `/auth/users/me/`;
         await this.$axios.get(endpoint).then((res) => {
           this.user = res.data;
-          this.loading = false;
           if (
             this.user.designation_category == "new_client" ||
             this.user.designation_category == "current_client" ||
