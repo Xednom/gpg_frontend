@@ -425,7 +425,7 @@ export default {
         })
         .catch((e) => {
           this.loading = false;
-          console.error(e);
+          console.log(e);
           throw e;
         });
     },

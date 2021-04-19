@@ -307,7 +307,7 @@ export default {
         await this.$store.dispatch("user/fetchClientUser", id).then(() => {
         });
       } catch (err) {
-        console.log(err.response.data);
+        console.error(err.response.data);
       }
     },
     async fetchStaff(id) {
@@ -315,7 +315,7 @@ export default {
         await this.$store.dispatch("user/fetchStaff", id).then(() => {
         });
       } catch (err) {
-        console.erro(err);
+        console.error(err);
       }
     },
     async fetchMe() {
@@ -332,7 +332,7 @@ export default {
           }
         });
       } catch (err) {
-        console.log(err.response.data);
+        console.error(err.response.data);
       }
     },
     async fetchJobOrderCategory(id) {
@@ -407,9 +407,7 @@ export default {
         confirmButtonText: "Yes, delete it!",
         buttonsStyling: false,
       }).then((result) => {
-        console.log(row);
         if (result.value) {
-          console.log(row);
           this.deletejobOrderCategory(row);
           let url = `/api/v1/job-order-by-category/${row}/`;
           try {

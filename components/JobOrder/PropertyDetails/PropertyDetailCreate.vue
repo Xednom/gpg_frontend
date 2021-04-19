@@ -225,7 +225,6 @@ export default {
       e.preventDefault();
       var index = this.property_price_statuses
         .map(function(item) {
-          console.log(item.id);
           return item.id;
         })
         .indexOf(item);
@@ -238,37 +237,30 @@ export default {
       swal("Good job!", "You clicked the finish button!", "success");
     },
     async fetchClient(id) {
-      this.loading = true;
       let endpoint = `/api/v1/client/${id}/`;
       try {
         await this.$axios.get(endpoint).then((res) => {
           this.clientUser = res.data;
-          this.loading = false;
         });
       } catch (err) {
         console.error(err.response.data);
       }
     },
     async fetchStaff(id) {
-      this.loading = true;
       let endpoint = `/api/v1/staff/${id}`;
       try {
         await this.$axios.get(endpoint).then((res) => {
           this.staffUser = res.data;
-          this.loading = false;
         });
       } catch (err) {
-        this.loading = false;
+        console.error(err);
       }
     },
     async fetchMe() {
-      this.loading = true;
       try {
         let endpoint = `/auth/users/me/`;
         await this.$axios.get(endpoint).then((res) => {
           this.user = res.data;
-          this.loading = false;
-          console.log(this.user);
           if (
             this.user.designation_category == "new_client" ||
             this.user.designation_category == "current_client" ||
@@ -280,8 +272,7 @@ export default {
           }
         });
       } catch (err) {
-        console.log(err.response.data);
-        this.loading = false;
+        console.error(err.response.data);
       }
     },
     errorMessage(variant = null, error) {
@@ -358,8 +349,6 @@ export default {
           notes_management_side: this.notes_management_side,
           property_price_statuses: this.property_price_statuses,
         };
-
-        console.log(clientPayload);
 
         if (this.$auth.user.designation_category == "staff") {
           try {

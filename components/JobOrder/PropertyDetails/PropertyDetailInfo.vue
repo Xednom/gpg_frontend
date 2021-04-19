@@ -544,7 +544,7 @@ export default {
           }
         });
       } catch (err) {
-        console.log(err.response.data);
+        console.error(err.response.data);
         this.loading = false;
       }
     },
@@ -585,7 +585,6 @@ export default {
       if (isValidForm) {
         this.loading = true;
         this.propertyDetail.property_price_statuses.forEach((item) => {
-          console.log(item);
           item.user = this.$auth.user.id;
           item.updated_info =
             "Updated by " +

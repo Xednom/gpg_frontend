@@ -137,10 +137,6 @@ export default {
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
-    passPropertyPriceStatuses() {
-      this.property_price_statuses = this.propertyPriceStatuses;
-      console.log("hehe" + this.propertyPriceStatuses);
-    },
     validate() {
       return this.$validator.validateAll().then((res) => {
         this.$emit("on-validated", res, this.model);
@@ -161,7 +157,6 @@ export default {
       e.preventDefault();
       var index = this.property_price_statuses
         .map(function(item) {
-          console.log(item.id);
           return item.id;
         })
         .indexOf(item);

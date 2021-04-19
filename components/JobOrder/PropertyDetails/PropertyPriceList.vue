@@ -259,16 +259,13 @@ export default {
   methods: {
     // ...mapActions("propertyDetail", ["deletePropertyDetail"]),
     async fetchMe() {
-      this.loading = true;
       try {
         let endpoint = `/auth/users/me/`;
         await this.$axios.get(endpoint).then((res) => {
           this.user = res.data;
-          this.loading = false;
         });
       } catch (err) {
-        console.log(err.response.data);
-        this.loading = false;
+        console.error(err.response.data);
       }
     },
     handleLike(index, row) {
@@ -320,7 +317,6 @@ export default {
       return this.$axios
         .get(endpoint)
         .then((res) => {
-          console.log(this.propertyDetail);
           this.propertyPrices = res.data.results;
         })
         .catch((e) => {

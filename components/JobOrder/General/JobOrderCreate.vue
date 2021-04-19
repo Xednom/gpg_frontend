@@ -186,12 +186,10 @@ export default {
         });
     }, 700),
     async fetchClient(id) {
-      this.loading = true;
       let endpoint = `/api/v1/client/${id}/`;
       try {
         await this.$axios.get(endpoint).then((res) => {
           this.clientUser = res.data;
-          this.loading = false;
         });
       } catch (err) {
         console.error(err.response.data);
@@ -225,7 +223,7 @@ export default {
               this.fetch();
             });
           } catch (err) {
-            console.log(err);
+            console.error(err);
             this.success = false;
             this.error = err;
             this.errorMessage(this.error);

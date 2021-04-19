@@ -297,7 +297,6 @@ export default {
         await this.$axios.get(endpoint).then((res) => {
           this.user = res.data;
           this.loading = false;
-          console.log(this.user);
           if (
             this.user.designation_category == "new_client" ||
             this.user.designation_category == "current_client" ||
@@ -309,7 +308,7 @@ export default {
           }
         });
       } catch (err) {
-        console.log(err.response.data);
+        console.error(err.response.data);
         this.loading = false;
       }
     },

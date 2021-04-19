@@ -345,7 +345,7 @@ export default {
               this.fetch();
             });
           } catch (err) {
-            console.log(err);
+            console.error(err);
             this.success = false;
             this.error = err;
             this.errorMessage(this.error);

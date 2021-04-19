@@ -200,27 +200,21 @@ export default {
         });
     }, 700),
     async fetchCounties() {
-      this.loading = true;
       let endpoint = `/api/v1/county/?search=${this.state}`;
       try {
         await this.$axios.get(endpoint).then((res) => {
           this.counties = res.data.results;
-          this.loading = false;
         });
       } catch (err) {
-        this.loading = false;
       }
     },
     async fetchStates() {
-      this.loading = true;
       let endpoint = `/api/v1/state/`;
       try {
         await this.$axios.get(endpoint).then((res) => {
           this.states = res.data.results;
-          this.loading = false;
         });
       } catch (err) {
-        this.loading = false;
         console.error(err);
       }
     },

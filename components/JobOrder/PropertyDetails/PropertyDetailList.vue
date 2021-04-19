@@ -294,7 +294,7 @@ export default {
         await this.$store.dispatch("user/fetchClientUser", id).then(() => {
         });
       } catch (err) {
-        console.log(err.response.data);
+        console.error(err.response.data);
       }
     },
     async fetchStaff(id) {
@@ -394,9 +394,7 @@ export default {
         confirmButtonText: "Yes, delete it!",
         buttonsStyling: false,
       }).then((result) => {
-        console.log(row);
         if (result.value) {
-          console.log(row);
           this.deletePropertyDetail(row);
           let url = `/api/v1/property-detail/${row}/`;
           try {

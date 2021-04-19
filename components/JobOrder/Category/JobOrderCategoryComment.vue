@@ -136,7 +136,7 @@ export default {
                 this.refresh(this.job.id);
               });
           } catch (err) {
-            console.log(err);
+            console.error(err);
             this.success = false;
             this.error = err;
             this.errorMessage(this.error);
