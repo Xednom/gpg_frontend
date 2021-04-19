@@ -1,6 +1,6 @@
-# nuxt-black-dashboard-pro
+# GPG Corp. Management App
 
-> Nuxt Black Dashboard PRO
+> GPG Corp. Management App
 
 ## Build Setup
 

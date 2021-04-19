@@ -225,6 +225,7 @@ export default {
           { value: "land_master", label: "Landmaster.us" },
           { value: "call_me_ph", label: "CallMe.com.ph" },
           { value: "psalms_global", label: "Psalmsglobal.com" },
+          { value: "english_academy", label: "English Academy" },
           { value: "affiliate_partner", label: "Affiliate Partner" },
         ],
       },

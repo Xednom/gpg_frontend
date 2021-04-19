@@ -310,10 +310,8 @@ export default {
       }
     },
     async fetchMe() {
-      this.loading = true;
       try {
         await this.$store.dispatch("user/fetchUser").then(() => {
-          this.loading = false;
           if (
             this.$auth.user.designation_category == "new_client" ||
             this.$auth.user.designation_category == "current_client" ||
@@ -325,8 +323,7 @@ export default {
           }
         });
       } catch (err) {
-        console.log(err.response.data);
-        this.loading = false;
+        console.error(err.response.data);
       }
     },
     async fetchPropertyDetail(id) {

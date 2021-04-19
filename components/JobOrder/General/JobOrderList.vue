@@ -309,10 +309,8 @@ export default {
       }
     },
     async fetchMe() {
-      this.loading = true;
       try {
         await this.$store.dispatch("user/fetchUser").then(() => {
-          this.loading = false;
           if (
             this.$auth.user.designation_category == "new_client" ||
             this.$auth.user.designation_category == "current_client" ||
@@ -325,7 +323,6 @@ export default {
         });
       } catch (err) {
         console.error(err.response.data);
-        this.loading = false;
       }
     },
     async fetchJobOrder(id) {

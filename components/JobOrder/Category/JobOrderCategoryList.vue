@@ -109,7 +109,7 @@
                 </template>
 
                 <template #cell(url_of_the_completed_jo)="row">
-                  <nuxt-link :to="row.item.url_of_the_completed_jo" target="_blank">link here</nuxt-link>
+                  <nuxt-link :to="'//' + row.item.url_of_the_completed_jo" target="_blank">link here</nuxt-link>
                 </template>
               </b-table>
 
@@ -260,7 +260,7 @@ export default {
         { key: "property_detail", label: "APN", sortable: true},
         { key: "client_code", sortable: true, requiredStaff: true },
         { key: "category_", sortable: true },
-        { key: "status", sortable: true },
+        { key: "status_", sortable: true },
         { key: "due_date", sortable: true },
         { key: "date_completed", sortable: true },
         { key: "url_of_the_completed_jo", sortable: true }
@@ -323,10 +323,8 @@ export default {
       }
     },
     async fetchMe() {
-      this.loading = true;
       try {
         await this.$store.dispatch("user/fetchUser").then(() => {
-          this.loading = false;
           if (
             this.$auth.user.designation_category == "new_client" ||
             this.$auth.user.designation_category == "current_client" ||
@@ -339,7 +337,6 @@ export default {
         });
       } catch (err) {
         console.log(err.response.data);
-        this.loading = false;
       }
     },
     async fetchJobOrderCategory(id) {
