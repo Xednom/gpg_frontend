@@ -313,14 +313,17 @@ export default {
         });
     },
     fetchPropertyPrices() {
+      this.isBusy = true;
       let endpoint = `/api/v1/property-price/?search=${this.propertyDetail.id}`;
       return this.$axios
         .get(endpoint)
         .then((res) => {
+          this.isBusy = false;
           this.propertyPrices = res.data.results;
         })
         .catch((e) => {
-          throw e;
+          this.isBusy = false;
+          console.error(e);
         });
     },
     refresh() {

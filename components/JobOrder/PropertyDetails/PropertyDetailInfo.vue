@@ -91,6 +91,7 @@
                       size="large"
                       placeholder="Select a County"
                       v-model="propertyDetail.county"
+                      filterable
                     >
                       <template v-if="!this.propertyDetail.state"
                         >Please select a State first</template
@@ -117,6 +118,7 @@
                       placeholder="Select a State"
                       v-model="propertyDetail.state"
                       @change="changeFetchCounties"
+                      filterable
                     >
                       <el-option
                         v-for="option in states"
@@ -446,30 +448,28 @@ export default {
       let endpoint = `/api/v1/county/?search=${state}`;
       try {
         await this.$axios.get(endpoint).then((res) => {
-          this.counties = res.data.results;
+          this.counties = res.data;
         });
       } catch (err) {
         console.error(err);
       }
     },
     async changeFetchCounties(state) {
-      this.loading = true;
       let endpoint = `/api/v1/county/?search=${state}`;
       try {
         await this.$axios.get(endpoint).then((res) => {
-          this.counties = res.data.results;
+          this.counties = res.data;
           this.reset();
-          this.loading = false;
         });
       } catch (err) {
-        this.loading = false;
+        console.error(err);
       }
     },
     async fetchStates() {
       let endpoint = `/api/v1/state/`;
       try {
         await this.$axios.get(endpoint).then((res) => {
-          this.states = res.data.results;
+          this.states = res.data;
         });
       } catch (err) {
         console.error(err);
