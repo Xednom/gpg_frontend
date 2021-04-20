@@ -240,6 +240,10 @@ export default {
           { value: "dispute", label: "Dispute" },
           { value: "complete", label: "Complete" },
           { value: "under_quality_review", label: "Under Quality Review" },
+          { value: "daily_tasks", label: "Daily Tasks" },
+          { value: "weekly_tasks", label: "Weekly Tasks" },
+          { value: "monthly_tasks", label: "Monthly Tasks" },
+          { value: "redo", label: "Redo" },
         ],
       },
     };
