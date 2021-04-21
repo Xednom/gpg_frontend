@@ -173,6 +173,14 @@
                           disabled
                         >
                         </base-input>
+                        <base-input
+                          label="Property owner"
+                          name="property owner"
+                          required
+                          placeholder="Property owner"
+                          v-model="propertyDetail.property_owner"
+                        >
+                        </base-input>
                       </div>
                       <div class="col-sm-5">
                         <div class="row">
@@ -656,6 +664,7 @@ export default {
           county: this.propertyDetail.county,
           state: this.propertyDetail.state,
           size: this.propertyDetail.size,
+          property_owner: this.propertyDetail.property_owner,
           notes_client_side: this.propertyDetail.notes_client_side,
           notes_va_side: this.propertyDetail.notes_va_side,
           notes_management_side: this.propertyDetail.notes_management_side,
@@ -679,6 +688,7 @@ export default {
           county: this.propertyDetail.county,
           state: this.propertyDetail.state,
           size: this.propertyDetail.size,
+          property_owner: this.propertyDetail.property_owner,
           notes_client_side: this.propertyDetail.notes_client_side,
           notes_va_side: this.propertyDetail.notes_va_side,
           notes_management_side: this.propertyDetail.notes_management_side,
