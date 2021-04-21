@@ -12,20 +12,15 @@
           <base-input label="Phone" name="phone" v-model="phone"> </base-input>
         </div>
         <div class="col-sm-5">
-          <base-input
-            label="Email"
-            name="email"
-            v-validate="'required|email'"
-            :error="getError('email')"
-            v-model="email"
-          >
-          </base-input>
+          <base-input label="Email" name="email" v-model="email"> </base-input>
         </div>
         <div class="col-sm-5">
           <base-input label="Website URL" v-model="website_url"> </base-input>
         </div>
         <div class="col-sm-5 mt-3">
-          <a href="https://form.jotform.com/210818766251458" target="_blank">Logo(Please attached file)</a>
+          <a href="https://form.jotform.com/210818766251458" target="_blank"
+            >Logo(Please attached file)</a
+          >
         </div>
         <div class="col-sm-5">
           <base-input
@@ -77,16 +72,7 @@ export default {
     [Option.name]: Option,
   },
   data() {
-    return {
-      modelValidations: {
-        // category: {
-        //   required: true,
-        // },
-        adDetails: {
-          required: true,
-        },
-      },
-    };
+    return {};
   },
   methods: {
     getError(fieldName) {
