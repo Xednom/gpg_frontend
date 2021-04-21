@@ -81,6 +81,30 @@
 
       <div class="form-row">
         <div class="col-sm-12 col-md-12">
+          <div class="row">
+            <label>Status</label>
+          </div>
+          <el-select
+            class="select-primary"
+            size="large"
+            name="status"
+            placeholder="Status"
+            v-model="status"
+          >
+            <el-option
+              v-for="option in StatusChoices.status"
+              class="select-primary"
+              :value="option.value"
+              :label="option.label"
+              :key="option.label"
+            >
+            </el-option>
+          </el-select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="col-sm-12 col-md-12">
           <textarea
             class="form-control"
             placeholder="Job description"
@@ -125,7 +149,7 @@
 <script>
 import { mapActions } from "vuex";
 import CreateJobMixin from "@/mixins/CreateJobOrderMixin.js";
-import { DatePicker, Select } from "element-ui";
+import { DatePicker, Select, Option } from "element-ui";
 import { BaseAlert } from "@/components";
 import VueTypeaheadBootstrap from "vue-typeahead-bootstrap";
 import { debounce } from "lodash";
@@ -135,6 +159,7 @@ export default {
     BaseAlert,
     [DatePicker.name]: DatePicker,
     [Select.name]: Select,
+    [Option.name]: Option,
     VueTypeaheadBootstrap,
   },
   mixins: [CreateJobMixin],
@@ -166,6 +191,26 @@ export default {
         job_title: "",
         job_description: "",
         client_notes: "",
+      },
+      StatusChoices: {
+        placeholder: "",
+        status: [
+          { value: "na", label: "N/A" },
+          { value: "job_order_request", label: "Job order request" },
+          { value: "va_processing", label: "VA Processing" },
+          { value: "management_processing", label: "Management Processing" },
+          { value: "verified_job_order", label: "Verified Job Order" },
+          { value: "on_hold", label: "On Hold" },
+          { value: "canceled", label: "Canceled" },
+          { value: "follow_up", label: "Follow up" },
+          { value: "dispute", label: "Dispute" },
+          { value: "complete", label: "Complete" },
+          { value: "under_quality_review", label: "Under Quality Review" },
+          { value: "daily_tasks", label: "Daily Tasks" },
+          { value: "weekly_tasks", label: "Weekly Tasks" },
+          { value: "monthly_tasks", label: "Monthly Tasks" },
+          { value: "redo", label: "Redo" },
+        ],
       },
       error: "",
     };
@@ -209,6 +254,7 @@ export default {
             request_date: this.request_date,
             due_date: this.due_date,
             job_title: this.job_title,
+            status: this.status,
             job_description: this.job_description,
           };
           try {
@@ -235,6 +281,7 @@ export default {
             request_date: this.request_date,
             due_date: this.due_date,
             job_title: this.job_title,
+            status: this.status,
             job_description: this.job_description,
           };
           await this.saveJobOrder(payload);
@@ -285,6 +332,14 @@ export default {
       },
       set(value) {
         this.setBasicStoreValue("job_title", value);
+      },
+    },
+    status: {
+      get() {
+        return this.$store.getters["jobOrder/status"];
+      },
+      set(value) {
+        this.setBasicStoreValue("status", value);
       },
     },
     job_description: {
