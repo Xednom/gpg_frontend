@@ -97,6 +97,15 @@
             >
             </el-option>
           </el-select>
+
+          <base-input
+            label="Property Owner"
+            class="mt-2"
+            name="Property owner"
+            placeholder="Property Owner"
+            v-model="propertyOwner"
+          >
+          </base-input>
         </div>
         <div class="col-sm-5">
           <div v-if="this.$auth.user.designation_category == 'staff'">
@@ -115,6 +124,9 @@
               @input="getClientCode"
             />
           </div>
+        </div>
+        <div class="col-sm-5">
+          
         </div>
       </div>
     </card>
@@ -268,6 +280,14 @@ export default {
       },
       set(value) {
         this.setBasicStoreValue("property_status", value);
+      },
+    },
+    propertyOwner: {
+      get() {
+        return this.$store.getters["propertyDetail/property_owner"];
+      },
+      set(value) {
+        this.setBasicStoreValue("property_owner", value);
       },
     },
   },
