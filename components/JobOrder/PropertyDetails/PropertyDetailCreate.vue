@@ -3,96 +3,105 @@
     <div class="row d-flex justify-content-center">
       <div class="col-md-10">
         <form @submit.prevent="save">
-          <first-step></first-step>
-          <card>
-            <h5 class="info-text">
-              Property Price
-            </h5>
-            <div
-              class="row justify-content-center mt-5"
-              v-for="(item, index) in this.property_price_statuses"
-              :key="index"
-            >
-              <div class="col-sm-5 col-md-3">
-                <base-input
-                  label="Asking price"
-                  name="askingPrice"
-                  required
-                  v-model="item.asking_price"
-                  v-validate="modelValidations.askingPrice"
-                  :error="getError('askingPrice')"
+          <tabs
+            type="primary"
+            tabNavWrapperClasses="col-lg-3 col-md-6"
+            tabContentClasses="col-md-8"
+            vertical
+            square
+            class="row"
+          >
+            <tab-pane>
+              <span slot="label">
+                Property Details
+              </span>
+              <first-step></first-step>
+            </tab-pane>
+            <tab-pane>
+              <span slot="label">
+                Property Price
+              </span>
+              <card>
+                <div
+                  class="row justify-content-center mt-5"
+                  v-for="(item, index) in this.property_price_statuses"
+                  :key="index"
                 >
-                </base-input>
-              </div>
-              <div class="col-sm-5 col-md-3">
-                <base-input
-                  label="Cash terms"
-                  name="cashTerms"
-                  required
-                  v-model="item.cash_terms"
-                  v-validate="modelValidations.cashTerms"
-                  :error="getError('cashTerms')"
-                >
-                </base-input>
-              </div>
-              <div class="col-sm-5 col-md-3 status">
-                <div class="row">
-                  <label>Price status</label>
-                </div>
-                <el-select
-                  class="select-primary"
-                  size="large"
-                  name="price_status"
-                  v-model="item.price_status"
-                >
-                  <el-option
-                    v-for="option in priceStatusChoices.status"
-                    class="select-primary"
-                    :value="option.value"
-                    :label="option.label"
-                    :key="option.label"
-                  >
-                  </el-option>
-                </el-select>
-              </div>
-              <div class="col-sm-12 col-md-12 mt-3">
-                <label>Finance Terms</label>
-                <textarea
-                  name=""
-                  id=""
-                  cols="30"
-                  rows="10"
-                  class="form-control"
-                  v-model="item.finance_terms"
-                ></textarea>
-              </div>
-              <div class="col-sm-12 col-md-12 mt-3">
-                <label>Other Terms</label>
-                <textarea
-                  name=""
-                  id=""
-                  cols="30"
-                  rows="10"
-                  class="form-control"
-                  v-model="item.other_terms"
-                ></textarea>
-              </div>
-              <div class="col-sm-12 mt-3">
-                <label>Notes</label>
-                <textarea
-                  name="notes"
-                  class="form-control"
-                  type="text"
-                  v-model="item.notes"
-                  v-validate="'required'"
-                  :error="getError('notes')"
-                  required
-                >
-                </textarea>
-              </div>
-            </div>
-          </card>
-          <third-step></third-step>
+                  <div class="col-sm-5 col-md-3">
+                    <base-input
+                      label="Asking price"
+                      name="askingPrice"
+                      v-model="item.asking_price"
+                    >
+                    </base-input>
+                  </div>
+                  <div class="col-sm-5 col-md-3">
+                    <base-input
+                      label="Cash terms"
+                      name="cashTerms"
+                      v-model="item.cash_terms"
+                    >
+                    </base-input>
+                  </div>
+                  <div class="col-sm-5 col-md-3 status">
+                    <div class="row">
+                      <label>Price status</label>
+                    </div>
+                    <el-select
+                      class="select-primary"
+                      size="large"
+                      name="price_status"
+                      v-model="item.price_status"
+                    >
+                      <el-option
+                        v-for="option in priceStatusChoices.status"
+                        class="select-primary"
+                        :value="option.value"
+                        :label="option.label"
+                        :key="option.label"
+                      >
+                      </el-option>
+                    </el-select>
+                  </div>
+                  <div class="col-sm-12 col-md-12 mt-3">
+                    <label>Finance Terms</label>
+                    <textarea
+                      name=""
+                      id=""
+                      cols="30"
+                      rows="10"
+                      class="form-control"
+                      v-model="item.finance_terms"
+                    ></textarea>
+                  </div>
+                  <div class="col-sm-12 col-md-12 mt-3">
+                    <label>Other Terms</label>
+                    <textarea
+                      name=""
+                      id=""
+                      cols="30"
+                      rows="10"
+                      class="form-control"
+                      v-model="item.other_terms"
+                    ></textarea>
+                  </div>
+                  <div class="col-sm-12 mt-3">
+                    <label>Notes</label>
+                    <textarea
+                      name="notes"
+                      class="form-control"
+                      type="text"
+                      v-model="item.notes"
+                    >
+                    </textarea>
+                  </div></div
+              ></card>
+            </tab-pane>
+            <tab-pane>
+              <span slot="label">Listing Ad Details</span>
+              <third-step></third-step>
+            </tab-pane>
+          </tabs>
           <div class="pull-right">
             <base-button
               v-if="!saving"
@@ -130,7 +139,7 @@ import FirstStep from "@/components/JobOrder/PropertyDetails/PropertyDetailFirst
 import SecondStep from "@/components/JobOrder/PropertyDetails/PropertyDetailSecondStep.vue";
 import ThirdStep from "@/components/JobOrder/PropertyDetails/PropertyDetailThirdStep.vue";
 import swal from "sweetalert2";
-import { SimpleWizard, WizardTab } from "@/components";
+import { TabPane, Tabs, Collapse, CollapseItem } from "@/components";
 
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
 import { Select, Option } from "element-ui";
@@ -153,26 +162,6 @@ export default {
           { value: "active", label: "Active" },
         ],
       },
-      modelValidations: {
-        askingPrice: {
-          required: true,
-        },
-        cashTerms: {
-          required: true,
-        },
-        financeTerms: {
-          required: true,
-        },
-        otherTerms: {
-          required: true,
-        },
-        notes: {
-          required: true,
-        },
-        priceStatus: {
-          required: true,
-        },
-      },
       error: {
         client: "",
         staff: "",
@@ -193,8 +182,10 @@ export default {
     FirstStep,
     SecondStep,
     ThirdStep,
-    SimpleWizard,
-    WizardTab,
+    TabPane,
+    Tabs,
+    Collapse,
+    CollapseItem,
     [Select.name]: Select,
     [Option.name]: Option,
   },
@@ -284,7 +275,7 @@ export default {
           : error.county
           ? "County" + error.county
           : error.size
-          ? "Size: " + error.username
+          ? "Size: " + error.size
           : error.property_status
           ? "Property status: " + error.property_status
           : error.asking_price
@@ -324,6 +315,7 @@ export default {
           county: this.county,
           state: this.state,
           size: this.size,
+          property_owner: this.property_owner,
           notes_client_side: this.notes_client_side,
           notes_va_side: this.notes_va_side,
           notes_management_side: this.notes_management_side,
@@ -344,6 +336,7 @@ export default {
           county: this.county,
           state: this.state,
           size: this.size,
+          property_owner: this.property_owner,
           notes_client_side: this.notes_client_side,
           notes_va_side: this.notes_va_side,
           notes_management_side: this.notes_management_side,
@@ -403,6 +396,7 @@ export default {
       "county",
       "state",
       "size",
+      "property_owner",
       "company_name",
       "phone",
       "email",
