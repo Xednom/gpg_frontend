@@ -67,205 +67,239 @@
           </template>
 
           <form @submit.prevent="save">
+            <base-alert v-if="success" type="success" dismissible>
+              <span>
+                {{ successMessage() }}
+              </span>
+            </base-alert>
             <div class="col-sm-12 col-md-12">
               <card>
-                <h5 class="info-text">Property Details</h5>
-                <div class="row justify-content-center mt-5">
-                  <div class="col-sm-5">
-                    <base-input
-                      label="APN"
-                      name="apn"
-                      required
-                      placeholder="APN"
-                      v-model="propertyDetail.apn"
-                      v-validate="modelValidations.apn"
-                      :error="getError('apn')"
-                    >
-                    </base-input>
-
-                    <div class="row">
-                      <label>County</label>
-                    </div>
-                    <el-select
-                      class="select-primary"
-                      size="large"
-                      placeholder="Select a County"
-                      v-model="propertyDetail.county"
-                      filterable
-                    >
-                      <template v-if="!this.propertyDetail.state"
-                        >Please select a State first</template
-                      >
-                      <template v-else>
-                        <el-option
-                          v-for="option in counties"
-                          class="select-primary"
-                          :value="option.name"
-                          :label="option.label"
-                          :key="option.label"
+                <template slot="header">
+                  <h3 class="card-title">APN Inventory</h3>
+                </template>
+                <tabs
+                  type="primary"
+                  tabNavWrapperClasses="col-lg-3 col-md-6"
+                  tabContentClasses="col-md-8"
+                  vertical
+                  square
+                  class="row"
+                >
+                  <tab-pane>
+                    <span slot="label">
+                      <i class="tim-icons"></i>Property Details
+                    </span>
+                    <h5 class="info-text">Property Details</h5>
+                    <div class="row justify-content-center mt-5">
+                      <div class="col-sm-5">
+                        <base-input
+                          label="APN"
+                          name="apn"
+                          required
+                          placeholder="APN"
+                          v-model="propertyDetail.apn"
+                          v-validate="modelValidations.apn"
+                          :error="getError('apn')"
                         >
-                        </el-option>
-                      </template>
-                    </el-select>
-                  </div>
-                  <div class="col-sm-5">
-                    <div class="row">
-                      <label>State</label>
+                        </base-input>
+
+                        <div class="row">
+                          <label>County</label>
+                        </div>
+                        <el-select
+                          class="select-primary"
+                          size="large"
+                          placeholder="Select a County"
+                          v-model="propertyDetail.county"
+                          filterable
+                        >
+                          <template v-if="!this.propertyDetail.state"
+                            >Please select a State first</template
+                          >
+                          <template v-else>
+                            <el-option
+                              v-for="option in counties"
+                              class="select-primary"
+                              :value="option.name"
+                              :label="option.label"
+                              :key="option.label"
+                            >
+                            </el-option>
+                          </template>
+                        </el-select>
+                      </div>
+                      <div class="col-sm-5">
+                        <div class="row">
+                          <label>State</label>
+                        </div>
+                        <el-select
+                          class="select-primary"
+                          size="large"
+                          placeholder="Select a State"
+                          v-model="propertyDetail.state"
+                          @change="changeFetchCounties"
+                          filterable
+                        >
+                          <el-option
+                            v-for="option in states"
+                            class="select-primary"
+                            :value="option.name"
+                            :label="option.label"
+                            :key="option.label"
+                          >
+                          </el-option>
+                        </el-select>
+
+                        <base-input
+                          label="Size"
+                          name="size"
+                          required
+                          placeholder="Size(Acreage)"
+                          v-model="propertyDetail.size"
+                          v-validate="modelValidations.size"
+                          :error="getError('size')"
+                        >
+                        </base-input>
+                      </div>
+                      <div class="col-sm-5">
+                        <base-input
+                          label="Client code"
+                          name="client_code"
+                          required
+                          placeholder="Client code"
+                          v-model="propertyDetail.client"
+                          v-validate="modelValidations.client_code"
+                          :error="getError('client_code')"
+                          disabled
+                        >
+                        </base-input>
+                      </div>
+                      <div class="col-sm-5">
+                        <div class="row">
+                          <label>Property Status </label>
+                        </div>
+                        <el-select
+                          class="select-primary"
+                          reqiured
+                          size="large"
+                          name="propertyStatus"
+                          placeholder="Property Status"
+                          v-model="propertyDetail.property_status"
+                          v-validate="modelValidations.propertyStatus"
+                          :error="getError('propertyStatus')"
+                        >
+                          <el-option
+                            v-for="option in propertyStatusChoices.status"
+                            class="select-primary"
+                            :value="option.value"
+                            :label="option.label"
+                            :key="option.label"
+                          >
+                          </el-option>
+                        </el-select>
+                      </div>
                     </div>
-                    <el-select
-                      class="select-primary"
-                      size="large"
-                      placeholder="Select a State"
-                      v-model="propertyDetail.state"
-                      @change="changeFetchCounties"
-                      filterable
-                    >
-                      <el-option
-                        v-for="option in states"
-                        class="select-primary"
-                        :value="option.name"
-                        :label="option.label"
-                        :key="option.label"
-                      >
-                      </el-option>
-                    </el-select>
+                  </tab-pane>
 
-                    <base-input
-                      label="Size"
-                      name="size"
-                      required
-                      placeholder="Size(Acreage)"
-                      v-model="propertyDetail.size"
-                      v-validate="modelValidations.size"
-                      :error="getError('size')"
-                    >
-                    </base-input>
-                  </div>
-                  <div class="col-sm-5">
-                    <base-input
-                      label="Client code"
-                      name="client_code"
-                      required
-                      placeholder="Client code"
-                      v-model="propertyDetail.client"
-                      v-validate="modelValidations.client_code"
-                      :error="getError('client_code')"
-                      disabled
-                    >
-                    </base-input>
-                  </div>
-                  <div class="col-sm-5">
-                    <div class="row">
-                      <label>Property Status </label>
+                  <tab-pane>
+                    <span slot="label">
+                      List of Property Prices for APN
+                      <strong>{{ propertyDetail.apn }}</strong>
+                    </span>
+                    <property-price-list
+                      :propertyDetail="this.propertyDetail"
+                    ></property-price-list>
+                  </tab-pane>
+                  <tab-pane>
+                    <span slot="label">
+                      List of Property files for APN
+                      <strong>{{ propertyDetail.apn }}</strong>
+                    </span>
+                    <property-file-list
+                      :propertyDetail="this.propertyDetail"
+                    ></property-file-list>
+                  </tab-pane>
+                  <tab-pane>
+                    <span slot="label">
+                      Listing Ad Details
+                    </span>
+                    <h5 class="info-text">
+                      Listing Ad Details
+                    </h5>
+                    <div class="row justify-content-center mt-5">
+                      <div class="col-sm-5">
+                        <base-input
+                          label="Company name"
+                          v-model="propertyDetail.company_name"
+                        >
+                        </base-input>
+                      </div>
+                      <div class="col-sm-5">
+                        <base-input
+                          label="Phone"
+                          v-model="propertyDetail.phone"
+                        >
+                        </base-input>
+                      </div>
+                      <div class="col-sm-5">
+                        <base-input
+                          label="Email"
+                          v-model="propertyDetail.email"
+                        >
+                        </base-input>
+                      </div>
+                      <div class="col-sm-5 category-choices">
+                        <base-input
+                          label="Website url"
+                          v-model="propertyDetail.website_url"
+                        >
+                        </base-input>
+                      </div>
+                      <div class="col-sm-5 mt-3">
+                        <a
+                          href="https://form.jotform.com/210818766251458"
+                          target="_blank"
+                          >Logo(Please attached file)</a
+                        >
+                      </div>
+                      <div class="col-sm-5">
+                        <base-input
+                          label="Logo(If you're using file storage such as Gdrive, Dropbox, etc..)"
+                          v-model="propertyDetail.file_storage"
+                        >
+                        </base-input>
+                      </div>
+                      <div class="col-sm-10 mt-3">
+                        <label>Notes</label>
+                        <textarea
+                          name="notes_client_side"
+                          class="form-control"
+                          placeholder="Notes from the Client"
+                          v-model="propertyDetail.notes_client_side"
+                        >
+                        </textarea>
+
+                        <textarea
+                          v-if="this.$auth.user.designation_category == 'staff'"
+                          name="notes_va_side"
+                          class="form-control"
+                          placeholder="Notes from VA"
+                          v-model="propertyDetail.notes_va_side"
+                        >
+                        </textarea>
+
+                        <textarea
+                          v-if="this.$auth.user.designation_category == 'staff'"
+                          name="notes_management_side"
+                          class="form-control"
+                          placeholder="Notes - Management side"
+                          v-model="propertyDetail.notes_management_side"
+                        >
+                        </textarea>
+                      </div>
                     </div>
-                    <el-select
-                      class="select-primary"
-                      reqiured
-                      size="large"
-                      name="propertyStatus"
-                      placeholder="Property Status"
-                      v-model="propertyDetail.property_status"
-                      v-validate="modelValidations.propertyStatus"
-                      :error="getError('propertyStatus')"
-                    >
-                      <el-option
-                        v-for="option in propertyStatusChoices.status"
-                        class="select-primary"
-                        :value="option.value"
-                        :label="option.label"
-                        :key="option.label"
-                      >
-                      </el-option>
-                    </el-select>
-                  </div>
-                </div>
-              </card>
-
-              <card>
-                <h4 slot="header" class="card-title">
-                  List of Property Prices for APN
-                  <strong>{{ propertyDetail.apn }}</strong>
-                </h4>
-                <div class="property-price-list">
-                  <property-price-list
-                    :propertyPrices="
-                      this.propertyDetail.property_price_statuses
-                    "
-                    :propertyDetail="this.propertyDetail"
-                  ></property-price-list>
-                </div>
-              </card>
-
-              <card>
-                <h5 class="info-text">
-                  Listing Ad Details
-                </h5>
-                <div class="row justify-content-center mt-5">
-                  <div class="col-sm-5">
-                    <base-input
-                      label="Company name"
-                      v-model="propertyDetail.company_name"
-                    >
-                    </base-input>
-                  </div>
-                  <div class="col-sm-5">
-                    <base-input label="Phone" v-model="propertyDetail.phone">
-                    </base-input>
-                  </div>
-                  <div class="col-sm-5">
-                    <base-input label="Email" v-model="propertyDetail.email">
-                    </base-input>
-                  </div>
-                  <div class="col-sm-5 category-choices">
-                    <base-input
-                      label="Website url"
-                      v-model="propertyDetail.website_url"
-                    >
-                    </base-input>
-                  </div>
-                  <div class="col-sm-5 mt-3">
-                    <a
-                      href="https://form.jotform.com/210818766251458"
-                      target="_blank"
-                      >Logo(Please attached file)</a
-                    >
-                  </div>
-                  <div class="col-sm-5">
-                    <base-input
-                      label="Logo(If you're using file storage such as Gdrive, Dropbox, etc..)"
-                      v-model="propertyDetail.file_storage"
-                    >
-                    </base-input>
-                  </div>
-                  <div class="col-sm-10 mt-3">
-                    <label>Notes</label>
-                    <textarea
-                      name="notes_client_side"
-                      class="form-control"
-                      placeholder="Notes from the Client"
-                      v-model="propertyDetail.notes_client_side"
-                    >
-                    </textarea>
-
-                    <textarea
-                      v-if="this.$auth.user.designation_category == 'staff'"
-                      name="notes_va_side"
-                      class="form-control"
-                      placeholder="Notes from VA"
-                      v-model="propertyDetail.notes_va_side"
-                    >
-                    </textarea>
-
-                    <textarea
-                      v-if="this.$auth.user.designation_category == 'staff'"
-                      name="notes_management_side"
-                      class="form-control"
-                      placeholder="Notes - Management side"
-                      v-model="propertyDetail.notes_management_side"
-                    >
-                    </textarea>
-                  </div>
-                </div>
+                  </tab-pane>
+                </tabs>
               </card>
             </div>
             <div class="pull-right">
@@ -310,9 +344,13 @@ import { mapGetters, mapActions } from "vuex";
 
 import { Modal } from "@/components";
 import { Select, Option } from "element-ui";
+import { BaseAlert } from "@/components";
 import PropertyPriceList from "~/components/JobOrder/PropertyDetails/PropertyPriceList";
+import PropertyFileList from "~/components/JobOrder/PropertyDetails/PropertyDetailFiles/PropertyDetailFileList";
 import PropertyPriceCreate from "~/components/JobOrder/PropertyDetails/PropertyPriceCreate";
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
+
+import { TabPane, Tabs, Collapse, CollapseItem } from "@/components";
 
 export default {
   name: "wizard-form",
@@ -320,10 +358,12 @@ export default {
   data() {
     return {
       property_price_statuses: [],
+      property_detail_files: [],
       user: {},
       wizardModel: {},
       loading: false,
       saving: false,
+      success: false,
       clientUser: {},
       staffUser: {},
       propertyDetail: {},
@@ -420,8 +460,14 @@ export default {
     [Select.name]: Select,
     [Option.name]: Option,
     PropertyPriceList,
+    PropertyFileList,
     Modal,
     PropertyPriceCreate,
+    TabPane,
+    Tabs,
+    Collapse,
+    CollapseItem,
+    BaseAlert,
   },
   provide() {
     return {
@@ -555,7 +601,7 @@ export default {
           : this.error.state
           ? "State: " + this.error.state
           : this.error.county
-          ? "County" + this.error.county
+          ? "County: " + this.error.county
           : this.error.size
           ? "Size: " + this.error.username
           : this.error.property_status
@@ -580,10 +626,13 @@ export default {
         }
       );
     },
+    successMessage() {
+      return "Successfully updated your APN informations!";
+    },
     async save() {
       let isValidForm = await this.$validator.validateAll();
       if (isValidForm) {
-        this.loading = true;
+        this.saving = true;
         this.propertyDetail.property_price_statuses.forEach((item) => {
           item.user = this.$auth.user.id;
           item.updated_info =
@@ -647,7 +696,8 @@ export default {
             await this.updatePropertyDetail(staffPayload)
               .then(() => {
                 this.saving = false;
-                this.$router.push("/job-order/property-detail");
+                this.success = true;
+                this.successMessage();
               })
               .catch((e) => {
                 this.saving = false;
@@ -659,13 +709,15 @@ export default {
             this.error = e.response.data;
             this.errorMessage("danger", this.error);
           }
+          setTimeout(() => (this.success = false), 2000);
         } else {
           try {
             this.saving = true;
             await this.updatePropertyDetail(clientPayload)
               .then(() => {
                 this.saving = false;
-                this.$router.push("/job-order/property-detail");
+                this.success = true;
+                this.successMessage();
               })
               .catch((e) => {
                 this.saving = false;
@@ -677,9 +729,9 @@ export default {
             this.error = e.response.data;
             this.errorMessage("danger", this.error);
           }
+          setTimeout(() => (this.success = false), 2000);
         }
-        this.loading = false;
-        this.reset();
+        this.saving = false;
       }
     },
   },
