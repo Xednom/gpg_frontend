@@ -13,11 +13,13 @@ const blankState = {
   county: "",
   state: "",
   size: "",
+  property_owner: "",
   notes_client_side: "",
   notes_va_side: "",
   notes_management_side: "",
   comment: "",
   property_price_statuses: [],
+  property_detail_files: [],
   property_detail: "",
   user: null,
   asking_price: "",
@@ -25,7 +27,11 @@ const blankState = {
   finance_terms: "",
   other_terms: "",
   price_status: "",
-  notes: ""
+  notes: "",
+  // property detail files
+  details: "",
+  url: "",
+  description: ""
 };
 
 export const state = () => ({
@@ -33,6 +39,7 @@ export const state = () => ({
   propertyDetails: [],
   propertyDetail: {},
   propertyPrice: {},
+  propertyDetailFile: {},
   propertyDetailsPagination: {
     offset: 0,
     count: 0,
@@ -56,6 +63,7 @@ export const getters = {
   county: (state) => state.county,
   state: (state) => state.state,
   size: (state) => state.size,
+  property_owner: (state) => state.property_owner,
   property_detail: (state) => state.property_detail,
   user: (state) => state.user,
   asking_price: (state) => state.asking_price,
@@ -70,6 +78,10 @@ export const getters = {
   propertyDetails: (state) => state.propertyDetails,
   comment: (state) => state.comment,
   property_price_statuses: (state) => state.property_price_statuses,
+  property_detail_files: (state) => state.property_detail_files,
+  details: (state) => state.details,
+  url: (state) => state.url,
+  description: (state) => state.description,
   propertyPrice: (state) => {
     return state.propertyPrice;
   },
@@ -216,6 +228,20 @@ export const actions = {
     console.log(payload);
     let url = `/api/v1/property-price/`;
     let method = "post";
+    return await this.$axios[method](url, payload).then((res) => {
+      return res.data;
+    });
+  },
+  async createPropertyFile({ commit }, payload) {
+    let url = `/api/v1/property-detail-file/`;
+    let method = "post";
+    return await this.$axios[method](url, payload).then((res) => {
+      return res.data;
+    });
+  },
+  async updatePropertyDetailFile({ commit }, payload) {
+    let url = `/api/v1/property-detail-file/${payload.id}/`;
+    let method = "put";
     return await this.$axios[method](url, payload).then((res) => {
       return res.data;
     });
