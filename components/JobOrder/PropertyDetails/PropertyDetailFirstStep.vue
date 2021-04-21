@@ -97,15 +97,6 @@
             >
             </el-option>
           </el-select>
-
-          <base-input
-            label="Property Owner"
-            class="mt-2"
-            name="Property owner"
-            placeholder="Property Owner"
-            v-model="propertyOwner"
-          >
-          </base-input>
         </div>
         <div class="col-sm-5">
           <div v-if="this.$auth.user.designation_category == 'staff'">
@@ -124,10 +115,16 @@
               @input="getClientCode"
             />
           </div>
+          <base-input
+            label="Property Owner"
+            class="mt-2"
+            name="Property owner"
+            placeholder="Property Owner"
+            v-model="propertyOwner"
+          >
+          </base-input>
         </div>
-        <div class="col-sm-5">
-          
-        </div>
+        <div class="col-sm-5"></div>
       </div>
     </card>
   </div>
@@ -219,8 +216,7 @@ export default {
         await this.$axios.get(endpoint).then((res) => {
           this.counties = res.data;
         });
-      } catch (err) {
-      }
+      } catch (err) {}
     },
     async fetchStates() {
       let endpoint = `/api/v1/state/`;
@@ -296,5 +292,4 @@ export default {
   },
 };
 </script>
-<style scoped>
-</style>
+<style scoped></style>
