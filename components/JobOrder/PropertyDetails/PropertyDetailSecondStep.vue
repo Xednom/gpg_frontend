@@ -13,10 +13,7 @@
           <base-input
             label="Asking price"
             name="askingPrice"
-            required
             v-model="item.asking_price"
-            v-validate="modelValidations.askingPrice"
-            :error="getError('askingPrice')"
           >
           </base-input>
         </div>
@@ -24,10 +21,7 @@
           <base-input
             label="Cash terms"
             name="cashTerms"
-            required
             v-model="item.cash_terms"
-            v-validate="modelValidations.cashTerms"
-            :error="getError('cashTerms')"
           >
           </base-input>
         </div>
@@ -35,10 +29,7 @@
           <base-input
             label="Finance terms"
             name="financeTerms"
-            required
             v-model="item.finance_terms"
-            v-validate="modelValidations.financeTerms"
-            :error="getError('financeTerms')"
           >
           </base-input>
         </div>
@@ -46,10 +37,7 @@
           <base-input
             label="Other terms"
             name="otherTerms"
-            required
             v-model="item.other_terms"
-            v-validate="modelValidations.otherTerms"
-            :error="getError('otherTerms')"
           >
           </base-input>
         </div>
@@ -80,9 +68,6 @@
             class="form-control"
             type="text"
             v-model="item.notes"
-            v-validate="'required'"
-            :error="getError('notes')"
-            required
           >
           </textarea>
         </div>
@@ -104,26 +89,6 @@ export default {
     return {
       saving: false,
       property_price_statuses: [],
-      modelValidations: {
-        askingPrice: {
-          required: true,
-        },
-        cashTerms: {
-          required: true,
-        },
-        financeTerms: {
-          required: true,
-        },
-        otherTerms: {
-          required: true,
-        },
-        notes: {
-          required: true,
-        },
-        priceStatus: {
-          required: true,
-        },
-      },
       priceStatusChoices: {
         placeholder: "",
         status: [
