@@ -93,6 +93,10 @@
                   >
                 </template>
 
+                <template #cell(url_of_the_completed_jo)="row">
+                  <a :href="row.item.url_of_the_completed_jo" target="_blank">link here</a>
+                </template>
+
                 <template #row-details="row">
                   <b-card>
                     <ul>
@@ -250,7 +254,8 @@ export default {
         { key: "job_title", sortable: true },
         { key: "status_", sortable: true },
         { key: "date_completed", sortable: true },
-        { key: "total_time_consumed", sortable: true }
+        { key: "total_time_consumed", sortable: true },
+        { key: "url_of_the_completed_jo", sortable: true }
       ],
       totalRows: 1,
       currentPage: 1,

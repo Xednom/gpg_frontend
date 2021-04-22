@@ -144,6 +144,17 @@
                 </textarea>
               </div>
             </div>
+            <div class="form-row mt-3">
+              <div class="col-sm-12 col-md-12">
+                <label>URL of the completed JO</label>
+                <textarea
+                  class="form-control"
+                  v-model="jobOrder.url_of_the_completed_jo"
+                  :disabled="isDisabled"
+                >
+                </textarea>
+              </div>
+            </div>
             <div class="col-sm-5 mt-3">
               Any attachments please send it
               <a href="https://form.jotform.com/210818766251458" target="_blank"
@@ -326,6 +337,7 @@ export default {
         due_date: this.jobOrder.due_date,
         job_title: this.jobOrder.job_title,
         job_description: this.jobOrder.job_description,
+        url_of_the_completed_jo: this.jobOrder.url_of_the_completed_jo,
         total_time_consumed: this.jobOrder.total_time_consumed,
       };
       const staffPayload = {
@@ -339,6 +351,7 @@ export default {
         due_date: this.jobOrder.due_date,
         job_title: this.jobOrder.job_title,
         job_description: this.jobOrder.job_description,
+        url_of_the_completed_jo: this.jobOrder.url_of_the_completed_jo,
         total_time_consumed: this.jobOrder.total_time_consumed,
       };
 
@@ -405,7 +418,8 @@ export default {
     },
   },
   mounted() {
-    this.fetchClient(this.$auth.user.id);
+    this.fetchMe();
+    // this.fetchClient(this.$auth.user.id);
     this.fetchJobOrder(this.$route.params.ticket_number);
   },
 };
