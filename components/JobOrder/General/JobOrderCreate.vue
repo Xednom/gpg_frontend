@@ -103,7 +103,7 @@
         </div>
       </div>
 
-      <div class="form-row">
+      <div class="form-row mt-3">
         <div class="col-sm-12 col-md-12">
           <textarea
             class="form-control"
@@ -115,8 +115,22 @@
         </div>
       </div>
 
+      <div class="form-row mt-3">
+        <div
+          class="col-sm-12 col-md-12"
+          v-if="$auth.user.designation_category == 'staff'"
+        >
+          <textarea
+            class="form-control"
+            placeholder="URL of the completed JO"
+            v-model="url_of_the_completed_jo"
+          >
+          </textarea>
+        </div>
+      </div>
+
       <div slot="footer">
-        <div class="pull-right">
+        <div class="pull-right mt-3">
           <base-button
             v-if="!loading"
             native-type="submit"
@@ -283,9 +297,11 @@ export default {
             job_title: this.job_title,
             status: this.status,
             job_description: this.job_description,
+            url_of_the_completed_jo: this.url_of_the_completed_jo
           };
           await this.saveJobOrder(payload);
           this.loading = false;
+          this.query = "";
           this.reset();
           this.$validator.reset();
           this.fetch();
@@ -340,6 +356,14 @@ export default {
       },
       set(value) {
         this.setBasicStoreValue("status", value);
+      },
+    },
+    url_of_the_completed_jo: {
+      get() {
+        return this.$store.getters["jobOrder/url_of_the_completed_jo"];
+      },
+      set(value) {
+        this.setBasicStoreValue("url_of_the_completed_jo", value);
       },
     },
     job_description: {
