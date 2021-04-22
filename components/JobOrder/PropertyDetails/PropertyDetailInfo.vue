@@ -220,15 +220,6 @@
                   </tab-pane>
                   <tab-pane>
                     <span slot="label">
-                      List of Property files for APN
-                      <strong>{{ propertyDetail.apn }}</strong>
-                    </span>
-                    <property-file-list
-                      :propertyDetail="this.propertyDetail"
-                    ></property-file-list>
-                  </tab-pane>
-                  <tab-pane>
-                    <span slot="label">
                       Listing Ad Details
                     </span>
                     <h5 class="info-text">
@@ -306,6 +297,15 @@
                         </textarea>
                       </div>
                     </div>
+                  </tab-pane>
+                  <tab-pane>
+                    <span slot="label">
+                      List of Property files for APN
+                      <strong>{{ propertyDetail.apn }}</strong>
+                    </span>
+                    <property-file-list
+                      :propertyDetail="this.propertyDetail"
+                    ></property-file-list>
                   </tab-pane>
                 </tabs>
               </card>
