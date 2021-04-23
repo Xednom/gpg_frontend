@@ -37,7 +37,7 @@
         <div slot="footer">
           <div class="pull-right">
             <base-button
-              v-if="!loading"
+              v-if="!saving"
               native-type="submit"
               slot="footer"
               type="submit"
@@ -116,8 +116,8 @@ export default {
     },
     async save() {
       let isValidForm = await this.$validator.validateAll();
+      this.saving = true;
       if (isValidForm) {
-        this.loading = true;
         if (
           this.$auth.user.designation_category == "new_client" ||
           this.$auth.user.designation_category == "current_client" ||
@@ -129,14 +129,15 @@ export default {
                 comment: this.comment,
               })
               .then(() => {
-                this.loading = false;
+                this.saving = false;
                 this.success = true;
                 this.comment = "";
                 this.fetch();
-                this.refresh(this.job.id);
+                // this.refresh(this.job.id);
               });
           } catch (err) {
             console.error(err);
+            this.saving = false;
             this.success = false;
             this.error = err;
             this.errorMessage(this.error);
@@ -147,11 +148,11 @@ export default {
               comment: this.comment,
             })
             .then(() => {
-              this.loading = false;
+              this.saving = false;
               this.success = true;
               this.comment = "";
               this.fetch();
-              this.refresh(this.job.id);
+              // this.refresh(this.job.id);
             });
           this.reset();
           this.fetch();
