@@ -155,15 +155,13 @@
                     </base-input>
                   </div>
                   <div class="col-sm-5 col-md-10">
-                    <base-input
-                      label="URL of the completed Job order"
-                      name="URL of the completed Job order"
+                    <label>URL of the completed JO</label>
+                    <textarea
+                      class="form-control"
                       v-model="jobOrderCategory.url_of_the_completed_jo"
-                      v-validate="'required|url'"
-                      :error="getError('URL of the completed Job order')"
                       :disabled="isDisabled"
                     >
-                    </base-input>
+                    </textarea>
                   </div>
 
                   <div class="col-sm-10">
@@ -274,6 +272,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { DatePicker, Select, Option } from "element-ui";
+
 import JobOrderCatComment from "~/components/JobOrder/Category/JobOrderCategoryComment";
 
 import CreateJobOrderCategoryMixin from "@/mixins/CreateJobOrderCategoryMixin.js";
@@ -293,6 +292,7 @@ export default {
       wizardModel: {},
       loading: false,
       saving: false,
+      success: false,
       clientUser: {},
       staffUser: {},
       jobOrderCategory: {},
@@ -436,6 +436,18 @@ export default {
           throw e;
         });
     },
+    async fetchJobOrderCategoryComment(payload) {
+      let endpoint = `/api/v1/job-order-by-category/${payload}/`;
+      return await this.$axios
+        .get(endpoint)
+        .then((res) => {
+          this.jobOrderCategory = res.data;
+        })
+        .catch((e) => {
+          console.log(e);
+          throw e;
+        });
+    },
     async fetchCategory() {
       let endpoint = `/api/v1/apn-category-type/`;
       return await this.$axios
@@ -488,6 +500,13 @@ export default {
         console.error(err.response.data);
       }
     },
+    successMessage(variant = null) {
+      this.$bvToast.toast("Successfully updated this Per APN Job Order!", {
+        title: `Successful`,
+        variant: variant,
+        solid: true
+      });
+    },
     errorMessage(variant = null, error) {
       this.$bvToast.toast(
         this.error.ticket_number
@@ -528,11 +547,10 @@ export default {
     async save() {
       let isValidForm = await this.$validator.validateAll();
       if (isValidForm) {
-        this.loading = true;
         const clientPayload = {
           ticket_number: this.jobOrderCategory.ticket_number,
           property_detail: this.jobOrderCategory.property_detail,
-          client: this.clientUser.id,
+          client: this.clientUser.client_code,
           client_email: this.$auth.user.email,
           deadline: this.jobOrderCategory.deadline,
           category: this.jobOrderCategory.category,
@@ -567,7 +585,8 @@ export default {
             await this.updateJobOrderCategory(staffPayload)
               .then(() => {
                 this.saving = false;
-                this.$router.push("/job-order/category");
+                this.success = true;
+                this.successMessage("success");
               })
               .catch((e) => {
                 this.saving = false;
@@ -579,13 +598,15 @@ export default {
             this.error = e.response.data;
             this.errorMessage("danger", this.error);
           }
+          setTimeout(() => (this.success = false), 2000);
         } else {
           try {
             this.saving = true;
             await this.updateJobOrderCategory(clientPayload)
               .then(() => {
                 this.saving = false;
-                this.$router.push("/job-order/category");
+                this.success = true;
+                this.successMessage("success");
               })
               .catch((e) => {
                 this.saving = false;
@@ -597,13 +618,13 @@ export default {
             this.error = e.response.data;
             this.errorMessage("danger", this.error);
           }
+          setTimeout(() => (this.success = false), 2000);
         }
-        this.loading = false;
         this.reset();
       }
     },
     refresh() {
-      this.fetchJobOrderCategory(this.$route.params.ticket_number);
+      this.fetchJobOrderCategoryComment(this.$route.params.ticket_number);
     },
   },
   computed: {
