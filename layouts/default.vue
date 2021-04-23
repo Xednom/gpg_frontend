@@ -43,6 +43,14 @@
             }"
           ></sidebar-item>
         </sidebar-item>
+        <sidebar-item
+          :link="{
+            name: 'Account credentials',
+            icon: 'tim-icons icon-single-02',
+            path: '/login-credentials/',
+          }"
+        >
+        </sidebar-item>
       </template>
     </side-bar>
     <!--Share plugin (for demo purposes). You can remove it if don't plan on using it-->
