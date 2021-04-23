@@ -275,6 +275,18 @@ export default {
           throw e;
         });
     },
+    async fetchJobOrderComment(payload) {
+      let endpoint = `/api/v1/job-order/${payload}/`;
+      return await this.$axios
+        .get(endpoint)
+        .then((res) => {
+          this.jobOrder = res.data;
+        })
+        .catch((e) => {
+          console.error(e)
+          throw e;
+        });
+    },
     async fetchClient(id) {
       this.loading = true;
       let endpoint = `/api/v1/client/${id}/`;
@@ -327,6 +339,13 @@ export default {
         this.loading = false;
       }
     },
+    successMessage(variant = null) {
+      this.$bvToast.toast("Successfully updated this Job Order General request.", {
+        title: `Successful`,
+        variant: variant,
+        solid: true
+      });
+    },
     async save() {
       const clientPayload = {
         ticket_number: this.jobOrder.ticket_number,
@@ -378,7 +397,7 @@ export default {
           await this.updateJobOrder(clientPayload)
             .then(() => {
               this.saving = false;
-              this.$router.push("/job-order/general");
+              this.successMessage("success");
             })
             .catch((e) => {
               this.saving = false;
@@ -394,7 +413,7 @@ export default {
       this.saving = false;
     },
     refresh() {
-      this.fetchJobOrder(this.$route.params.ticket_number);
+      this.fetchJobOrderComment(this.$route.params.ticket_number);
     },
   },
   computed: {
