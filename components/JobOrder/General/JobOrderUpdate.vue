@@ -339,6 +339,13 @@ export default {
         this.loading = false;
       }
     },
+    successMessage(variant = null) {
+      this.$bvToast.toast("Successfully updated this Job Order General request.", {
+        title: `Successful`,
+        variant: variant,
+        solid: true
+      });
+    },
     async save() {
       const clientPayload = {
         ticket_number: this.jobOrder.ticket_number,
@@ -390,7 +397,7 @@ export default {
           await this.updateJobOrder(clientPayload)
             .then(() => {
               this.saving = false;
-              this.$router.push("/job-order/general");
+              this.successMessage("success");
             })
             .catch((e) => {
               this.saving = false;
