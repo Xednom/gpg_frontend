@@ -330,6 +330,9 @@ export default {
           { value: "weekly_tasks", label: "Weekly Tasks" },
           { value: "monthly_tasks", label: "Monthly Tasks" },
           { value: "redo", label: "Redo" },
+          { value: "pending", label: "Pending"},
+          { value: "request_for_posting", label: "Request for Posting" },
+          { value: "mark_as_sold_request", label: "Mark as Sold Request" }
         ],
       },
       propertyStatusChoices: {
