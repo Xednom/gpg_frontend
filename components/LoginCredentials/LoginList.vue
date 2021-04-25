@@ -84,7 +84,7 @@
                 <template #cell(client_code)="row">
                   <nuxt-link
                     :to="'/login-credentials/' + row.item.id"
-                    >Account credentials #{{ row.item.id }}</nuxt-link
+                    >{{ row.item.client_code }}</nuxt-link
                   >
                 </template>
 
