@@ -82,10 +82,15 @@
                   </div>
                 </template>
                 <template #cell(client_code)="row">
-                  <nuxt-link
+                  <template v-if="$auth.user.designation_category == 'staff'">
+                    {{ row.item.client_code }}
+                  </template>
+                  <template v-else>
+                    <nuxt-link
                     :to="'/login-credentials/' + row.item.id"
                     >{{ row.item.client_code }}</nuxt-link
                   >
+                  </template>
                 </template>
 
                 <template #cell(actions)="row">
@@ -101,28 +106,6 @@
                   Info
                   </b-button>
                 </template>
-
-                <!-- <b-button
-                    size="sm"
-                    variant="success"
-                    v-b-modal.job-order-comments
-                    @click="
-                      {
-                        fetchPropertyDetail(row.item.id), (modals.comments = true);
-                      }
-                    "
-                    >Comments</b-button
-                  > -->
-                <!-- <base-button
-                    type="danger"
-                    icon
-                    size="sm"
-                    class="btn-link"
-                    @click="handleDelete(row.item.ticket_number)"
-                  >
-                    <i class="tim-icons icon-simple-remove"></i>
-                  </base-button>
-                </template> -->
 
                 <template #row-details="row">
                   <b-card>
