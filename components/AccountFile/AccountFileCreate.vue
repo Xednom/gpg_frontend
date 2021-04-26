@@ -10,10 +10,10 @@
       <div class="form-row">
         <div class="col-sm-12 col-md-12">
           <base-input
-            label="Category"
+            label="File name"
             v-validate="'required'"
-            :error="getError('Category')"
-            name="Category"
+            :error="getError('File name')"
+            name="File name"
             v-model="file_name"
           >
           </base-input>
@@ -73,7 +73,7 @@
 
 <script>
 import { mapActions } from "vuex";
-import CreateLoginMixin from "@/mixins/CreateLoginCredentialsMixin";
+import CreateFileMixin from "@/mixins/CreateAccountFileMixin";
 import { DatePicker, Select, Option } from "element-ui";
 import { BaseAlert } from "@/components";
 import VueTypeaheadBootstrap from "vue-typeahead-bootstrap";
@@ -87,7 +87,7 @@ export default {
     [Option.name]: Option,
     VueTypeaheadBootstrap,
   },
-  mixins: [CreateLoginMixin],
+  mixins: [CreateFileMixin],
   props: {
     fetch: {
       type: Function,
@@ -192,7 +192,7 @@ export default {
   computed: {
     client: {
       get() {
-        return this.$store.getters["account/client"];
+        return this.$store.getters["accountFile/client"];
       },
       set(value) {
         this.setBasicStoreValue("client", value);
@@ -200,15 +200,15 @@ export default {
     },
     file_name: {
       get() {
-        return this.$store.getters["account/category"];
+        return this.$store.getters["accountFile/file_name"];
       },
       set(value) {
-        this.setBasicStoreValue("category", value);
+        this.setBasicStoreValue("file_name", value);
       },
     },
     url: {
       get() {
-        return this.$store.getters["account/url"];
+        return this.$store.getters["accountFile/url"];
       },
       set(value) {
         this.setBasicStoreValue("url", value);
@@ -216,10 +216,10 @@ export default {
     },
     file_description: {
       get() {
-        return this.$store.getters["account/username"];
+        return this.$store.getters["accountFile/file_description"];
       },
       set(value) {
-        this.setBasicStoreValue("username", value);
+        this.setBasicStoreValue("file_description", value);
       },
     },
   },
