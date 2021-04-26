@@ -51,6 +51,14 @@
           }"
         >
         </sidebar-item>
+        <sidebar-item
+          :link="{
+            name: 'Account Files',
+            icon: 'tim-icons icon-paper',
+            path: '/account-files/',
+          }"
+        >
+        </sidebar-item>
       </template>
     </side-bar>
     <!--Share plugin (for demo purposes). You can remove it if don't plan on using it-->
