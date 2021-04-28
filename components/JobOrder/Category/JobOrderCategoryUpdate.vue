@@ -566,7 +566,6 @@ export default {
           ticket_number: this.jobOrderCategory.ticket_number,
           property_detail: this.jobOrderCategory.property_detail,
           client: this.jobOrderCategory.client_code,
-          staff: [this.staffUser.id],
           staff_email: this.$auth.user.email,
           deadline: this.jobOrderCategory.deadline,
           category: this.jobOrderCategory.category,
