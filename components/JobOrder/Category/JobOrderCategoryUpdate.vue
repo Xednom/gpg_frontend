@@ -198,7 +198,7 @@
                       class="form-control"
                       type="text"
                       v-model="jobOrderCategory.notes_management"
-                      :disabled="isDisabled"
+                      disabled
                     >
                     </textarea>
                   </div>

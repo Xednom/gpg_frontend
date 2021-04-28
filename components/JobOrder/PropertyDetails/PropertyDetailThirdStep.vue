@@ -46,15 +46,6 @@
             v-model="notes_va_side"
           >
           </textarea>
-
-          <textarea
-            v-if="this.$auth.user.designation_category == 'staff'"
-            name="notes_management_side"
-            class="form-control"
-            placeholder="Notes - Management side"
-            v-model="notes_management_side"
-          >
-          </textarea>
         </div>
       </div>
     </card>

@@ -293,6 +293,7 @@
                           class="form-control"
                           placeholder="Notes - Management side"
                           v-model="propertyDetail.notes_management_side"
+                          disabled
                         >
                         </textarea>
                       </div>
