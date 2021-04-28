@@ -45,6 +45,32 @@
         </sidebar-item>
         <sidebar-item
           :link="{
+            name: ('Timesheet'),
+            icon: 'tim-icons icon-watch-time',
+            path: '/',
+          }"
+        >
+        <sidebar-item
+            :link="{
+              name: 'Account Balance',
+              path: '/timesheet/account-balance',
+            }"
+          ></sidebar-item>
+          <sidebar-item
+            :link="{
+              name: 'Account Charges',
+              path: '/timesheet/account-charge',
+            }"
+          ></sidebar-item>
+          <sidebar-item
+            :link="{
+              name: 'Payment History',
+              path: '/timesheet/payment-history',
+            }"
+          ></sidebar-item>
+        </sidebar-item>
+        <sidebar-item
+          :link="{
             name: 'Account credentials',
             icon: 'tim-icons icon-single-02',
             path: '/login-credentials/',
