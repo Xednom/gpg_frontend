@@ -154,14 +154,9 @@
                     >
                     </base-input>
                   </div>
-                  <div class="col-sm-5 col-md-10">
-                    <label>URL of the completed JO</label>
-                    <textarea
-                      class="form-control"
-                      v-model="jobOrderCategory.url_of_the_completed_jo"
-                      :disabled="isDisabled"
-                    >
-                    </textarea>
+                  <div class="col-sm-5 col-md-10 mt-3 mb-3">
+                    <label>URL of the completed JO: </label>
+                    <a :href="jobOrderCategory.url_of_the_completed_jo" target="_blank">link here</a>
                   </div>
 
                   <div class="col-sm-10">

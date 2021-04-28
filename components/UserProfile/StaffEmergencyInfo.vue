@@ -28,8 +28,8 @@
         <div class="col-sm-12 col-md-4">
           <base-input
             type="text"
-            label="Emergency contact full name"
-            placeholder="Emergency contact full name"
+            label="Emergency contact number"
+            placeholder="Emergency contact number"
             v-model="staff.emergency_contact_number"
           >
           </base-input>
@@ -58,8 +58,8 @@
         <div class="col-sm-12 col-md-4">
           <base-input
             type="text"
-            label="Father's name"
-            placeholder="Father's name"
+            label="Father's full name"
+            placeholder="Father's full name"
             v-model="staff.fathers_full_name"
           >
           </base-input>
