@@ -83,7 +83,7 @@
                 </template>
                 <template #cell(apn)="row">
                   <nuxt-link
-                    :to="'/job-order/property-detail/' + row.item.apn"
+                    :to="'/job-order/property-detail/' + row.item.ticket_number"
                     >{{ row.item.apn }}</nuxt-link
                   >
                 </template>
