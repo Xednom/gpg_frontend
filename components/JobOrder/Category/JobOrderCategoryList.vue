@@ -92,7 +92,7 @@
 
                 <template #cell(property_detail)="row">
                   <nuxt-link
-                    :to="'/job-order/property-detail/' + row.item.property_detail"
+                    :to="'/job-order/property-detail/' + row.item.ticket_number"
                     target="_blank"
                     >{{ row.item.property_detail }}</nuxt-link
                   >
