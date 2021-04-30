@@ -16,6 +16,8 @@
           <base-input label="Date of Birth">
             <el-date-picker
               v-model="staff.date_of_birth"
+              format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd"
               type="date"
               placeholder="Date Picker"
             >

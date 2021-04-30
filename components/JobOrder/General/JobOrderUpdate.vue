@@ -365,7 +365,6 @@ export default {
       const staffPayload = {
         ticket_number: this.jobOrder.ticket_number,
         client: this.jobOrder.client_code,
-        va_assigned: [this.staffUser.id],
         staff_email: this.$auth.user.email,
         request_date: this.jobOrder.request_date,
         date_completed: this.jobOrder.date_completed,

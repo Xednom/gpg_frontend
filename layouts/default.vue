@@ -2,65 +2,171 @@
   <div class="wrapper" :class="{ 'nav-open': $sidebar.showSidebar }">
     <notifications></notifications>
     <sidebar-fixed-toggle-button />
-    <side-bar
-      :background-color="sidebarBackground"
-      :short-title="$t('sidebar.shortTitle')"
-      :title="$t('sidebar.title')"
-    >
-      <template slot-scope="props" slot="links">
-        <!-- TODO: uncomment this if the necessary features are integrated already -->
-        <sidebar-item
-          :link="{
-            name: $t('sidebar.dashboard'),
-            icon: 'tim-icons icon-chart-pie-36',
-            path: '/',
-          }"
-        >
-        </sidebar-item>
-        <sidebar-item
-          :link="{
-            name: ('Job order'),
-            icon: 'tim-icons icon-bullet-list-67',
-            path: '/',
-          }"
-        >
-        <sidebar-item
-            :link="{
-              name: 'Per APN Job Order',
-              path: '/job-order/category',
-            }"
-          ></sidebar-item>
+
+    <div v-if="$auth.user.designation_category == 'new_client' ||
+      $auth.user.designation_category == 'current_client' ||
+      $auth.user.designation_category == 'affiliate_partner'">
+      <side-bar
+        :background-color="sidebarBackground"
+        :short-title="$t('sidebar.shortTitle')"
+        :title="$t('sidebar.title')"
+      >
+        <template slot-scope="props" slot="links">
+          <!-- TODO: uncomment this if the necessary features are integrated already -->
           <sidebar-item
             :link="{
-              name: 'General Request',
-              path: '/job-order/general',
+              name: $t('sidebar.dashboard'),
+              icon: 'tim-icons icon-chart-pie-36',
+              path: '/',
             }"
-          ></sidebar-item>
+          >
+          </sidebar-item>
           <sidebar-item
             :link="{
-              name: 'APN Inventory',
-              path: '/job-order/property-detail',
+              name: 'Job order',
+              icon: 'tim-icons icon-bullet-list-67',
+              path: '/',
             }"
-          ></sidebar-item>
-        </sidebar-item>
-        <sidebar-item
-          :link="{
-            name: 'Account credentials',
-            icon: 'tim-icons icon-single-02',
-            path: '/login-credentials/',
-          }"
-        >
-        </sidebar-item>
-        <sidebar-item
-          :link="{
-            name: 'Account Files',
-            icon: 'tim-icons icon-paper',
-            path: '/account-files/',
-          }"
-        >
-        </sidebar-item>
-      </template>
-    </side-bar>
+          >
+            <sidebar-item
+              :link="{
+                name: 'Per APN Job Order',
+                path: '/job-order/category',
+              }"
+            ></sidebar-item>
+            <sidebar-item
+              :link="{
+                name: 'General Request',
+                path: '/job-order/general',
+              }"
+            ></sidebar-item>
+            <sidebar-item
+              :link="{
+                name: 'APN Inventory',
+                path: '/job-order/property-detail',
+              }"
+            ></sidebar-item>
+          </sidebar-item>
+          <sidebar-item
+            :link="{
+              name: 'Timesheet',
+              icon: 'tim-icons icon-watch-time',
+              path: '/',
+            }"
+          >
+            <sidebar-item
+              :link="{
+                name: 'Account Balance',
+                path: '/timesheet/account-balance',
+              }"
+            ></sidebar-item>
+            <sidebar-item
+              :link="{
+                name: 'Account Charges',
+                path: '/timesheet/account-charge',
+              }"
+            ></sidebar-item>
+            <sidebar-item
+              :link="{
+                name: 'Payment History',
+                path: '/timesheet/payment-history',
+              }"
+            ></sidebar-item>
+          </sidebar-item>
+          <sidebar-item
+            :link="{
+              name: 'Account credentials',
+              icon: 'tim-icons icon-single-02',
+              path: '/login-credentials/',
+            }"
+          >
+          </sidebar-item>
+          <sidebar-item
+            :link="{
+              name: 'Account Files',
+              icon: 'tim-icons icon-paper',
+              path: '/account-files/',
+            }"
+          >
+          </sidebar-item>
+        </template>
+      </side-bar>
+    </div>
+    <div v-else>
+      <side-bar
+        :background-color="sidebarBackground"
+        :short-title="$t('sidebar.shortTitle')"
+        :title="$t('sidebar.title')"
+      >
+        <template slot-scope="props" slot="links">
+          <!-- TODO: uncomment this if the necessary features are integrated already -->
+          <sidebar-item
+            :link="{
+              name: $t('sidebar.dashboard'),
+              icon: 'tim-icons icon-chart-pie-36',
+              path: '/',
+            }"
+          >
+          </sidebar-item>
+          <sidebar-item
+            :link="{
+              name: 'Job order',
+              icon: 'tim-icons icon-bullet-list-67',
+              path: '/',
+            }"
+          >
+            <sidebar-item
+              :link="{
+                name: 'Per APN Job Order',
+                path: '/job-order/category',
+              }"
+            ></sidebar-item>
+            <sidebar-item
+              :link="{
+                name: 'General Request',
+                path: '/job-order/general',
+              }"
+            ></sidebar-item>
+            <sidebar-item
+              :link="{
+                name: 'APN Inventory',
+                path: '/job-order/property-detail',
+              }"
+            ></sidebar-item>
+          </sidebar-item>
+          <sidebar-item
+            :link="{
+              name: 'Timesheet',
+              icon: 'tim-icons icon-watch-time',
+              path: '/',
+            }"
+          >
+            <sidebar-item
+              :link="{
+                name: 'Account Charges',
+                path: '/timesheet/account-charge',
+              }"
+            ></sidebar-item>
+          </sidebar-item>
+          <sidebar-item
+            :link="{
+              name: 'Account credentials',
+              icon: 'tim-icons icon-single-02',
+              path: '/login-credentials/',
+            }"
+          >
+          </sidebar-item>
+          <sidebar-item
+            :link="{
+              name: 'Account Files',
+              icon: 'tim-icons icon-paper',
+              path: '/account-files/',
+            }"
+          >
+          </sidebar-item>
+        </template>
+      </side-bar>
+    </div>
     <!--Share plugin (for demo purposes). You can remove it if don't plan on using it-->
     <sidebar-share :background-color.sync="sidebarBackground"> </sidebar-share>
     <div class="main-panel" :data="sidebarBackground">

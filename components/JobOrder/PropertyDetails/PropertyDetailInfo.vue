@@ -293,6 +293,7 @@
                           class="form-control"
                           placeholder="Notes - Management side"
                           v-model="propertyDetail.notes_management_side"
+                          disabled
                         >
                         </textarea>
                       </div>
@@ -678,7 +679,6 @@ export default {
 
         const staffPayload = {
           ticket_number: this.propertyDetail.ticket_number,
-          staff: [this.staffUser.id],
           client: this.propertyDetail.client,
           staff_email: this.$auth.user.email,
           price_status: this.propertyDetail.price_status,

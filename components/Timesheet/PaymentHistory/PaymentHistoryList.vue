@@ -3,17 +3,10 @@
     <div class="row mt-5">
       <div class="col-12">
         <card card-body-classes="table-full-width">
-          <h4 slot="header" class="card-title">
-            Per APN Job Order
-          </h4>
+          <h4 slot="header" class="card-title">Payment History</h4>
           <div>
             <b-container fluid>
               <!-- <b-row> -->
-              <b-col sm="12" md="4" class="my-1 pull-left">
-                <b-button variant="success" @click="modals.classic = true"
-                  >Create Job order</b-button
-                >
-              </b-col>
 
               <b-col sm="12" md="4" lg="4" class="my-1 pull-right">
                 <b-form-group
@@ -63,8 +56,8 @@
 
               <!-- Main table element -->
               <b-table
-                :items="jobOrderCategories"
-                :fields="computedFields"
+                :items="paymentHistories"
+                :fields="fields"
                 :current-page="currentPage"
                 :per-page="perPage"
                 :filter="filter"
@@ -83,33 +76,23 @@
                     <strong>Loading...</strong>
                   </div>
                 </template>
-                <template #cell(ticket_number)="row">
-                  <nuxt-link
-                    :to="'/job-order/category/' + row.item.ticket_number"
-                    >{{ row.item.ticket_number }}</nuxt-link
+                <template #cell(name)="row">
+                  {{ row.value.first }} {{ row.value.last }}
+                </template>
+
+                <template #cell(actions)="row">
+                  <b-button
+                    size="sm"
+                    @click="
+                      {
+                        info(row.item, row.index, $event.target),
+                          fetchPaymentHistory(row.item.id);
+                      }
+                    "
+                    class="mr-1"
                   >
-                </template>
-
-                <template #cell(property_detail)="row">
-                  <nuxt-link
-                    :to="'/job-order/property-detail/' + row.item.property_detail_ticket"
-                    target="_blank"
-                    >{{ row.item.property_detail }}</nuxt-link
-                  >
-                </template>
-
-                <template #row-details="row">
-                  <b-card>
-                    <ul>
-                      <li v-for="(value, key) in row.item" :key="key">
-                        {{ key }}: {{ value }}
-                      </li>
-                    </ul>
-                  </b-card>
-                </template>
-
-                <template #cell(url_of_the_completed_jo)="row">
-                  <a :href="row.item.url_of_the_completed_jo" target="_blank">link here</a>
+                    Info
+                  </b-button>
                 </template>
               </b-table>
 
@@ -120,7 +103,11 @@
                 ok-only
                 @hide="resetInfoModal"
               >
-                <pre>{{ infoModal.content }}</pre>
+                <span class="mt-3">
+                  <payment-history-view
+                    :payment="paymentHistory"
+                  ></payment-history-view>
+                </span>
               </b-modal>
             </b-container>
           </div>
@@ -143,20 +130,22 @@
         </card>
       </div>
     </div>
-    <!-- modal for create -->
+    <!-- Classic Modal -->
     <modal
       :show.sync="modals.classic"
       headerClasses="justify-content-center"
       class="white-content"
     >
-      <job-order-create
-        :fetch="fetchJobOrderCategories"
-        :staff="staff"
-        :client="client"
-      ></job-order-create>
     </modal>
 
-    <!-- modal for comment -->
+    <modal
+      :show.sync="modals.info"
+      headerClasses="justify-content-center"
+      class="white-content"
+    >
+      <!-- <job-order-info :job="jobOrder"></job-order-info> -->
+    </modal>
+
     <modal
       fade
       id="job-order-comments"
@@ -164,12 +153,6 @@
       :show.sync="modals.comments"
       hide-footer
     >
-      <job-order-category-comment
-        :fetch="fetchJobOrderCategories"
-        :staff="staff"
-        :client="client"
-        :job="jobOrderCategory"
-      ></job-order-category-comment>
     </modal>
   </div>
 </template>
@@ -179,16 +162,14 @@ import { Modal } from "@/components";
 import users from "../../../util/mock-users";
 import Fuse from "fuse.js";
 import swal from "sweetalert2";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 
-import jobOrderCreate from "@/components/JobOrder/Category/JobOrderCategoryCreate";
-import jobOrderCategoryComment from "@/components/JobOrder/Category/JobOrderCategoryComment";
+import PaymentHistoryView from "@/components/Timesheet/PaymentHistory/PaymentHistoryView";
 
 export default {
   name: "paginated",
   components: {
-    jobOrderCreate,
-    jobOrderCategoryComment,
+    PaymentHistoryView,
     Modal,
     [Select.name]: Select,
     [Option.name]: Option,
@@ -200,9 +181,9 @@ export default {
      * Returns a page from the searched data or the whole data. Search is performed in the watch section below
      */
     ...mapGetters({
-      jobOrderCategories: "jobOrderCategory/jobOrderCategories",
-      jobOrderCategory: "jobOrderCategory/jobOrderCategory",
-      pagination: "jobOrderCategory/jobOrderCategoriesPagination",
+      paymentHistories: "paymentHistory/paymentHistories",
+      paymentHistory: "paymentHistory/paymentHistory",
+      pagination: "paymentHistory/paymentHistoriesPagination",
       staff: "user/staff",
       user: "user/user",
       client: "user/clientUser",
@@ -239,31 +220,15 @@ export default {
       searchQuery: "",
       tableData: users,
       searchedData: [],
+      currentJobOrder: {},
       fuseSearch: null,
       isBusy: false,
-      error: {
-        client: "",
-        staff: "",
-        apn: "",
-        state: "",
-        county: "",
-        size: "",
-        asking_price: "",
-        cash_terms: "",
-        finance_terms: "",
-        other_terms: "",
-        notes: "",
-        non_field_errors: "",
-      },
       fields: [
-        { key: "ticket_number", sortable: true },
-        { key: "property_detail", label: "APN", sortable: true},
-        { key: "client_code", sortable: true, requiredStaff: true },
-        { key: "category_", sortable: true },
-        { key: "status_", sortable: true },
-        { key: "due_date", sortable: true },
-        { key: "date_completed", sortable: true },
-        { key: "url_of_the_completed_jo", sortable: true }
+        { key: "transaction_number", sortable: true },
+        { key: "date", sortable: true },
+        { key: "payment_amount", sortable: true },
+        { key: "payment_channel", sortable: true },
+        { key: "actions", label: "Actions" },
       ],
       totalRows: 1,
       currentPage: 1,
@@ -286,7 +251,6 @@ export default {
     };
   },
   methods: {
-    // ...mapActions("jobOrderCategoryCategory", ["deletejobOrderCategoryCategory"]),
     handleLike(index, row) {
       swal({
         title: `You liked ${row.name}`,
@@ -304,16 +268,14 @@ export default {
     },
     async fetchClient(id) {
       try {
-        await this.$store.dispatch("user/fetchClientUser", id).then(() => {
-        });
+        await this.$store.dispatch("user/fetchClientUser", id).then(() => {});
       } catch (err) {
         console.error(err.response.data);
       }
     },
     async fetchStaff(id) {
       try {
-        await this.$store.dispatch("user/fetchStaff", id).then(() => {
-        });
+        await this.$store.dispatch("user/fetchStaff", id).then(() => {});
       } catch (err) {
         console.error(err);
       }
@@ -335,24 +297,19 @@ export default {
         console.error(err.response.data);
       }
     },
-    async fetchJobOrderCategory(id) {
-      await this.$store.dispatch("jobOrderCategory/fetchJobOrderCategory", id);
+    async fetchPaymentHistory(id) {
+      await this.$store.dispatch("paymentHistory/fetchPaymentHistory", id);
     },
-    async fetchJobOrderCategories() {
+    async fetchPaymentHistories() {
       this.isBusy = true;
       await this.$store
-        .dispatch("jobOrderCategory/fetchJobOrderCategories", this.pagination)
+        .dispatch("paymentHistory/fetchPaymentHistories", this.pagination)
         .then(() => {
           this.isBusy = false;
         });
     },
-    async deletejobOrderCategory(id) {
-      await this.$store.dispatch("jobOrderCategory/deleteJobOrderCategory", id);
-    },
 
     info(item, index, button) {
-      this.infoModal.title = `Row index: ${index}`;
-      this.infoModal.content = JSON.stringify(item, null, 2);
       this.$root.$emit("bv::show::modal", this.infoModal.id, button);
     },
     resetInfoModal() {
@@ -364,39 +321,7 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    errorMessage(variant = null, error) {
-      this.$bvToast.toast(
-        error.apn
-          ? "APN: " + error.apn
-          : error.state
-          ? "State: " + errors.state
-          : errors.county
-          ? "County" + error.county
-          : error.size
-          ? "Size: " + error.username
-          : error.property_status
-          ? "Property status: " + error.property_status
-          : error.asking_price
-          ? "Asking price: " + error.asking_price
-          : error.finance_terms
-          ? "Finance terms: " + error.finance_terms
-          : error.cash_terms
-          ? "Cash terms: " + error.cash_terms
-          : error.other_terms
-          ? "Other terms: " + error.other_terms
-          : error.notes
-          ? "Notes: " + error.notes
-          : error.non_field_errors
-          ? error.non_field_errors
-          : error,
-        {
-          title: `Something went wrong`,
-          variant: variant,
-          solid: true,
-        }
-      );
-    },
-    handleDelete(row) {
+    handleDelete(index, row) {
       swal({
         title: "Are you sure?",
         text: `You won't be able to revert this!`,
@@ -408,19 +333,10 @@ export default {
         buttonsStyling: false,
       }).then((result) => {
         if (result.value) {
-          this.deletejobOrderCategory(row);
-          let url = `/api/v1/job-order-by-category/${row}/`;
-          try {
-            this.$axios.delete(url);
-            this.fetchJobOrderCategories();
-          } catch (err) {
-            console.error(err);
-            this.error = err.response.data;
-            this.errorMessage("danger", this.error);
-          }
+          this.deleteRow(row);
           swal({
             title: "Deleted!",
-            text: `You deleted ${row}`,
+            text: `You deleted ${row.name}`,
             type: "success",
             confirmButtonClass: "btn btn-success btn-fill",
             buttonsStyling: false,
@@ -430,9 +346,9 @@ export default {
     },
   },
   async mounted() {
-    await this.fetchJobOrderCategories();
+    await this.fetchPaymentHistories();
     await this.fetchMe();
-    this.totalRows = this.jobOrderCategories.length;
+    this.totalRows = this.paymentHistories.length;
   },
 };
 </script>
