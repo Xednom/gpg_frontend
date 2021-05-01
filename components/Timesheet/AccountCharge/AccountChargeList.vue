@@ -81,7 +81,7 @@
                 </template>
 
                 <template #cell(actions)="row">
-                  <b-button
+                  <!-- <b-button
                     size="sm"
                     @click="
                       {
@@ -92,7 +92,15 @@
                     class="mr-1"
                   >
                     Info
+                  </b-button> -->
+                  <b-button size="sm" @click="row.toggleDetails">
+                    {{ row.detailsShowing ? "Hide" : "Show" }} Details
                   </b-button>
+                </template>
+                <template #row-details="row">
+                  <b-card>
+                    <account-update :charge="row.item"></account-update>
+                  </b-card>
                 </template>
               </b-table>
 
@@ -122,6 +130,8 @@
               v-model="currentPage"
               :total-rows="totalRows"
               :per-page="perPage"
+              next="next"
+              prev="prev"
               align="fill"
               size="sm"
               class="my-0"
@@ -164,11 +174,12 @@ import Fuse from "fuse.js";
 import swal from "sweetalert2";
 import { mapGetters } from "vuex";
 
-// import PaymentHistoryView from "@/components/Timesheet/PaymentHistory/PaymentHistoryView";
+import AccountUpdate from "@/components/Timesheet/AccountCharge/AccountChargeUpdate";
 
 export default {
   name: "paginated",
   components: {
+    AccountUpdate,
     Modal,
     [Select.name]: Select,
     [Option.name]: Option,
@@ -180,8 +191,7 @@ export default {
      * Returns a page from the searched data or the whole data. Search is performed in the watch section below
      */
     ...mapGetters({
-      accountCharges: "accountCharge/accountCharges",
-      accountCharge: "accountCharge/accountCharge",
+      // accountCharge: "accountCharge/accountCharge",
       pagination: "accountCharge/accountChargesPagination",
       staff: "user/staff",
       user: "user/user",
@@ -220,6 +230,8 @@ export default {
       tableData: users,
       searchedData: [],
       currentJobOrder: {},
+      accountCharge: {},
+      accountCharges: [],
       fuseSearch: null,
       isBusy: false,
       fields: [
@@ -230,6 +242,12 @@ export default {
         { key: "total_items", sortable: true },
         { key: "actions", label: "Actions" },
       ],
+      offset: "",
+      count: "",
+      showing: "",
+      next: "",
+      prev: "",
+      limit: 1000,
       totalRows: 1,
       currentPage: 1,
       perPage: 5,
@@ -297,15 +315,44 @@ export default {
         console.error(err.response.data);
       }
     },
+    // async fetchAccountCharge(id) {
+    //   await this.$store.dispatch("accountCharge/fetchAccountCharge", id);
+    // },
+    // async fetchAccountCharges() {
+    //   this.isBusy = true;
+    //   await this.$store
+    //     .dispatch("accountCharge/fetchAccountCharges", this.pagination)
+    //     .then(() => {
+    //       this.isBusy = false;
+    //     });
+    // },
     async fetchAccountCharge(id) {
-      await this.$store.dispatch("accountCharge/fetchAccountCharge", id);
+      let endpoint = `/api/v1/account-charge/${id}/`;
+      return await this.$axios
+        .get(endpoint)
+        .then((res) => {
+          this.accountCharge = res.data.results;
+        })
+        .catch((e) => {
+          throw e;
+        });
     },
     async fetchAccountCharges() {
-      this.isBusy = true;
-      await this.$store
-        .dispatch("accountCharge/fetchAccountCharges", this.pagination)
-        .then(() => {
-          this.isBusy = false;
+      return await this.$axios
+        .get(`/api/v1/account-charge/?limit=${this.limit}`)
+        .then((res) => {
+          console.log(res);
+          console.log(res.data.next);
+          this.count = res.count;
+          this.next = res.data.next;
+          console.log(this.next);
+          this.prev = res.data.prev;
+          this.showing = res.data.results.length;
+          this.currentPage = this.offset;
+          this.accountCharges = res.data.results;
+        })
+        .catch((e) => {
+          throw e;
         });
     },
 
