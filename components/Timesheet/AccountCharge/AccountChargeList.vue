@@ -7,6 +7,11 @@
           <div>
             <b-container fluid>
               <!-- <b-row> -->
+              <b-col sm="12" md="4" class="my-1 pull-left">
+                <b-button variant="success" @click="modals.classic = true"
+                  >Create Account Charge</b-button
+                >
+              </b-col>
 
               <b-col sm="12" md="4" lg="4" class="my-1 pull-right">
                 <b-form-group
@@ -146,6 +151,11 @@
       headerClasses="justify-content-center"
       class="white-content"
     >
+      <account-create
+        :fetch="fetchAccountCharges"
+        :staff="staff"
+        :client="client"
+      ></account-create>
     </modal>
 
     <modal
@@ -175,11 +185,13 @@ import swal from "sweetalert2";
 import { mapGetters } from "vuex";
 
 import AccountUpdate from "@/components/Timesheet/AccountCharge/AccountChargeUpdate";
+import AccountCreate from "@/components/Timesheet/AccountCharge/AccountChargeCreate";
 
 export default {
   name: "paginated",
   components: {
     AccountUpdate,
+    AccountCreate,
     Modal,
     [Select.name]: Select,
     [Option.name]: Option,
@@ -315,17 +327,6 @@ export default {
         console.error(err.response.data);
       }
     },
-    // async fetchAccountCharge(id) {
-    //   await this.$store.dispatch("accountCharge/fetchAccountCharge", id);
-    // },
-    // async fetchAccountCharges() {
-    //   this.isBusy = true;
-    //   await this.$store
-    //     .dispatch("accountCharge/fetchAccountCharges", this.pagination)
-    //     .then(() => {
-    //       this.isBusy = false;
-    //     });
-    // },
     async fetchAccountCharge(id) {
       let endpoint = `/api/v1/account-charge/${id}/`;
       return await this.$axios
@@ -341,11 +342,8 @@ export default {
       return await this.$axios
         .get(`/api/v1/account-charge/?limit=${this.limit}`)
         .then((res) => {
-          console.log(res);
-          console.log(res.data.next);
           this.count = res.count;
           this.next = res.data.next;
-          console.log(this.next);
           this.prev = res.data.prev;
           this.showing = res.data.results.length;
           this.currentPage = this.offset;

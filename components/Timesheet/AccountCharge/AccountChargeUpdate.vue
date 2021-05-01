@@ -63,16 +63,6 @@
                   </el-date-picker>
                 </base-input>
               </div>
-              <div class="col-sm-12 col-md-6">
-                <base-input
-                  label="Total time consumed"
-                  v-model="charge.total_time"
-                  :disabled="isDisabled"
-                >
-                </base-input>
-              </div>
-            </div>
-            <div class="form-row">
               <div
                 class="col-sm-12 col-md-6"
                 v-if="this.$auth.user.designation_category == 'staff'"
@@ -84,6 +74,9 @@
                 >
                 </base-input>
               </div>
+            </div>
+            <div class="form-row">
+              
               <div class="col-sm-12 col-md-3">
                 <base-input
                   label="Total time"
@@ -100,8 +93,6 @@
                 >
                 </base-input>
               </div>
-            </div>
-            <div class="form-row">
               <div class="col-sm-12 col-md-6">
                 <base-input
                   label="Job Request"
@@ -110,6 +101,8 @@
                 >
                 </base-input>
               </div>
+            </div>
+            <div class="form-row">
               
               <div class="col-sm-12 col-md-6">
                 <base-input
@@ -132,6 +125,17 @@
               </div>
             </div>
             <div class="form-row">
+              <div class="col-sm-12 col-md-12">
+                <label>Notes</label>
+                <textarea
+                  class="form-control"
+                  v-model="charge.notes"
+                  disabled
+                >
+                </textarea>
+              </div>
+            </div>
+            <div class="form-row">
               <div class="col-sm-12 col-md-6">
                 <div class="col-sm-10">
                   <div class="row">
@@ -143,6 +147,7 @@
                     name="status"
                     placeholder="Status"
                     v-model="charge.status"
+                    disabled
                   >
                     <el-option
                       v-for="option in StatusChoices.status"
@@ -298,6 +303,7 @@ export default {
         job_request_description: this.charge.job_request_description,
         total_items: this.charge.total_items,
         total_time: this.charge.total_time,
+        hourly_rate: this.staffUser.hourly_rate,
         status: this.charge.status,
         notes: this.charge.notes,
       };
