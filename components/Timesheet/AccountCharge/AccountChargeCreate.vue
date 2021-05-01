@@ -33,6 +33,16 @@
           </base-input>
         </div>
         <div class="col-sm-12 col-md-12">
+          <base-input
+            label="Ticket number"
+            v-validate="'required'"
+            :error="getError('Ticket number')"
+            name="Ticket number"
+            v-model="ticket_number"
+          >
+          </base-input>
+        </div>
+        <div class="col-sm-12 col-md-12">
           <base-input label="Total items" v-model="total_items"> </base-input>
         </div>
         <div class="col-sm-12 col-md-12">
@@ -185,6 +195,7 @@ export default {
           client_hourly_rate: this.clientHourlyRate,
           shift_date: this.shift_date,
           job_request: this.job_request,
+          ticket_number: this.ticket_number,
           total_items: this.total_items,
           total_time: this.total_time,
           job_request_description: this.job_description,
@@ -228,6 +239,14 @@ export default {
       },
       set(value) {
         this.setBasicStoreValue("job_request", value);
+      },
+    },
+    ticket_number: {
+      get() {
+        return this.$store.getters["accountCharge/ticket_number"];
+      },
+      set(value) {
+        this.setBasicStoreValue("ticket_number", value);
       },
     },
     total_items: {
