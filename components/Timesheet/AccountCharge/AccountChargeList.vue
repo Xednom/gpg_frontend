@@ -8,7 +8,7 @@
             <b-container fluid>
               <!-- <b-row> -->
               <b-col sm="12" md="4" class="my-1 pull-left">
-                <b-button variant="success" @click="modals.classic = true"
+                <b-button variant="success" @click="modals.classic = true" v-if="$auth.user.designation_category == 'staff'"
                   >Create Account Charge</b-button
                 >
               </b-col>
