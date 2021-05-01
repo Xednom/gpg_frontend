@@ -76,7 +76,6 @@
               </div>
             </div>
             <div class="form-row">
-              
               <div class="col-sm-12 col-md-3">
                 <base-input
                   label="Total time"
@@ -95,6 +94,16 @@
               </div>
               <div class="col-sm-12 col-md-6">
                 <base-input
+                  label="Ticket number"
+                  v-model="charge.ticket_number"
+                  :disabled="isDisabled"
+                >
+                </base-input>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-sm-12 col-md-12">
+                <base-input
                   label="Job Request"
                   v-model="charge.job_request"
                   :disabled="isDisabled"
@@ -102,12 +111,79 @@
                 </base-input>
               </div>
             </div>
-            <div class="form-row">
-              
-              <div class="col-sm-12 col-md-6">
+            <div
+              class="form-row"
+              v-if="$auth.user.designation_category == 'staff'"
+            >
+              <div class="col-sm-12 col-md-3">
                 <base-input
                   label="Staff hourly rate"
-                  v-model="charge.staff_hourly_rate"
+                  v-model="charge.staffs_hourly_rate"
+                  disabled
+                >
+                </base-input>
+              </div>
+              <div class="col-sm-12 col-md-3">
+                <base-input
+                  label="Staff Fee"
+                  v-model="charge.staffs_fee"
+                  disabled
+                >
+                </base-input>
+              </div>
+              <div class="col-sm-12 col-md-3">
+                <base-input
+                  label="Staff Other Fees"
+                  v-model="charge.staffs_other_fee"
+                  disabled
+                >
+                </base-input>
+              </div>
+              <div class="col-sm-12 col-md-3">
+                <base-input
+                  label="Staff Total due"
+                  v-model="charge.staffs_total_due"
+                  disabled
+                >
+                </base-input>
+              </div>
+            </div>
+            <div
+              class="form-row"
+              v-if="
+                $auth.user.designation_category == 'new_client' ||
+                  $auth.user.designation_category == 'current_client' ||
+                  $auth.user.designation_category == 'affiliate_partner'
+              "
+            >
+              <div class="col-sm-12 col-md-3">
+                <base-input
+                  label="Hourly rate charge"
+                  v-model="charge.clients_hourly_rate"
+                  disabled
+                >
+                </base-input>
+              </div>
+              <div class="col-sm-12 col-md-3">
+                <base-input
+                  label="Other fee"
+                  v-model="charge.clients_other_fee"
+                  disabled
+                >
+                </base-input>
+              </div>
+              <div class="col-sm-12 col-md-3">
+                <base-input
+                  label="Total Charge"
+                  v-model="charge.clients_total_charge"
+                  disabled
+                >
+                </base-input>
+              </div>
+              <div class="col-sm-12 col-md-3">
+                <base-input
+                  label="Total due"
+                  v-model="charge.clients_total_due"
                   disabled
                 >
                 </base-input>
@@ -127,11 +203,7 @@
             <div class="form-row">
               <div class="col-sm-12 col-md-12">
                 <label>Notes</label>
-                <textarea
-                  class="form-control"
-                  v-model="charge.notes"
-                  disabled
-                >
+                <textarea class="form-control" v-model="charge.notes" disabled>
                 </textarea>
               </div>
             </div>
