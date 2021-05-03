@@ -147,6 +147,18 @@
                 path: '/timesheet/account-charge',
               }"
             ></sidebar-item>
+            <sidebar-item
+              :link="{
+                name: 'Account Balance',
+                path: '/timesheet/staff-account-balance',
+              }"
+            ></sidebar-item>
+            <sidebar-item
+              :link="{
+                name: 'Payment History',
+                path: '/timesheet/staff-payment-history',
+              }"
+            ></sidebar-item>
           </sidebar-item>
           <sidebar-item
             :link="{
