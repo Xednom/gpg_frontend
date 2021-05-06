@@ -227,7 +227,7 @@ export default {
         { key: "id", sortable: true },
         { key: "total_payment_made", sortable: true },
         { key: "total_time_consumed", sortable: true },
-        { key: "amount_due", sortable: true },
+        { key: "account_charges", sortable: true },
         { key: "account_balance", sortable: true },
         { key: "actions", label: "Actions" },
       ],
