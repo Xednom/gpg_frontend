@@ -20,7 +20,7 @@
           </base-input>
           </div>
           <div class="col-sm-12 col-md-6">
-              <base-input label="Account due" v-model="balance.amount_due" disabled>
+              <base-input label="Account charge" v-model="balance.account_charges" disabled>
           </base-input>
           </div>
       </div>
