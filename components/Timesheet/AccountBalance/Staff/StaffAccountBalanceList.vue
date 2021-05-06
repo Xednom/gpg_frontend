@@ -222,7 +222,6 @@ export default {
       fuseSearch: null,
       isBusy: false,
       fields: [
-        { key: "id", sortable: true },
         { key: "amount_due_w_currency", label: "Amount due", sortable: true },
         { key: "payment_made_w_currency", label: "Payment Made", sortable: true },
         { key: "account_balance_w_currency", label: "Account Balance", sortable: true },

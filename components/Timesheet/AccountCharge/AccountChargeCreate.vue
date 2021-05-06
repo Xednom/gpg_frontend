@@ -1,7 +1,6 @@
 <template>
   <div class="col-md-12">
     <form @submit.prevent="save">
-      {{ clientCodes.hourly_rate }}
       <h4 class="card-title">Create Account Charge</h4>
       <div class="form-row">
         <div class="col-sm-12 col-md-12">
@@ -43,10 +42,42 @@
           </base-input>
         </div>
         <div class="col-sm-12 col-md-12">
-          <base-input label="Total items" v-model="total_items"> </base-input>
+          <base-input
+            label="Hourly rate"
+            class="mt-2"
+            name="hourly rate"
+            required
+            v-model="hourly_rate"
+            v-validate="modelValidations.hourly_rate"
+            :error="getError('hourly rate')"
+          >
+          </base-input>
         </div>
         <div class="col-sm-12 col-md-12">
-          <base-input label="Total time" v-model="total_time"> </base-input>
+
+          <base-input
+            label="Total items"
+            class="mt-2"
+            name="Total items"
+            required
+            v-model="total_items"
+            v-validate="modelValidations.total_items"
+            :error="getError('Total items')"
+          >
+          </base-input>
+        </div>
+        <div class="col-sm-12 col-md-12">
+
+          <base-input
+            label="Total time"
+            class="mt-2"
+            name="Total time"
+            required
+            v-model="total_time"
+            v-validate="modelValidations.total_time"
+            :error="getError('Total time')"
+          >
+          </base-input>
         </div>
       </div>
       <div class="form-row">
@@ -154,6 +185,20 @@ export default {
       clientCodes: [],
       clientHourlyRate: "",
       error: "",
+      modelValidations: {
+        hourly_rate: {
+          required: true,
+          decimal: true,
+        },
+        total_items: {
+          required: true,
+          decimal: true,
+        },
+        total_time: {
+          required: true,
+          decimal: true,
+        },
+      },
     };
   },
   methods: {
@@ -190,7 +235,7 @@ export default {
       if (isValidForm) {
         const payload = {
           staff: this.staff.id,
-          staff_hourly_rate: this.staff.hourly_rate,
+          staff_hourly_rate: this.hourly_rate,
           client: this.query,
           client_hourly_rate: this.clientHourlyRate,
           shift_date: this.shift_date,
@@ -211,16 +256,28 @@ export default {
       return "Successfully added a new Job Order. Management is on it's way to process this.";
     },
     errorMessage(error) {
-      if (error.request_date) {
-        return "Request date: " + this.error.request_date;
-      } else if (error.due_date) {
-        return "due_date: " + this.error.due_date;
-      } else if (error.job_title) {
-        return "Job title: " + this.error.job_title;
+      if (error.staff) {
+        return "Staff: " + this.error.staff;
+      } else if (error.staff_hourly_rate) {
+        return "Staff hourly rate: " + this.error.staff_hourly_rate;
+      } else if (error.clientHourlyRate) {
+        return "Client hourly rate: " + this.error.clientHourlyRate;
+      } else if (error.shift_date) {
+        return "Shift date: " + this.error.shift_date;
+      } else if (error.job_request) {
+        return "Job Request: " + this.error.job_request;
+      } else if (error.ticket_number) {
+        return "Ticket number: " + this.error.ticket_number;
+      } else if (error.total_items) {
+        return "Total items: " + this.error.total_items;
+      } else if (error.total_time) {
+        return "Total time: " + this.error.total_time;
       } else if (error.job_description) {
-        return "Job description: " + this.error.job_decription;
+        return "Job description: " + this.error.job_description;
       } else if (error.non_field_errors) {
         return this.error.non_field_errors;
+      } else if (error.details) {
+        return "error: " + this.error.details
       }
     },
   },
@@ -255,6 +312,14 @@ export default {
       },
       set(value) {
         this.setBasicStoreValue("total_items", value);
+      },
+    },
+    hourly_rate: {
+      get() {
+        return this.$store.getters["accountCharge/staff_hourly_rate"];
+      },
+      set(value) {
+        this.setBasicStoreValue("staff_hourly_rate", value);
       },
     },
     total_time: {

@@ -62,7 +62,7 @@
               <!-- Main table element -->
               <b-table
                 :items="accountCharges"
-                :fields="fields"
+                :fields="computedFields"
                 :current-page="currentPage"
                 :per-page="perPage"
                 :filter="filter"
@@ -251,7 +251,8 @@ export default {
         { key: "client_code", sortable: true },
         { key: "shift_date", sortable: true },
         { key: "job_request", sortable: true },
-        { key: "total_items", sortable: true },
+        { key: "clients_total_due", label: "Total due", sortable: true, requiresClient: true },
+        { key: "staffs_total_due", label: "Total due", sortable: true, requiresStaff: true },
         { key: "actions", label: "Actions" },
       ],
       offset: "",
