@@ -156,7 +156,11 @@
                   </div>
                   <div class="col-sm-5 col-md-10 mt-3 mb-3">
                     <label>URL of the completed JO: </label>
-                    <a :href="jobOrderCategory.url_of_the_completed_jo" target="_blank">link here</a>
+                    <a
+                      :href="jobOrderCategory.url_of_the_completed_jo"
+                      target="_blank"
+                      >link here</a
+                    >
                   </div>
 
                   <div class="col-sm-10">
@@ -200,7 +204,14 @@
                 </div>
               </card>
 
-              <div class="col-sm-5 mt-3">
+              <div
+                class="col-sm-5 mt-3"
+                v-if="
+                  $auth.user.designation_category == 'new_client' ||
+                    $auth.user.designation_category == 'current_client' ||
+                    $auth.user.designation_category == 'affiliate_partner'
+                "
+              >
                 Any attachments please send it
                 <a
                   href="https://form.jotform.com/210818766251458"
@@ -325,9 +336,9 @@ export default {
           { value: "weekly_tasks", label: "Weekly Tasks" },
           { value: "monthly_tasks", label: "Monthly Tasks" },
           { value: "redo", label: "Redo" },
-          { value: "pending", label: "Pending"},
+          { value: "pending", label: "Pending" },
           { value: "request_for_posting", label: "Request for Posting" },
-          { value: "mark_as_sold_request", label: "Mark as Sold Request" }
+          { value: "mark_as_sold_request", label: "Mark as Sold Request" },
         ],
       },
       propertyStatusChoices: {
@@ -502,7 +513,7 @@ export default {
       this.$bvToast.toast("Successfully updated this Per APN Job Order!", {
         title: `Successful`,
         variant: variant,
-        solid: true
+        solid: true,
       });
     },
     errorMessage(variant = null, error) {
