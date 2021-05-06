@@ -93,6 +93,14 @@
                   >
                     Info
                   </b-button>
+
+                  <b-button
+                    size="sm"
+                    @click="payment(row.item, row.index, $event.target)"
+                    class="mr-1"
+                  >
+                    Make a payment
+                  </b-button>
                 </template>
               </b-table>
 
@@ -107,6 +115,19 @@
                   <account-balance-view
                     :balance="accountBalance"
                   ></account-balance-view>
+                </span>
+              </b-modal>
+
+              <!-- Payment portal modal -->
+              <b-modal
+                :id="paymentModal.id"
+                :title="paymentModal.title"
+                ok-only
+                @hide="resetPaymentModal"
+              >
+                <span class="mt-3">
+                  <account-payment-view
+                  ></account-payment-view>
                 </span>
               </b-modal>
             </b-container>
@@ -165,11 +186,13 @@ import swal from "sweetalert2";
 import { mapGetters } from "vuex";
 
 import AccountBalanceView from "@/components/Timesheet/AccountBalance/AccountBalanceView";
+import AccountPaymentView from "@/components/Timesheet/AccountBalance/AccountBalancePayment";
 
 export default {
   name: "paginated",
   components: {
     AccountBalanceView,
+    AccountPaymentView,
     Modal,
     [Select.name]: Select,
     [Option.name]: Option,
@@ -244,6 +267,11 @@ export default {
         title: "",
         content: "",
       },
+      paymentModal: {
+        id: "payment-modal",
+        title: "",
+        content: "",
+      },
       modals: {
         classic: false,
         comments: false,
@@ -313,9 +341,16 @@ export default {
     info(item, index, button) {
       this.$root.$emit("bv::show::modal", this.infoModal.id, button);
     },
+    payment(item, index, button) {
+      this.$root.$emit("bv::show::modal", this.paymentModal.id, button);
+    },
     resetInfoModal() {
       this.infoModal.title = "";
       this.infoModal.content = "";
+    },
+    resetPaymentModal() {
+      this.paymentModal.title = "";
+      this.paymentModal.content = "";
     },
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
