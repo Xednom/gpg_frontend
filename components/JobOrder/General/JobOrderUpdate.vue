@@ -155,7 +155,14 @@
                 </textarea>
               </div>
             </div>
-            <div class="col-sm-5 mt-3">
+            <div
+              class="col-sm-5 mt-3"
+              v-if="
+                $auth.user.designation_category == 'new_client' ||
+                  $auth.user.designation_category == 'current_client' ||
+                  $auth.user.designation_category == 'affiliate_partner'
+              "
+            >
               Any attachments please send it
               <a href="https://form.jotform.com/210818766251458" target="_blank"
                 >here</a
@@ -255,9 +262,9 @@ export default {
           { value: "weekly_tasks", label: "Weekly Tasks" },
           { value: "monthly_tasks", label: "Monthly Tasks" },
           { value: "redo", label: "Redo" },
-          { value: "pending", label: "Pending"},
+          { value: "pending", label: "Pending" },
           { value: "request_for_posting", label: "Request for Posting" },
-          { value: "mark_as_sold_request", label: "Mark as Sold Request" }
+          { value: "mark_as_sold_request", label: "Mark as Sold Request" },
         ],
       },
     };
@@ -286,7 +293,7 @@ export default {
           this.jobOrder = res.data;
         })
         .catch((e) => {
-          console.error(e)
+          console.error(e);
           throw e;
         });
     },
@@ -343,11 +350,14 @@ export default {
       }
     },
     successMessage(variant = null) {
-      this.$bvToast.toast("Successfully updated this Job Order General request.", {
-        title: `Successful`,
-        variant: variant,
-        solid: true
-      });
+      this.$bvToast.toast(
+        "Successfully updated this Job Order General request.",
+        {
+          title: `Successful`,
+          variant: variant,
+          solid: true,
+        }
+      );
     },
     async save() {
       const clientPayload = {
