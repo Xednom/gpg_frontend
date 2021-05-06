@@ -9,6 +9,7 @@ const blankState = {
   
   export const state = () => ({
     ...blankState,
+    paymentPortals: [],
     accountBalances: [],
     accountBalance: {},
     accountBalancesPagination: {
@@ -26,6 +27,7 @@ const blankState = {
     amount_due: (state) => state.amount_due,
     account_balance: (state) => state.account_balance,
     notes: (state) => state.notes,
+    paymentPortals: (state) => state.paymentPortals,
     accountBalances: (state) => state.accountBalances,
     accountBalancesPagination: (state) => state.accountBalancesPagination,
     accountBalance: (state) => {
@@ -34,6 +36,9 @@ const blankState = {
   };
   
   export const mutations = {
+    setPaymentPortals(state, payload) {
+      state.paymentPortals = payload.paymentPortals;
+    },
     setAccountBalance(state, payload) {
       state.accountBalance = payload.accountBalance;
     },
@@ -74,6 +79,17 @@ const blankState = {
             showing: res.data.results.length,
             currentPage: offset / 12 + 1,
           });
+          return res;
+        })
+        .catch((e) => {
+          throw e;
+        });
+    },
+    async fetchPaymentPortals({ commit, dispatch }, params) {
+      return await this.$axios
+        .get("/api/v1/payment-portal/", { params: params })
+        .then((res) => {
+          commit("setPaymentPortals", { paymentPortals: res.data.results });
           return res;
         })
         .catch((e) => {
