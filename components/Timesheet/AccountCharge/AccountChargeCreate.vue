@@ -213,6 +213,7 @@ export default {
           this.clientCodes = res.data.results;
           this.clientCodes.forEach((value) => {
             this.clientHourlyRate = value.hourly_rate;
+            console.log(this.clientHourlyRate);
           });
         })
         .catch((err) => {
