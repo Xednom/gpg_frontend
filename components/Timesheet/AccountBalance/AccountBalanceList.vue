@@ -224,7 +224,7 @@ export default {
       fuseSearch: null,
       isBusy: false,
       fields: [
-        { key: "id", sortable: true },
+        { key: "client_code", sortable: true },
         { key: "total_payment_made", sortable: true },
         { key: "total_time_consumed", sortable: true },
         { key: "account_charges", sortable: true },
