@@ -79,7 +79,10 @@
               <div class="col-sm-12 col-md-3">
                 <base-input
                   label="Total time"
+                  name="Total time"
                   v-model="charge.total_time"
+                  v-validate="modelValidations.total_time"
+                  :error="getError('Total time')"
                   :disabled="isDisabled"
                 >
                 </base-input>
@@ -87,7 +90,10 @@
               <div class="col-sm-12 col-md-3">
                 <base-input
                   label="Total items"
+                  name="Total items"
                   v-model="charge.total_items"
+                  v-validate="modelValidations.total_items"
+                  :error="getError('Total items')"
                   :disabled="isDisabled"
                 >
                 </base-input>
@@ -303,10 +309,21 @@ export default {
           { value: "waived", label: "Waived" },
         ],
       },
+      modelValidations: {
+        total_time: {
+          decimal: true,
+        },
+        total_items: {
+          decimal: true,
+        },
+      },
     };
   },
   methods: {
     ...mapActions("accountCharge", ["updateCharge"]),
+    getError(fieldName) {
+      return this.errors.first(fieldName);
+    },
     async fetchClient(id) {
       this.loading = true;
       let endpoint = `/api/v1/client/${id}/`;
@@ -367,39 +384,42 @@ export default {
       });
     },
     async save() {
-      const staffPayload = {
-        ticket_number: this.charge.ticket_number,
-        client: this.charge.client,
-        shift_date: this.charge.shift_date,
-        job_request: this.charge.job_request,
-        job_request_description: this.charge.job_request_description,
-        total_items: this.charge.total_items,
-        total_time: this.charge.total_time,
-        hourly_rate: this.staffUser.hourly_rate,
-        status: this.charge.status,
-        notes: this.charge.notes,
-      };
+      let isValidForm = await this.$validator.validateAll();
+      if (isValidForm) {
+        const staffPayload = {
+          ticket_number: this.charge.ticket_number,
+          client: this.charge.client,
+          shift_date: this.charge.shift_date,
+          job_request: this.charge.job_request,
+          job_request_description: this.charge.job_request_description,
+          total_items: this.charge.total_items,
+          total_time: this.charge.total_time,
+          hourly_rate: this.staffUser.hourly_rate,
+          status: this.charge.status,
+          notes: this.charge.notes,
+        };
 
-      if (this.$auth.user.designation_category == "staff") {
-        try {
-          this.saving = true;
-          await this.updateCharge(staffPayload)
-            .then(() => {
-              this.saving = false;
-              this.successMessage("success");
-            })
-            .catch((e) => {
-              this.saving = false;
-              this.error = e.response.data;
-              this.errorMessage("danger", this.error);
-            });
-        } catch (e) {
-          this.saving = false;
-          this.error = e.response.data;
-          this.errorMessage("danger", this.error);
+        if (this.$auth.user.designation_category == "staff") {
+          try {
+            this.saving = true;
+            await this.updateCharge(staffPayload)
+              .then(() => {
+                this.saving = false;
+                this.successMessage("success");
+              })
+              .catch((e) => {
+                this.saving = false;
+                this.error = e.response.data;
+                this.errorMessage("danger", this.error);
+              });
+          } catch (e) {
+            this.saving = false;
+            this.error = e.response.data;
+            this.errorMessage("danger", this.error);
+          }
         }
+        this.saving = false;
       }
-      this.saving = false;
     },
     successMessage(variant = null) {
       this.$bvToast.toast("Successfully updated this Account Charge.", {
