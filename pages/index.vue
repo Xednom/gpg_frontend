@@ -1,6 +1,5 @@
 <template>
   <div class="row">
-    <h5>This page is under construction</h5>
     <!-- Big Chart -->
     <!-- <div class="col-12">
       <card type="chart">
