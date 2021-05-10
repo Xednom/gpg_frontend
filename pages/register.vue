@@ -266,6 +266,8 @@ export default {
         return "Username: " + this.error.username;
       } else if (error.detail) {
         return "Detail: " + this.error.detail;
+      } else if (error.email) {
+        return "Email: " + this.error.email;
       } else if (error.non_field_errors) {
         return this.error.non_field_errors;
       }
