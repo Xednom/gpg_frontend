@@ -7,11 +7,6 @@
             <img class="card-img" src="img/card-primary.png" alt="Card image" />
             <h4 class="card-title">Register</h4>
           </template>
-          <base-alert v-if="error" type="danger" dismissible>
-            <span>
-              {{ errorMessage(error) }}
-            </span>
-          </base-alert>
           <div class="form-row">
             <div class="col-sm-12 col-md-6">
               <base-input
@@ -201,6 +196,13 @@ export default {
       error: "",
       loading: false,
       confirm_password: "",
+      error: {
+        password: "",
+        username: "",
+        detail: "",
+        email: "",
+        non_field_errors: ""
+      },
       register: {
         username: "",
         password: "",
@@ -255,22 +257,29 @@ export default {
           .catch((e) => {
             this.loading = false;
             this.error = e.response.data;
-            this.errorMessage(e.response.data);
+            this.errorMessage("danger", this.error);
           });
       }
     },
-    errorMessage(error) {
-      if (error.password) {
-        return "Password: " + this.error.password;
-      } else if (error.username) {
-        return "Username: " + this.error.username;
-      } else if (error.detail) {
-        return "Detail: " + this.error.detail;
-      } else if (error.email) {
-        return "Email: " + this.error.email;
-      } else if (error.non_field_errors) {
-        return this.error.non_field_errors;
-      }
+    errorMessage(variant = null, error) {
+      this.$bvToast.toast(
+        error.password
+          ? "Password: " + error.password
+          : error.username
+          ? "Username: " + error.username
+          : error.detail
+          ? "Detail: " + error.detail
+          : error.email
+          ? "Email: " + error.email
+          : error.non_field_errors
+          ? error.non_field_errors
+          : error,
+        {
+          title: `Error`,
+          variant: variant,
+          solid: true,
+        }
+      );
     },
   },
 };
