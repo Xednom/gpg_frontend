@@ -155,6 +155,16 @@
                 </textarea>
               </div>
             </div>
+            <div class="form-row mt-3">
+              <div class="col-sm-12 col-md-12">
+                <label>Management notes</label>
+                <textarea
+                  class="form-control"
+                  v-model="jobOrder.management_notes"
+                  disabled>
+                </textarea>
+              </div>
+            </div>
             <div
               class="col-sm-5 mt-3"
               v-if="
