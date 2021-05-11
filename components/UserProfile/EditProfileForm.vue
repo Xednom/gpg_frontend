@@ -1,11 +1,6 @@
 <template>
   <card>
     <h5 slot="header" class="title">Edit Profile</h5>
-    <base-alert v-if="success" type="success" dismissible>
-      <span>
-        {{ successMessage() }}
-      </span>
-    </base-alert>
     <form @submit.prevent="save">
       <div class="row">
         <div class="col-md-6">
@@ -21,8 +16,7 @@
         <div class="col-md-6">
           <base-input
             type="email"
-            :disabled="true"
-            label="Email address"
+            label="Primary mail address"
             placeholder="email"
             v-model="user.email"
           >
@@ -209,8 +203,12 @@ export default {
         this.loading = false;
       }
     },
-    successMessage() {
-      return "Successfully updated the data";
+    successMessage(variant = null) {
+      this.$bvToast.toast("Successfully updated your information!", {
+        title: `Successful`,
+        variant: variant,
+        solid: true,
+      });
     },
     async save() {
       this.saving = true;
@@ -219,42 +217,32 @@ export default {
         first_name: this.user.first_name,
         last_name: this.user.last_name,
         phone: this.user.phone,
+        email: this.user.email
       };
-      await this.saveMe(payload)
+      return await this.saveMe(payload)
         .then(() => {
           this.saving = false;
           this.success = true;
-          this.successMessage();
+          this.successMessage("success");
         })
         .catch((err) => {
-          console.log(err.response.data);
-          this.errorMessage(err);
+          console.log(err);
+          this.errorClientMessage("danger", err.response.data);
         });
     },
-    async saveUser() {
-      console.log(this.clientUser.client_files);
-      const clientPayload = {
-        id: this.clientUser.id,
-        client: this.user.id,
-        client_code: this.clientUser.client_code,
-        affiliate_partner_code: this.clientUser.affiliate_partner_code,
-        affiliate_partner_name: this.clientUser.affiliate_partner_name,
-        pin: this.clientUser.pin,
-        lead_information: this.clientUser.lead_information,
-        customer_id: this.clientUser.customer_id,
-        client_files: this.clientUser.client_files,
-      };
-      let url = `/api/v1/client/${this.user.id}/`;
-      if (this.clientUser) {
-        return await this.$axios
-          .put(url, clientPayload)
-          .then((res) => {
-            return res.data;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+    errorClientMessage(variant = null, error) {
+      this.$bvToast.toast(
+        error.email
+          ? "Email: " + error.email
+          : error.non_field_errors
+          ? error.non_field_errors
+          : error,
+        {
+          title: `Error`,
+          variant: variant,
+          solid: true,
+        }
+      );
     },
   },
   mounted() {
