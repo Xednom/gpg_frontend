@@ -167,9 +167,6 @@ const blankState = {
       return await this.$axios.put(url, payload).then(res => {
         commit("setUser", payload);
       })
-      .catch((err) => {
-        console.log(err);
-      });
     },
     async updateClientUser({commit, dispatch}, payload) {
       let url = `/api/v1/client/${payload}/`;

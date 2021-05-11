@@ -3,16 +3,6 @@
     <card>
       <h5 slot="header" class="title">Edit Client information</h5>
       <form @submit.prevent="saveClient">
-        <base-alert v-if="success2" type="success" dismissible>
-          <span>
-            {{ successMessage2() }}
-          </span>
-        </base-alert>
-        <base-alert v-if="error" type="danger" dismissible>
-          <span>
-            {{ errorMessage(error) }}
-          </span>
-        </base-alert>
         <div class="row">
           <div class="col-md-2">
             <base-input
@@ -70,6 +60,15 @@
               label="Hourly rate"
               v-model="clientUser.client_hourly_rate"
               disabled
+            >
+            </base-input>
+          </div>
+          <div class="col-md-4">
+            <base-input
+              type="email"
+              label="Secondary email address"
+              placeholder="email"
+              v-model="clientUser.email"
             >
             </base-input>
           </div>
@@ -160,7 +159,6 @@
                   >
                   </textarea>
                 </div>
-                
               </div>
             </div>
             <div class="row">
@@ -302,8 +300,12 @@ export default {
     successMessage() {
       return "Successfully added a new files";
     },
-    successMessage2() {
-      return "Successfully updated your account info";
+    successMessage2(variant = null) {
+      this.$bvToast.toast("Successfully updated Client information!", {
+        title: `Successful`,
+        variant: variant,
+        solid: true,
+      });
     },
     async save() {
       this.saving2 = true;
@@ -317,7 +319,7 @@ export default {
         .then(() => {
           this.saving2 = false;
           this.success2 = true;
-          this.successMessage2();
+          this.successMessage2("success");
         })
         .catch((err) => {
           this.success2 = false;
@@ -360,6 +362,7 @@ export default {
         id: this.clientUser.id,
         client: this.user.id,
         client_code: this.clientUser.client_code,
+        email: this.clientUser.email,
         affiliate_partner_code: this.clientUser.affiliate_partner_code,
         affiliate_partner_name: this.clientUser.affiliate_partner_name,
         pin: this.clientUser.pin,
@@ -374,12 +377,13 @@ export default {
           .then((res) => {
             this.saving2 = false;
             this.success2 = true;
-            this.successMessage2();
+            this.successMessage2("success");
             return res.data;
           })
           .catch((err) => {
             this.saving2 = false;
             console.log(err);
+            this.errorClientMessage("danger", err.response.data)
           });
       }
     },
@@ -418,9 +422,25 @@ export default {
         .indexOf(item);
       this.clientUser.client_files.splice(index, 1);
     },
+    errorClientMessage(variant = null, error) {
+      this.$bvToast.toast(
+        error.client
+          ? "Client: " + error.client
+          : error.email
+          ? "Email: " + error.email
+          : error.non_field_errors
+          ? error.non_field_errors
+          : error,
+        {
+          title: `Error`,
+          variant: variant,
+          solid: true,
+        }
+      );
+    },
     errorMessage(error) {
-      if (error.password) {
-        return "Password: " + this.error.password;
+      if (error.email) {
+        return "Email: " + this.error.email;
       } else if (error.username) {
         return "Username: " + this.error.username;
       } else if (error.detail) {
