@@ -115,7 +115,6 @@ export default {
             data: data,
           })
           .then((res) => {
-            console.log(res);
             this.loading = false;
             this.$router.push("/");
           })
@@ -143,7 +142,6 @@ export default {
     },
     async resetPassword() {
       this.loading = true;
-      console.log(this.recoverPassEmail.email);
       await this.$axios
         .post(`/auth/users/reset_password/`, {
           email: this.recoverPassEmail,
