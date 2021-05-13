@@ -63,15 +63,6 @@
             >
             </base-input>
           </div>
-          <div class="col-md-4">
-            <base-input
-              type="email"
-              label="Secondary email address"
-              placeholder="email"
-              v-model="clientUser.email"
-            >
-            </base-input>
-          </div>
         </div>
 
         <div class="row"></div>
@@ -426,8 +417,6 @@ export default {
       this.$bvToast.toast(
         error.client
           ? "Client: " + error.client
-          : error.email
-          ? "Email: " + error.email
           : error.non_field_errors
           ? error.non_field_errors
           : error,

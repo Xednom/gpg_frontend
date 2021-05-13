@@ -162,6 +162,25 @@
           </sidebar-item>
           <sidebar-item
             :link="{
+              name: 'Due diligence',
+              icon: 'tim-icons icon-bullet-list-67',
+              path: '/',
+            }"
+          >
+            <sidebar-item
+              :link="{
+                name: 'Call out dashboard',
+              }"
+            ></sidebar-item>
+            <sidebar-item
+              :link="{
+                name: 'Phone line extension',
+                path: '/due-diligence/phone-line-extension',
+              }"
+            ></sidebar-item>
+          </sidebar-item>
+          <sidebar-item
+            :link="{
               name: 'Account credentials',
               icon: 'tim-icons icon-single-02',
               path: '/login-credentials/',
