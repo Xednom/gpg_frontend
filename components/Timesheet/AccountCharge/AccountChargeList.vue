@@ -253,6 +253,7 @@ export default {
         { key: "job_request", sortable: true },
         { key: "clients_total_due", label: "Total due", sortable: true, requiresClient: true },
         { key: "staffs_total_due", label: "Total due", sortable: true, requiresStaff: true },
+        { key: "total_time", label: "Total time", sortable: true, requiresStaff: true },
         { key: "actions", label: "Actions" },
       ],
       offset: "",
