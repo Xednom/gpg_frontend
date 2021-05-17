@@ -251,6 +251,7 @@ export default {
         { key: "client_code", sortable: true },
         { key: "shift_date", sortable: true },
         { key: "job_request", sortable: true },
+        { key: "staff_code", label: "Staff code", sortable: true, requiresClient: true },
         { key: "clients_total_due", label: "Total due", sortable: true, requiresClient: true },
         { key: "staffs_total_due", label: "Total due", sortable: true, requiresStaff: true },
         { key: "total_time", label: "Total time", sortable: true, requiresStaff: true },
