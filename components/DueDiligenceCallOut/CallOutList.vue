@@ -3,15 +3,10 @@
     <div class="row mt-5">
       <div class="col-12">
         <card card-body-classes="table-full-width">
-          <h4 slot="header" class="card-title">Account Charge</h4>
+          <h4 slot="header" class="card-title">Due Diligence Call Out list</h4>
           <div>
             <b-container fluid>
               <!-- <b-row> -->
-              <b-col sm="12" md="4" class="my-1 pull-left">
-                <b-button variant="success" @click="modals.classic = true" v-if="$auth.user.designation_category == 'staff'"
-                  >Create Account Charge</b-button
-                >
-              </b-col>
 
               <b-col sm="12" md="4" lg="4" class="my-1 pull-right">
                 <b-form-group
@@ -61,8 +56,8 @@
 
               <!-- Main table element -->
               <b-table
-                :items="accountCharges"
-                :fields="computedFields"
+                :items="callOuts"
+                :fields="fields"
                 :current-page="currentPage"
                 :per-page="perPage"
                 :filter="filter"
@@ -86,25 +81,14 @@
                 </template>
 
                 <template #cell(actions)="row">
-                  <!-- <b-button
-                    size="sm"
-                    @click="
-                      {
-                        info(row.item, row.index, $event.target),
-                          fetchAccountCharge(row.item.id);
-                      }
-                    "
-                    class="mr-1"
-                  >
-                    Info
-                  </b-button> -->
                   <b-button size="sm" @click="row.toggleDetails">
-                    {{ row.detailsShowing ? "Hide" : "Show" }} Details
+                    {{ row.detailsShowing ? "Hide" : "Show" }} details
                   </b-button>
                 </template>
+
                 <template #row-details="row">
                   <b-card>
-                    <account-update :charge="row.item"></account-update>
+                    <category :callOut="row.item"></category>
                   </b-card>
                 </template>
               </b-table>
@@ -117,11 +101,10 @@
                 @hide="resetInfoModal"
               >
                 <span class="mt-3">
-                  <!-- <payment-history-view
-                    :payment="accountCharge"
-                  ></payment-history-view> -->
+                  <category :category="callOut"></category>
                 </span>
               </b-modal>
+
             </b-container>
           </div>
           <div
@@ -135,8 +118,6 @@
               v-model="currentPage"
               :total-rows="totalRows"
               :per-page="perPage"
-              next="next"
-              prev="prev"
               align="fill"
               size="sm"
               class="my-0"
@@ -151,11 +132,6 @@
       headerClasses="justify-content-center"
       class="white-content"
     >
-      <account-create
-        :fetch="fetchAccountCharges"
-        :staff="staff"
-        :client="client"
-      ></account-create>
     </modal>
 
     <modal
@@ -179,19 +155,16 @@
 <script>
 import { Table, TableColumn, Select, Option } from "element-ui";
 import { Modal } from "@/components";
-import users from "../../../util/mock-users";
 import Fuse from "fuse.js";
 import swal from "sweetalert2";
 import { mapGetters } from "vuex";
 
-import AccountUpdate from "@/components/Timesheet/AccountCharge/AccountChargeUpdate";
-import AccountCreate from "@/components/Timesheet/AccountCharge/AccountChargeCreate";
+import Category from "@/components/DueDiligenceCallOut/CallOutUpdate";
 
 export default {
-  name: "paginated",
+  name: "call-out-list",
   components: {
-    AccountUpdate,
-    AccountCreate,
+    Category,
     Modal,
     [Select.name]: Select,
     [Option.name]: Option,
@@ -203,8 +176,8 @@ export default {
      * Returns a page from the searched data or the whole data. Search is performed in the watch section below
      */
     ...mapGetters({
-      // accountCharge: "accountCharge/accountCharge",
-      pagination: "accountCharge/accountChargesPagination",
+      callOut: "dueDiligenceCallOut/callOut",
+      pagination: "dueDiligenceCallOut/callOutsPagination",
       staff: "user/staff",
       user: "user/user",
       client: "user/clientUser",
@@ -239,29 +212,24 @@ export default {
   data() {
     return {
       searchQuery: "",
-      tableData: users,
       searchedData: [],
       currentJobOrder: {},
-      accountCharge: {},
-      accountCharges: [],
       fuseSearch: null,
       isBusy: false,
+      callOuts: [],
       fields: [
         { key: "ticket_number", sortable: true },
         { key: "client_code", sortable: true },
-        { key: "shift_date", sortable: true },
-        { key: "job_request", sortable: true },
-        { key: "staff_code", label: "Staff code", sortable: true, requiresClient: true },
-        { key: "clients_total_due", label: "Total due", sortable: true, requiresClient: true },
-        { key: "staffs_total_due", label: "Total due", sortable: true, requiresStaff: true },
-        { key: "total_time", label: "Total time", sortable: true, requiresStaff: true },
+        { key: "dd_link", sortable: true },
+        { key: "apn", sortable: true },
+        { key: "county", sortable: true },
+        { key: "state", sortable: true },
+        { key: "initial_due_diligence_status", sortable: true },
+        { key: "initial_dd_date_complete", sortable: true },
+        { key: "call_out_status", sortable: true },
+        { key: "call_out_dd_date_complete", sortable: true },
         { key: "actions", label: "Actions" },
       ],
-      offset: "",
-      count: "",
-      showing: "",
-      next: "",
-      prev: "",
       limit: 1000,
       totalRows: 1,
       currentPage: 1,
@@ -273,6 +241,11 @@ export default {
       filter: null,
       infoModal: {
         id: "info-modal",
+        title: "",
+        content: "",
+      },
+      paymentModal: {
+        id: "payment-modal",
         title: "",
         content: "",
       },
@@ -330,27 +303,28 @@ export default {
         console.error(err.response.data);
       }
     },
-    async fetchAccountCharge(id) {
-      let endpoint = `/api/v1/account-charge/${id}/`;
-      return await this.$axios
-        .get(endpoint)
-        .then((res) => {
-          this.accountCharge = res.data.results;
-        })
-        .catch((e) => {
-          throw e;
-        });
+    async fetchCallOut(id) {
+      await this.$store.dispatch("dueDiligenceCallOut/fetchCallOut", id);
     },
-    async fetchAccountCharges() {
+    // async fetchCallOuts() {
+    //   this.isBusy = true;
+    //   await this.$store
+    //     .dispatch("dueDiligenceCallOut/fetchCallOuts", this.pagination)
+    //     .then(() => {
+    //       this.isBusy = false;
+    //     });
+    // },
+
+    async fetchCallOuts() {
       return await this.$axios
-        .get(`/api/v1/account-charge/?limit=${this.limit}`)
+        .get(`/api/v1/call-out/?limit=${this.limit}`)
         .then((res) => {
           this.count = res.count;
           this.next = res.data.next;
           this.prev = res.data.prev;
           this.showing = res.data.results.length;
           this.currentPage = this.offset;
-          this.accountCharges = res.data.results;
+          this.callOuts = res.data.results;
         })
         .catch((e) => {
           throw e;
@@ -360,9 +334,16 @@ export default {
     info(item, index, button) {
       this.$root.$emit("bv::show::modal", this.infoModal.id, button);
     },
+    payment(item, index, button) {
+      this.$root.$emit("bv::show::modal", this.paymentModal.id, button);
+    },
     resetInfoModal() {
       this.infoModal.title = "";
       this.infoModal.content = "";
+    },
+    resetPaymentModal() {
+      this.paymentModal.title = "";
+      this.paymentModal.content = "";
     },
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
@@ -394,9 +375,9 @@ export default {
     },
   },
   async mounted() {
-    await this.fetchAccountCharges();
+    await this.fetchCallOuts();
     await this.fetchMe();
-    this.totalRows = this.accountCharges.length;
+    this.totalRows = this.callOuts.length;
   },
 };
 </script>

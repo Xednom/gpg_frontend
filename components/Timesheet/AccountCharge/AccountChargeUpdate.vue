@@ -438,7 +438,9 @@ export default {
       ) {
         return true;
       } else {
-        return false;
+        if (this.charge.status == "approved") {
+          return true;
+        }
       }
     },
     staffDisable() {

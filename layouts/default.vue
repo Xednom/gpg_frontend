@@ -170,6 +170,7 @@
             <sidebar-item
               :link="{
                 name: 'Call out dashboard',
+                path: '/due-diligence/call-out'
               }"
             ></sidebar-item>
             <sidebar-item
