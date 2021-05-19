@@ -94,7 +94,7 @@
                 </template>
 
                 <template #cell(url_of_the_completed_jo)="row">
-                  <a :href="row.item.url_of_the_completed_jo" target="_blank">link here</a>
+                  <a :href="row.item.url_of_the_completed_jo" v-if="row.item.url_of_the_completed_jo" target="_blank">view the completed request</a>
                 </template>
 
                 <template #row-details="row">
