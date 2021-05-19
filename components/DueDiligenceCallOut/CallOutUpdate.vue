@@ -94,6 +94,7 @@
                       class="form-control"
                       v-model="callOut.memo_call_notes"
                       rows="8"
+                      :disabled="isDisabled"
                     >
                     </textarea>
                   </div>
@@ -105,6 +106,7 @@
                       class="form-control"
                       v-model="callOut.dd_specialists_additional_info"
                       rows="8"
+                      :disabled="isDisabled"
                     >
                     </textarea>
                   </div>
@@ -122,6 +124,7 @@
                         name="status"
                         placeholder="Status"
                         v-model="callOut.initial_due_diligence_status"
+                        :disabled="isDisabled"
                       >
                         <el-option
                           v-for="option in StatusChoices.status"
@@ -143,6 +146,7 @@
                         format="yyyy-MM-dd"
                         value-format="yyyy-MM-dd"
                         placeholder="Choose date"
+                        :disabled="isDisabled"
                       >
                       </el-date-picker>
                     </base-input>
@@ -159,6 +163,7 @@
                         name="status"
                         placeholder="Status"
                         v-model="callOut.call_out_status"
+                        :disabled="isDisabled"
                       >
                         <el-option
                           v-for="option in StatusChoices.status"
@@ -180,6 +185,7 @@
                         format="yyyy-MM-dd"
                         value-format="yyyy-MM-dd"
                         placeholder="Choose date"
+                        :disabled="isDisabled"
                       >
                       </el-date-picker>
                     </base-input>
@@ -195,6 +201,7 @@
                       class="form-control"
                       v-model="callOut.assessor_website"
                       rows="8"
+                      :disabled="isDisabled"
                     >
                     </textarea>
                     <small class="text-muted"
@@ -207,6 +214,7 @@
                       class="form-control"
                       v-model="callOut.assessor_contact"
                       rows="8"
+                      :disabled="isDisabled"
                     >
                     </textarea>
                     <small class="text-muted"
@@ -221,6 +229,7 @@
                       class="form-control"
                       v-model="callOut.treasurer_website"
                       rows="8"
+                      :disabled="isDisabled"
                     >
                     </textarea>
                     <small class="text-muted">For Tax Data Collection</small>
@@ -231,6 +240,7 @@
                       class="form-control"
                       v-model="callOut.treasurer_contact"
                       rows="8"
+                      :disabled="isDisabled"
                     >
                     </textarea>
                     <small class="text-muted">For Tax Data Collection</small>
@@ -243,6 +253,7 @@
                       class="form-control"
                       v-model="callOut.recorder_clerk_website"
                       rows="8"
+                      :disabled="isDisabled"
                     >
                     </textarea>
                     <small class="text-muted"
@@ -255,6 +266,7 @@
                       class="form-control"
                       v-model="callOut.recorder_clerk_contact"
                       rows="8"
+                      :disabled="isDisabled"
                     >
                     </textarea>
                     <small class="text-muted"
@@ -269,6 +281,7 @@
                       class="form-control"
                       v-model="callOut.zoning_or_planning_department_website"
                       rows="8"
+                      :disabled="isDisabled"
                     >
                     </textarea>
                     <small class="text-muted">For Zoning Data Collection</small>
@@ -279,6 +292,7 @@
                       class="form-control"
                       v-model="callOut.zoning_or_planning_department_contact"
                       rows="8"
+                      :disabled="isDisabled"
                     >
                     </textarea>
                     <small class="text-muted">For Zoning Data Collection</small>
@@ -295,6 +309,7 @@
                         callOut.county_environmental_health_department_website
                       "
                       rows="8"
+                      :disabled="isDisabled"
                     >
                     </textarea>
                     <small class="text-muted"
@@ -312,6 +327,7 @@
                         callOut.county_environmental_health_department_contact
                       "
                       rows="8"
+                      :disabled="isDisabled"
                     >
                     </textarea>
                     <small class="text-muted"
@@ -327,6 +343,7 @@
                       class="form-control"
                       v-model="callOut.gis_website"
                       rows="8"
+                      :disabled="isDisabled"
                     >
                     </textarea>
                     <small class="text-muted">For property map viewing</small>
@@ -337,6 +354,7 @@
                       class="form-control"
                       v-model="callOut.cad_website"
                       rows="8"
+                      :disabled="isDisabled"
                     >
                     </textarea>
                     <small class="text-muted">For property map viewing</small>
@@ -351,6 +369,7 @@
                         callOut.electricity_company_name_and_phone_number
                       "
                       rows="8"
+                      :disabled="isDisabled"
                     >
                     </textarea>
                     <small class="text-muted"
@@ -363,6 +382,7 @@
                       class="form-control"
                       v-model="callOut.water_company_name_and_phone_number"
                       rows="8"
+                      :disabled="isDisabled"
                     >
                     </textarea>
                     <small class="text-muted"
@@ -378,6 +398,7 @@
                       class="form-control"
                       v-model="callOut.sewer_company_name_and_phone_number"
                       rows="8"
+                      :disabled="isDisabled"
                     >
                     </textarea>
                     <small class="text-muted"
@@ -391,6 +412,7 @@
                       class="form-control"
                       v-model="callOut.gas_company_name_and_phone_number"
                       rows="8"
+                      :disabled="isDisabled"
                     >
                     </textarea>
                     <small class="text-muted"
@@ -406,6 +428,7 @@
                       class="form-control"
                       v-model="callOut.waste_company_name_and_phone_number"
                       rows="8"
+                      :disabled="isDisabled"
                     >
                     </textarea>
                     <small class="text-muted"
@@ -416,7 +439,7 @@
                 </div>
               </tab-pane>
             </tabs>
-            <div slot="footer">
+            <div slot="footer" v-if="this.$auth.user.designation_category == 'staff'">
               <div class="pull-right mt-5">
                 <base-button
                   v-if="!saving"
@@ -654,9 +677,7 @@ export default {
       ) {
         return true;
       } else {
-        if (this.category.status == "approved") {
-          return true;
-        }
+        return false;
       }
     },
     staffDisable() {
