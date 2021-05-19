@@ -80,6 +80,10 @@
                   {{ row.value.first }} {{ row.value.last }}
                 </template>
 
+                <template #cell(dd_link)="row">
+                  <a :href="row.item.dd_link" v-if="row.item.dd_link" target="_blank">link</a>
+                   </template>
+
                 <template #cell(actions)="row">
                   <b-button size="sm" @click="row.toggleDetails">
                     {{ row.detailsShowing ? "Hide" : "Show" }} details
@@ -104,7 +108,6 @@
                   <category :category="callOut"></category>
                 </span>
               </b-modal>
-
             </b-container>
           </div>
           <div
