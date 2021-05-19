@@ -75,6 +75,20 @@
           </sidebar-item>
           <sidebar-item
             :link="{
+              name: 'Due diligence',
+              icon: 'tim-icons icon-bullet-list-67',
+              path: '/',
+            }"
+          >
+            <sidebar-item
+              :link="{
+                name: 'Call out dashboard',
+                path: '/due-diligence/call-out'
+              }"
+            ></sidebar-item>
+          </sidebar-item>
+          <sidebar-item
+            :link="{
               name: 'Account credentials',
               icon: 'tim-icons icon-single-02',
               path: '/login-credentials/',
@@ -170,6 +184,7 @@
             <sidebar-item
               :link="{
                 name: 'Call out dashboard',
+                path: '/due-diligence/call-out'
               }"
             ></sidebar-item>
             <sidebar-item
