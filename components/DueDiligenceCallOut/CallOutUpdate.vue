@@ -513,6 +513,12 @@ export default {
           { value: "processing", label: "Processing" },
           { value: "not_applicable", label: "Not Applicable" },
           { value: "job_request", label: "Job order request" },
+          { value: "tax_data_complete", label: "Tax Data- Complete" },
+          { value: "zoning_data_complete", label: "Zoning Data - Complete" },
+          { value: "utilities_data_complete", label: "Utilities Data - Complete" },
+          { value: "tax_zoning_data_complete", label: "Tax/Zoning Data- Complete" },
+          { value: "tax_utlities_data_complete", label: "Tax/Utilies Data - Complete " },
+          { value: "zoning_utilities_data_complete", label: "Zoning/Utilities Data- Complete" },
         ],
       },
       modelValidations: {
