@@ -113,7 +113,7 @@
                 </div>
 
                 <div class="form-row mt-3">
-                  <div class="col-sm-12 col-md-3">
+                  <div class="col-sm-12 col-md-4">
                     <div class="col-sm-10">
                       <div class="row">
                         <label>Initial Due diligence status</label>
@@ -138,7 +138,32 @@
                     </div>
                   </div>
 
-                  <div class="col-sm-12 col-md-3">
+                  <div class="col-sm-12 col-md-4">
+                    <div class="col-sm-10">
+                      <div class="row">
+                        <label>Initial DD - Quality Review Status</label>
+                      </div>
+                      <el-select
+                        class="select-primary"
+                        size="large"
+                        name="status"
+                        placeholder="Status"
+                        v-model="callOut.initial_dd_quality_review_status"
+                        :disabled="isDisabled"
+                      >
+                        <el-option
+                          v-for="option in QualityStatusChoices.status"
+                          class="select-primary"
+                          :value="option.value"
+                          :label="option.label"
+                          :key="option.label"
+                        >
+                        </el-option>
+                      </el-select>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12 col-md-4">
                     <base-input label="Initial Due diligence date complete">
                       <el-date-picker
                         v-model="callOut.initial_dd_date_complete"
@@ -151,8 +176,10 @@
                       </el-date-picker>
                     </base-input>
                   </div>
+                </div>
 
-                  <div class="col-sm-12 col-md-3">
+                <div class="form-row mt-3">
+                  <div class="col-sm-12 col-md-4">
                     <div class="col-sm-10">
                       <div class="row">
                         <label>Call out status</label>
@@ -177,7 +204,32 @@
                     </div>
                   </div>
 
-                  <div class="col-sm-12 col-md-3">
+                  <div class="col-sm-12 col-md-4">
+                    <div class="col-sm-10">
+                      <div class="row">
+                        <label>Call Out DD - Quality Review Status</label>
+                      </div>
+                      <el-select
+                        class="select-primary"
+                        size="large"
+                        name="status"
+                        placeholder="Status"
+                        v-model="callOut.call_out_dd_quality_review_status"
+                        :disabled="isDisabled"
+                      >
+                        <el-option
+                          v-for="option in QualityStatusChoices.status"
+                          class="select-primary"
+                          :value="option.value"
+                          :label="option.label"
+                          :key="option.label"
+                        >
+                        </el-option>
+                      </el-select>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12 col-md-4">
                     <base-input label="Call Out Due diligence date complete">
                       <el-date-picker
                         v-model="callOut.call_out_dd_date_complete"
@@ -521,6 +573,19 @@ export default {
           { value: "zoning_utilities_data_complete", label: "Zoning/Utilities Data- Complete" },
         ],
       },
+      QualityStatusChoices: {
+        placeholder: "",
+        status: [
+          {value: "complete", label: "Complete"},
+          {value: "assigned", label: "Assigned"},
+          {value: "in_progress", label: "In Progress"},
+          {value: "for_verification", label: "For Verification"},
+          {value: "pending", label: "Pending"},
+          {value: "on_hold", label: "On hold"},
+          {value: "cancelled", label: "Cancelled"},
+          {value: "for_qa_review", label: "For QA review"},
+        ]
+      },
       modelValidations: {
         total_time: {
           decimal: true,
@@ -638,9 +703,11 @@ export default {
           staff_initial_dd: this.callOut.staff_initial_dd,
           initial_due_diligence_status: this.callOut
             .initial_due_diligence_status,
+          initial_dd_quality_review_status: this.callOut.initial_dd_quality_review_status,
           initial_dd_date_complete: this.callOut.initial_dd_date_complete,
           staff_assigned_for_call_out: this.callOut.staff_assigned_for_call_out,
           call_out_status: this.callOut.call_out_status,
+          call_out_dd_quality_review_status: this.callOut.call_out_dd_quality_review_status,
           call_out_dd_date_complete: this.callOut.call_out_dd_date_complete,
         };
 
