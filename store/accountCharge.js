@@ -149,7 +149,7 @@ const blankState = {
       }
     },
     async updateCharge({ commit }, payload) {
-      let url = `/api/v1/account-charge/${payload.ticket_number}/`;
+      let url = `/api/v1/account-charge/${payload.id}/`;
       let method = "put";
       return await this.$axios[method](url, payload).then((res) => {
         return res.data;

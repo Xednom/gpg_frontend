@@ -387,6 +387,7 @@ export default {
       let isValidForm = await this.$validator.validateAll();
       if (isValidForm) {
         const staffPayload = {
+          id: this.charge.id,
           ticket_number: this.charge.ticket_number,
           client: this.charge.client,
           shift_date: this.charge.shift_date,
