@@ -3,7 +3,7 @@
     <div class="sidebar-wrapper" ref="sidebarScrollArea">
       <div class="logo">
         <a href="#" class="simple-text logo-mini">
-          <img :src="'@/static/gpg_corp.png'" alt="app-logo" />
+          <img src="~/static/landmaster.png" alt="app-logo" />
         </a>
         <nuxt-link class="simple-text logo-normal" to="/">{{title}}</nuxt-link>
       </div>
