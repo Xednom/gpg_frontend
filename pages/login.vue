@@ -4,8 +4,8 @@
       <form @submit.prevent="login">
         <card class="card-login card-white">
           <template slot="header">
-            <img class="company-logo" src="img//gpg_corp.png" alt="" />
-            <h4 class="card-title">GPG Corp. Management App</h4>
+            <img class="company-logo" src="img//landmaster.png" alt="" />
+            <h4 class="card-title">Landmaster App</h4>
           </template>
           <base-alert v-if="error" type="danger" dismissible>
             <span>
