@@ -188,6 +188,7 @@ export default {
   font-size: 25px !important;
   text-transform: none !important;
   padding-left: 10px;
+  text-align: center;
 }
 @media only screen and (max-width: 767.98px) {
   .login-page .card-login .card-header img {
