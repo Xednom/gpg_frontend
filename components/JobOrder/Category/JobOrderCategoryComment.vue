@@ -17,6 +17,7 @@
               <td>
                 <p class="title">{{ row.commenter }}</p>
                 <p class="text-muted comment">{{ row.comment }}</p>
+                <p class="text-muted comment">commented at <strong>{{ row.created_at }} </strong></p>
               </td>
             </template>
           </base-table>
