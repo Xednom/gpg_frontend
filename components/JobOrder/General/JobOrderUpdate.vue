@@ -126,7 +126,6 @@
                 <base-input
                   label="Job title"
                   v-model="jobOrder.job_title"
-                  :disabled="staffDisable"
                 >
                 </base-input>
               </div>
