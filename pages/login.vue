@@ -5,7 +5,7 @@
         <card class="card-login card-white">
           <template slot="header">
             <img class="company-logo" src="img//landmaster.png" alt="" />
-            <h4 class="card-title">Landmaster App</h4>
+            <h4 class="card-title">LandMaster.US Management System</h4>
           </template>
           <base-alert v-if="error" type="danger" dismissible>
             <span>
@@ -182,6 +182,7 @@ export default {
 }
 .company-logo {
   padding: 40px 40px 60px 40px;
+  margin-top: 50px;
 }
 .card-title {
   color: #222a42 !important;
