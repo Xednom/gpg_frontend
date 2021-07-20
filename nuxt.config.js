@@ -41,6 +41,7 @@ export default {
     ],
     bodyAttrs: {
       // class: 'sidebar-mini' // delete the class to have the sidebar expanded by default. Add `white-content` class here to enable "white" mode.
+      class: "white-content"
     }
   },
   router: {
