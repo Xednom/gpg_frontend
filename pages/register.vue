@@ -138,6 +138,24 @@
             </div>
           </div>
 
+          <div class="form-row mt-5">
+            <div class="col-sm-12 col-md-12">
+              <base-checkbox class="text-left" v-model="termsPrivacy">
+                I agree to the
+                <nuxt-link
+                  class="link footer-link"
+                  :to="'/terms-and-condition'"
+                >
+                  terms and condition
+                </nuxt-link>
+                and
+                <nuxt-link class="link footer-link" :to="'/privacy-policy'"
+                  >privacy policy</nuxt-link
+                >.
+              </base-checkbox>
+            </div>
+          </div>
+
           <div slot="footer">
             <div class="pull-right">
               <base-button
@@ -181,6 +199,8 @@
 import { BaseCheckbox, BaseAlert } from "@/components";
 import { Select, Option } from "element-ui";
 
+import TermsAndCondtion from "@/components/TermsAndCondition/TermsAndCondition.vue";
+
 export default {
   auth: false,
   name: "register-page",
@@ -190,9 +210,15 @@ export default {
     BaseAlert,
     [Option.name]: Option,
     [Select.name]: Select,
+    TermsAndCondtion,
   },
   data() {
     return {
+      modals: {
+        terms: false,
+        privacy: false,
+      },
+      termsPrivacy: false,
       error: "",
       loading: false,
       confirm_password: "",
@@ -201,7 +227,7 @@ export default {
         username: "",
         detail: "",
         email: "",
-        non_field_errors: ""
+        non_field_errors: "",
       },
       register: {
         username: "",
@@ -238,28 +264,43 @@ export default {
       return this.errors.first(fieldName);
     },
     async registerUser() {
-      let isValidForm = await this.$validator.validateAll();
-      if (isValidForm) {
-        this.loading = true;
-        await this.$axios
-          .post(`auth/users/`, this.register)
-          .then(async (res) => {
-            this.loading = false;
-            // instead of showing a success page, we should automatically login the user.
-            await this.$auth
-              .loginWith("local", {
-                data: this.register
-              })
-              .then((res) => {
-                this.$router.push("/");
-              });
-          })
-          .catch((e) => {
-            this.loading = false;
-            this.error = e.response.data;
-            this.errorMessage("danger", this.error);
-          });
+      if (!this.termsPrivacy) {
+        this.message("warning");
+      } else {
+        let isValidForm = await this.$validator.validateAll();
+        if (isValidForm) {
+          this.loading = true;
+          await this.$axios
+            .post(`auth/users/`, this.register)
+            .then(async (res) => {
+              this.loading = false;
+              // instead of showing a success page, we should automatically login the user.
+              await this.$auth
+                .loginWith("local", {
+                  data: this.register,
+                })
+                .then((res) => {
+                  this.$router.push("/");
+                });
+            })
+            .catch((e) => {
+              this.loading = false;
+              this.error = e.response.data;
+              this.errorMessage("danger", this.error);
+            });
+        }
       }
+    },
+
+    message(variant = null) {
+      this.$bvToast.toast(
+        "Please check the terms and conditions and privacy policy",
+        {
+          title: `Warning`,
+          variant: variant,
+          solid: true,
+        }
+      );
     },
     errorMessage(variant = null, error) {
       this.$bvToast.toast(
