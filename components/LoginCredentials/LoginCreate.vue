@@ -8,6 +8,25 @@
         </span>
       </base-alert>
       <div class="form-row">
+        <div
+          class="col-sm-12 col-md-12"
+          v-if="this.$auth.user.designation_category == 'staff'"
+        >
+          <label>Client Code</label>
+          <vue-typeahead-bootstrap
+            class="mb-4"
+            v-model="client"
+            :ieCloseFix="false"
+            :data="clientCodes"
+            :serializer="(item) => item.client_code"
+            :value="keyword"
+            @hit="getClientCode"
+            @input="onSearchInput"
+            placeholder="Search by Client Code"
+          />
+        </div>
+      </div>
+      <div class="form-row">
         <div class="col-sm-12 col-md-12">
           <base-input
             label="Category"
@@ -124,9 +143,11 @@ export default {
       loading: false,
       saving: false,
       success: false,
+      keyword: "",
       query: "",
       selectedClientCode: "",
       clientUser: {},
+      staffUser: {},
       clientCodes: [],
       error: {
         client: "",
@@ -141,6 +162,19 @@ export default {
   },
   methods: {
     ...mapActions("account", ["reset", "saveAccount"]),
+    onSearchInput(text) {
+      this.keyword = text;
+    },
+    getClientCode: debounce(function() {
+      this.$axios
+        .get(`/api/v1/client-code/?search=${this.client}`)
+        .then((res) => {
+          this.clientCodes = res.data.results;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }, 700),
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
@@ -149,6 +183,16 @@ export default {
       try {
         await this.$axios.get(endpoint).then((res) => {
           this.clientUser = res.data;
+        });
+      } catch (err) {
+        console.error(err.response.data);
+      }
+    },
+    async fetchStaff(id) {
+      let endpoint = `/api/v1/staff/${id}/`;
+      try {
+        await this.$axios.get(endpoint).then((res) => {
+          this.staffUser = res.data;
         });
       } catch (err) {
         console.error(err.response.data);
@@ -165,6 +209,35 @@ export default {
         ) {
           const payload = {
             client: this.clientUser.id,
+            category: this.category,
+            url: this.url,
+            username: this.username,
+            password: this.password,
+            notes: this.notes,
+          };
+          try {
+            await this.saveAccount(payload)
+              .then(() => {
+                this.loading = false;
+                this.success = true;
+                this.successMessage();
+                this.reset();
+                this.$validator.reset();
+
+                this.fetch();
+              })
+              .catch((err) => {
+                this.error = err.response;
+                this.errorMessage("danger", this.error);
+              });
+          } catch (err) {
+            console.error(err.response);
+            this.success = false;
+          }
+        } else if (this.$auth.user.designation_category == "staff") {
+          const payload = {
+            client: this.client,
+            staff: [this.staffUser.id],
             category: this.category,
             url: this.url,
             username: this.username,
@@ -276,7 +349,18 @@ export default {
       this.$auth.user.designation_category == "affiliate_partner"
     ) {
       this.fetchClient(this.$auth.user.id);
+    } else if (this.$auth.user.designation_category == 'staff') {
+      this.fetchStaff(this.$auth.user.id);
     }
+  },
+  watch: {
+    keyword: debounce(function(oldKeyword, newKeyword) {
+      if (newKeyword !== "" && newKeyword !== oldKeyword) {
+        this.getClientCode();
+      } else if (!newKeyword) {
+        this.clientCodes = [];
+      }
+    }, 500),
   },
 };
 </script>

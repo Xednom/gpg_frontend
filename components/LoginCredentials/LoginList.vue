@@ -7,7 +7,7 @@
           <div>
             <b-container fluid>
               <!-- <b-row> -->
-              <b-col sm="12" md="4" class="my-1 pull-left" v-if="$auth.user.designation_category != 'staff'">
+              <b-col sm="12" md="4" class="my-1 pull-left">
                 <b-button variant="success" @click="modals.create = true"
                   >Create Account credential</b-button
                 >
@@ -232,7 +232,7 @@ export default {
         notes: "",
       },
       fields: [
-        { key: "client_code", sortable: true, requiredStaff: true },
+        { key: "client", sortable: true, requiredStaff: true },
         { key: "category", sortable: true },
         { key: "url", sortable: true },
         { key: "username", sortable: true },
