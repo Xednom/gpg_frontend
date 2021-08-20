@@ -264,6 +264,7 @@ export default {
       query: "",
       selectedClientCode: "",
       clientCodes: [],
+      propertyDetails: [],
       error: "",
       job: {
         request_date: "",
@@ -320,8 +321,18 @@ export default {
     async fetchCategory() {
       await this.$store.dispatch("jobOrderCategory/fetchCategory");
     },
+    // async fetchPropertyDetailApn() {
+    //   await this.$store.dispatch("propertyDetail/fetchPropertyDetails");
+    // },
     async fetchPropertyDetailApn() {
-      await this.$store.dispatch("propertyDetail/fetchPropertyDetails");
+      return await this.$axios
+        .get(`/api/v1/property-detail/?limit=${this.limit}`)
+        .then((res) => {
+          this.propertyDetails = res.data.results;
+        })
+        .catch((e) => {
+          throw e;
+        });
     },
     async fetchDeadline() {
       await this.$store.dispatch("jobOrderCategory/fetchDeadline");
@@ -409,7 +420,7 @@ export default {
     ...mapGetters({
       apnCategories: "jobOrderCategory/apnCategories",
       deadlines: "jobOrderCategory/deadlines",
-      propertyDetails: "propertyDetail/propertyDetails",
+      // propertyDetails: "propertyDetail/propertyDetails",
     }),
     category: {
       get() {
