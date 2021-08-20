@@ -264,6 +264,7 @@ export default {
       query: "",
       selectedClientCode: "",
       clientCodes: [],
+      limit: 1000,
       propertyDetails: [],
       error: "",
       job: {
