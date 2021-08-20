@@ -200,7 +200,7 @@ export default {
      * Returns a page from the searched data or the whole data. Search is performed in the watch section below
      */
     ...mapGetters({
-      jobOrderCategories: "jobOrderCategory/jobOrderCategories",
+      // jobOrderCategories: "jobOrderCategory/jobOrderCategories",
       jobOrderCategory: "jobOrderCategory/jobOrderCategory",
       pagination: "jobOrderCategory/jobOrderCategoriesPagination",
       staff: "user/staff",
@@ -239,6 +239,7 @@ export default {
       searchQuery: "",
       tableData: users,
       searchedData: [],
+      jobOrderCategories: [],
       fuseSearch: null,
       isBusy: false,
       error: {
@@ -362,7 +363,7 @@ export default {
           this.prev = res.data.prev;
           this.showing = res.data.results.length;
           this.currentPage = this.offset;
-          this.accountCharges = res.data.results;
+          this.jobOrderCategories = res.data.results;
         })
         .catch((e) => {
           throw e;

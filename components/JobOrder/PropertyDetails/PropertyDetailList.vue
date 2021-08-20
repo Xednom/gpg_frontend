@@ -188,7 +188,6 @@ export default {
      * Returns a page from the searched data or the whole data. Search is performed in the watch section below
      */
     ...mapGetters({
-      propertyDetails: "propertyDetail/propertyDetails",
       propertyDetail: "propertyDetail/propertyDetail",
       pagination: "propertyDetail/propertyDetailsPagination",
       staff: "user/staff",
@@ -227,6 +226,7 @@ export default {
       searchQuery: "",
       tableData: users,
       searchedData: [],
+      propertyDetails: [],
       fuseSearch: null,
       isBusy: false,
       error: {
@@ -349,7 +349,7 @@ export default {
           this.prev = res.data.prev;
           this.showing = res.data.results.length;
           this.currentPage = this.offset;
-          this.accountCharges = res.data.results;
+          this.propertyDetails = res.data.results;
         })
         .catch((e) => {
           throw e;
