@@ -41,9 +41,10 @@
             </div>
             <el-select
               class="select-primary"
+              filterable
               size="large"
-              name="status"
-              placeholder="Status"
+              name="Category"
+              placeholder="Category"
               v-model="category"
             >
               <el-option
@@ -64,9 +65,10 @@
             </div>
             <el-select
               class="select-primary"
+              filterable
               size="large"
-              name="status"
-              placeholder="Status"
+              name="Per APN"
+              placeholder="Per APN"
               v-model="perApn"
             >
               <el-option
@@ -87,6 +89,7 @@
             </div>
             <el-select
               class="select-primary"
+              filterable
               size="large"
               name="deadline"
               placeholder="Deadline"
@@ -110,6 +113,7 @@
             </div>
             <el-select
               class="select-primary"
+              filterable
               size="large"
               name="status"
               placeholder="Status"
