@@ -334,6 +334,7 @@ export default {
       await this.$store
         .dispatch("jobOrder/fetchJobOrders", this.pagination)
         .then(() => {
+          this.totalRows = this.jobOrders.length;
           this.isBusy = false;
         });
     },
@@ -379,7 +380,6 @@ export default {
   async mounted() {
     await this.fetchJobOrders();
     await this.fetchMe();
-    this.totalRows = this.jobOrders.length;
   },
 };
 </script>

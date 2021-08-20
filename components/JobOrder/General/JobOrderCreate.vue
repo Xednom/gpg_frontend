@@ -262,6 +262,14 @@ export default {
         console.error(err.response.data);
       }
     },
+    async fetchCallerInteraction(id) {
+      let endpoint = `/api/v1/post-paid/customer-interaction-post-paid/`;
+      try {
+        await this.$axios.get(endpoint);
+      } catch (err) {
+        console.error(err.response.data);
+      }
+    },
     async save() {
       let isValidForm = await this.$validator.validateAll();
       if (isValidForm) {

@@ -330,6 +330,7 @@ export default {
       await this.$store
         .dispatch("propertyDetail/fetchPropertyDetails", this.pagination)
         .then(() => {
+          this.totalRows = this.propertyDetails.length;
           this.isBusy = false;
         });
     },
@@ -419,7 +420,6 @@ export default {
   async mounted() {
     await this.fetchPropertyDetails();
     await this.fetchMe();
-    this.totalRows = this.propertyDetails.length;
   },
 };
 </script>
