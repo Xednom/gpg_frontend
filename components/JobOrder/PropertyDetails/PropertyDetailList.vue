@@ -252,6 +252,12 @@ export default {
         { key: "property_status", sortable: true },
         // { key: "actions", label: "Actions" },
       ],
+      offset: "",
+      count: "",
+      showing: "",
+      next: "",
+      prev: "",
+      limit: 1000,
       totalRows: 1,
       currentPage: 1,
       perPage: 100,
@@ -325,13 +331,28 @@ export default {
     async fetchPropertyDetail(id) {
       await this.$store.dispatch("propertyDetail/fetchPropertyDetail", id);
     },
+    // async fetchPropertyDetails() {
+    //   this.isBusy = true;
+    //   await this.$store
+    //     .dispatch("propertyDetail/fetchPropertyDetails", this.pagination)
+    //     .then(() => {
+    //       this.totalRows = this.propertyDetails.length;
+    //       this.isBusy = false;
+    //     });
+    // },
     async fetchPropertyDetails() {
-      this.isBusy = true;
-      await this.$store
-        .dispatch("propertyDetail/fetchPropertyDetails", this.pagination)
-        .then(() => {
-          this.totalRows = this.propertyDetails.length;
-          this.isBusy = false;
+      return await this.$axios
+        .get(`/api/v1/property-detail/?limit=${this.limit}`)
+        .then((res) => {
+          this.count = res.count;
+          this.next = res.data.next;
+          this.prev = res.data.prev;
+          this.showing = res.data.results.length;
+          this.currentPage = this.offset;
+          this.accountCharges = res.data.results;
+        })
+        .catch((e) => {
+          throw e;
         });
     },
     async deletePropertyDetail(id) {
@@ -420,6 +441,7 @@ export default {
   async mounted() {
     await this.fetchPropertyDetails();
     await this.fetchMe();
+    this.totalRows = this.propertyDetails.length;
   },
 };
 </script>

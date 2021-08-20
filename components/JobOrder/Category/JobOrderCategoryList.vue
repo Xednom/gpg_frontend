@@ -265,6 +265,12 @@ export default {
         { key: "date_completed", sortable: true },
         { key: "url_of_the_completed_jo", sortable: true }
       ],
+      offset: "",
+      count: "",
+      showing: "",
+      next: "",
+      prev: "",
+      limit: 1000,
       totalRows: 1,
       currentPage: 1,
       perPage: 100,
@@ -338,13 +344,28 @@ export default {
     async fetchJobOrderCategory(id) {
       await this.$store.dispatch("jobOrderCategory/fetchJobOrderCategory", id);
     },
+    // async fetchJobOrderCategories() {
+    //   this.isBusy = true;
+    //   await this.$store
+    //     .dispatch("jobOrderCategory/fetchJobOrderCategories", this.pagination)
+    //     .then(() => {
+    //       this.totalRows = this.jobOrderCategories.length;
+    //       this.isBusy = false;
+    //     });
+    // },
     async fetchJobOrderCategories() {
-      this.isBusy = true;
-      await this.$store
-        .dispatch("jobOrderCategory/fetchJobOrderCategories", this.pagination)
-        .then(() => {
-          this.totalRows = this.jobOrderCategories.length;
-          this.isBusy = false;
+      return await this.$axios
+        .get(`/api/v1/job-order-by-category/?limit=${this.limit}`)
+        .then((res) => {
+          this.count = res.count;
+          this.next = res.data.next;
+          this.prev = res.data.prev;
+          this.showing = res.data.results.length;
+          this.currentPage = this.offset;
+          this.accountCharges = res.data.results;
+        })
+        .catch((e) => {
+          throw e;
         });
     },
     async deletejobOrderCategory(id) {
@@ -433,6 +454,7 @@ export default {
   async mounted() {
     await this.fetchJobOrderCategories();
     await this.fetchMe();
+    this.totalRows = this.jobOrderCategories.length;
   },
 };
 </script>

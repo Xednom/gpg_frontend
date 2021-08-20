@@ -257,6 +257,12 @@ export default {
         { key: "total_time_consumed", sortable: true },
         { key: "url_of_the_completed_jo", sortable: true }
       ],
+      offset: "",
+      count: "",
+      showing: "",
+      next: "",
+      prev: "",
+      limit: 1000,
       totalRows: 1,
       currentPage: 1,
       perPage: 100,
@@ -329,13 +335,29 @@ export default {
     async fetchJobOrder(id) {
       await this.$store.dispatch("jobOrder/fetchJobOrder", id);
     },
+    // async fetchJobOrders() {
+    //   this.isBusy = true;
+    //   await this.$store
+    //     .dispatch("jobOrder/fetchJobOrders", this.pagination)
+    //     .then(() => {
+    //       this.totalRows = this.jobOrders.length;
+    //       this.isBusy = false;
+    //     });
+    // },
+
     async fetchJobOrders() {
-      this.isBusy = true;
-      await this.$store
-        .dispatch("jobOrder/fetchJobOrders", this.pagination)
-        .then(() => {
-          this.totalRows = this.jobOrders.length;
-          this.isBusy = false;
+      return await this.$axios
+        .get(`/api/v1/job-order/?limit=${this.limit}`)
+        .then((res) => {
+          this.count = res.count;
+          this.next = res.data.next;
+          this.prev = res.data.prev;
+          this.showing = res.data.results.length;
+          this.currentPage = this.offset;
+          this.accountCharges = res.data.results;
+        })
+        .catch((e) => {
+          throw e;
         });
     },
 
@@ -380,6 +402,7 @@ export default {
   async mounted() {
     await this.fetchJobOrders();
     await this.fetchMe();
+    this.totalRows = this.jobOrders.length;
   },
 };
 </script>
