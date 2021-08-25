@@ -21,6 +21,7 @@
               placeholder="Username"
               autocomplete="username"
               addon-left-icon="tim-icons icon-single-02"
+              :focused="true"
             >
             </base-input>
 
@@ -32,6 +33,7 @@
               autocomplete="current-password"
               placeholder="Password"
               addon-left-icon="tim-icons icon-lock-circle"
+              :focused="true"
             >
             </base-input>
           </div>
