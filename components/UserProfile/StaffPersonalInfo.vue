@@ -112,6 +112,7 @@
             placeholder="Your hourly rate"
             v-model="staff.hourly_rate"
             addon-left-icon="tim-icons icon-money-coins"
+            disabled
           >
           </base-input>
         </div>
@@ -248,6 +249,9 @@ export default {
           { value: "office_based", label: "Office based" },
           { value: "part_timers", label: "Part-timers" },
           { value: "home_based", label: "Home based" },
+          { value: "office_project_based_contract", label: "Office Project Based Contract" },
+          { value: "homebase_project_based_contract", label: "Homebase - Project Based Contract" },
+          { value: "part_time_job", label: "Part-time Job" },
         ],
       },
     };
