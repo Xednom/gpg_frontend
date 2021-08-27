@@ -50,6 +50,7 @@
             v-model="hourly_rate"
             v-validate="modelValidations.hourly_rate"
             :error="getError('hourly rate')"
+            disabled
           >
           </base-input>
         </div>
@@ -181,6 +182,7 @@ export default {
       success: false,
       query: "",
       selectedClientCode: "",
+      staffUser: {},
       clientUser: {},
       clientCodes: [],
       clientHourlyRate: "",
@@ -230,12 +232,23 @@ export default {
         console.error(err.response.data);
       }
     },
+    async fetchStaff(id) {
+      let endpoint = `/api/v1/staff/${id}/`;
+      try {
+        await this.$axios.get(endpoint).then((res) => {
+          this.staffUser = res.data;
+          console.log(this.staffUser.hourly_rate);
+        });
+      } catch (err) {
+        console.error(err.response.data);
+      }
+    },
     async save() {
       let isValidForm = await this.$validator.validateAll();
       if (isValidForm) {
         const payload = {
           staff: this.staff.id,
-          staff_hourly_rate: this.hourly_rate,
+          staff_hourly_rate: this.staffUser.hourly_rate,
           client: this.query,
           client_hourly_rate: this.clientHourlyRate,
           shift_date: this.shift_date,
@@ -316,7 +329,7 @@ export default {
     },
     hourly_rate: {
       get() {
-        return this.$store.getters["accountCharge/staff_hourly_rate"];
+        return this.staffUser.hourly_rate;
       },
       set(value) {
         this.setBasicStoreValue("staff_hourly_rate", value);
@@ -346,6 +359,8 @@ export default {
       this.$auth.user.designation_category == "affiliate_partner"
     ) {
       this.fetchClient(this.$auth.user.id);
+    } else if (this.$auth.user.designation_category == "staff") {
+      this.fetchStaff(this.$auth.user.id);
     }
   },
 };
