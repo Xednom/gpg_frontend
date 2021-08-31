@@ -258,6 +258,7 @@ export default {
       },
       fields: [
         { key: "ticket_number", sortable: true },
+        { key: "created_at", sortable: true },
         { key: "property_detail", label: "APN", sortable: true},
         { key: "client_code", sortable: true, requiredStaff: true },
         { key: "category_", sortable: true },

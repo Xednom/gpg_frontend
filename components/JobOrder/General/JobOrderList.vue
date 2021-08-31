@@ -249,6 +249,7 @@ export default {
       isBusy: false,
       fields: [
         { key: "ticket_number", sortable: true },
+        { key: "created_at", sotrable: true },
         { key: "client_code", sortable: true, requiredStaff: true },
         { key: "request_date", sortable: true },
         { key: "due_date", sortable: true },
