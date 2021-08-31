@@ -1,13 +1,7 @@
 <template>
-  <div id="comment-section">
-    <div class="col-md-12">
-      <form @submit.prevent="save">
-        <base-alert v-if="error" type="danger" dismissible>
-          <span>
-            {{ errorMessage(error) }}
-          </span>
-        </base-alert>
-
+  <div class="col-md-12">
+    <div id="comment-section">
+      <div class="col-md-12">
         <div class="form-row">
           <base-table
             :data="job.job_order_category_comments"
@@ -17,53 +11,61 @@
               <td>
                 <p class="title">{{ row.commenter }}</p>
                 <p class="text-muted comment">{{ row.comment }}</p>
-                <p class="text-muted comment">commented at <strong>{{ row.created_at }} </strong></p>
+                <p class="text-muted comment">
+                  commented at {{ row.created_at }}
+                </p>
               </td>
             </template>
           </base-table>
         </div>
-
-        <div class="form-row">
-          <div class="col-sm-12 col-md-12">
-            <textarea
-              class="form-control"
-              placeholder="Comment"
-              v-model="comment"
-              required
-            >
-            </textarea>
-          </div>
-        </div>
-
-        <div slot="footer">
-          <div class="pull-right">
-            <base-button
-              v-if="!saving"
-              native-type="submit"
-              slot="footer"
-              type="submit"
-              round
-              block
-              size="lg"
-            >
-              Post
-            </base-button>
-            <base-button
-              v-else
-              native-type="submit"
-              slot="footer"
-              type="primary"
-              round
-              block
-              size="lg"
-              disabled
-            >
-              Posting...
-            </base-button>
-          </div>
-        </div>
-      </form>
+      </div>
     </div>
+    <form @submit.prevent="save">
+      <base-alert v-if="error" type="danger" dismissible>
+        <span>
+          {{ errorMessage(error) }}
+        </span>
+      </base-alert>
+      <div class="form-row">
+        <div class="col-sm-12 col-md-12">
+          <textarea
+            class="form-control"
+            placeholder="Comment"
+            v-model="comment"
+            required
+          >
+          </textarea>
+        </div>
+      </div>
+
+      <div slot="footer">
+        <div class="pull-right">
+          <base-button
+            v-if="!loading"
+            native-type="submit"
+            slot="footer"
+            type="submit"
+            round
+            block
+            size="lg"
+          >
+            Post
+          </base-button>
+          <base-button
+            v-else
+            native-type="submit"
+            slot="footer"
+            type="primary"
+            round
+            block
+            size="lg"
+            disabled
+          >
+            Posting...
+          </base-button>
+        </div>
+      </div>
+    </form>
   </div>
 </template>
 
@@ -113,7 +115,10 @@ export default {
       return this.errors.first(fieldName);
     },
     async refresh(id) {
-      await this.$store.dispatch("jobOrderCategory/fetchJobOrderCategory", this.job.ticket_number);
+      await this.$store.dispatch(
+        "jobOrderCategory/fetchJobOrderCategory",
+        this.job.ticket_number
+      );
     },
     async save() {
       let isValidForm = await this.$validator.validateAll();
@@ -186,8 +191,10 @@ export default {
 </script>
 
 <style scoped>
-#comment-section { 
+#comment-section {
   width: 100%;
+  max-height: 500px;
+  overflow: auto;
 }
 .modal-body {
   margin-top: 35px !important;
