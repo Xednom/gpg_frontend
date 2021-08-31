@@ -20,7 +20,7 @@
         </div>
       </div>
     </div>
-    <form @submit.prevent="save">
+    <form class="mt-5" @submit.prevent="save">
       <base-alert v-if="error" type="danger" dismissible>
         <span>
           {{ errorMessage(error) }}
