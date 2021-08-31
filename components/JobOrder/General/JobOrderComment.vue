@@ -20,7 +20,7 @@
         </div>
       </div>
     </div>
-    <form @submit.prevent="save">
+    <form class="mt-5" @submit.prevent="save">
       <base-alert v-if="error" type="danger" dismissible>
         <span>
           {{ errorMessage(error) }}
@@ -28,13 +28,15 @@
       </base-alert>
       <div class="form-row">
         <div class="col-sm-12 col-md-12">
-          <textarea
+          <b-form-textarea
             class="form-control"
             placeholder="Comment"
             v-model="comment"
+            rows="5"
+            max-rows="15"
             required
           >
-          </textarea>
+          </b-form-textarea>
         </div>
       </div>
 

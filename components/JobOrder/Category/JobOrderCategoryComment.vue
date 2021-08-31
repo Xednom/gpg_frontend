@@ -28,13 +28,15 @@
       </base-alert>
       <div class="form-row">
         <div class="col-sm-12 col-md-12">
-          <textarea
+          <b-form-textarea
             class="form-control"
             placeholder="Comment"
             v-model="comment"
+            rows="5"
+            max-rows="15"
             required
           >
-          </textarea>
+          </b-form-textarea>
         </div>
       </div>
 
