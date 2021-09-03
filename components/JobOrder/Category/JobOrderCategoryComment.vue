@@ -8,7 +8,14 @@
             thead-classes="text-primary"
           >
             <template slot-scope="{ row }">
-              <td>
+              <td class="client-comment" v-if="row.user_type != 'staff'">
+                <p class="title">{{ row.commenter }}</p>
+                <p class="text-muted comment">{{ row.comment }}</p>
+                <p class="text-muted comment">
+                  commented at {{ row.created_at }}
+                </p>
+              </td>
+              <td class="staff-comment" v-else-if="row.user_type == 'staff'">
                 <p class="title">{{ row.commenter }}</p>
                 <p class="text-muted comment">{{ row.comment }}</p>
                 <p class="text-muted comment">
@@ -203,5 +210,11 @@ export default {
 }
 .comment {
   margin-left: 10px;
+}
+.client-comment {
+ background-color: #C5E0B4;
+}
+.staff-comment {
+  background-color: #fff2cc;
 }
 </style>
