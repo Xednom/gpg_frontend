@@ -132,7 +132,7 @@
                     v-if="row.item.url_of_the_completed_jo"
                   >
                     <b-badge variant="primary"
-                      >view the completed request</b-badge
+                      >view the file</b-badge
                     >
                   </a>
                   <span v-else-if="!row.item.url_of_the_completed_jo">

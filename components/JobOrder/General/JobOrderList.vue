@@ -133,7 +133,7 @@
                     target="_blank"
                   >
                     <b-badge variant="primary"
-                      >view the completed request</b-badge
+                      >view the file</b-badge
                     >
                   </a>
                   <span v-else>
