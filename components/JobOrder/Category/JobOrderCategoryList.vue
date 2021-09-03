@@ -10,7 +10,7 @@
             <b-container fluid>
               <!-- <b-row> -->
               <b-col sm="12" md="4" class="my-1 pull-left">
-                <b-button variant="success" @click="modals.classic = true"
+                <b-button class="create-button" variant="success" @click="modals.classic = true"
                   >Create Job order</b-button
                 >
               </b-col>
@@ -86,15 +86,23 @@
                 <template #cell(ticket_number)="row">
                   <nuxt-link
                     :to="'/job-order/category/' + row.item.ticket_number"
-                    >{{ row.item.ticket_number }}</nuxt-link
+                    ><b-badge variant="primary">{{
+                      row.item.ticket_number
+                    }}</b-badge></nuxt-link
                   >
                 </template>
 
                 <template #cell(property_detail)="row">
                   <nuxt-link
-                    :to="'/job-order/property-detail/' + row.item.property_detail_ticket"
+                    :to="
+                      '/job-order/property-detail/' +
+                        row.item.property_detail_ticket
+                    "
                     target="_blank"
-                    >{{ row.item.property_detail }}</nuxt-link
+                  >
+                    <b-badge variant="primary">{{
+                      row.item.property_detail
+                    }}</b-badge></nuxt-link
                   >
                 </template>
 
@@ -108,8 +116,28 @@
                   </b-card>
                 </template>
 
+                <template #cell(date_completed)="row">
+                  <span v-if="row.item.date_completed">
+                    {{ row.item.date_completed }}
+                  </span>
+                  <span v-else>
+                    -
+                  </span>
+                </template>
+
                 <template #cell(url_of_the_completed_jo)="row">
-                  <a :href="row.item.url_of_the_completed_jo" target="_blank">view the completed request</a>
+                  <a
+                    :href="row.item.url_of_the_completed_jo"
+                    target="_blank"
+                    v-if="row.item.url_of_the_completed_jo"
+                  >
+                    <b-badge variant="primary"
+                      >view the completed request</b-badge
+                    >
+                  </a>
+                  <span v-else-if="!row.item.url_of_the_completed_jo">
+                    -
+                  </span>
                 </template>
               </b-table>
 
@@ -259,13 +287,13 @@ export default {
       fields: [
         { key: "ticket_number", sortable: true },
         { key: "created_at", sortable: true },
-        { key: "property_detail", label: "APN", sortable: true},
+        { key: "property_detail", label: "APN", sortable: true },
         { key: "client_code", sortable: true, requiredStaff: true },
         { key: "category_", sortable: true },
         { key: "status_", sortable: true },
         { key: "due_date", sortable: true },
         { key: "date_completed", sortable: true },
-        { key: "url_of_the_completed_jo", sortable: true }
+        { key: "url_of_the_completed_jo", sortable: true },
       ],
       offset: "",
       count: "",
@@ -312,16 +340,14 @@ export default {
     },
     async fetchClient(id) {
       try {
-        await this.$store.dispatch("user/fetchClientUser", id).then(() => {
-        });
+        await this.$store.dispatch("user/fetchClientUser", id).then(() => {});
       } catch (err) {
         console.error(err.response.data);
       }
     },
     async fetchStaff(id) {
       try {
-        await this.$store.dispatch("user/fetchStaff", id).then(() => {
-        });
+        await this.$store.dispatch("user/fetchStaff", id).then(() => {});
       } catch (err) {
         console.error(err);
       }
@@ -356,17 +382,31 @@ export default {
     //     });
     // },
     async fetchJobOrderCategories() {
+      this.isBusy = true;
       return await this.$axios
         .get(`/api/v1/job-order-by-category/?limit=${this.limit}`)
         .then((res) => {
+          this.isBusy = false;
           this.count = res.count;
           this.next = res.data.next;
           this.prev = res.data.prev;
           this.showing = res.data.results.length;
           this.currentPage = this.offset;
           this.jobOrderCategories = res.data.results;
+          this.jobOrderCategories.forEach((item) => {
+            if (item.status == "closed") {
+              item._rowVariant = "info";
+            } else if (item.status == "complete") {
+              item._rowVariant = "success";
+            } else if (item.status == "canceled") {
+              item._rowVariant = "danger";
+            } else {
+              item._rowVariant = "warning";
+            }
+          });
         })
         .catch((e) => {
+          this.isBusy = false;
           throw e;
         });
     },
@@ -471,5 +511,8 @@ export default {
 .page-number {
   color: black !important;
   background-color: white !important;
+}
+.create-button {
+  border-radius: 0px;
 }
 </style>

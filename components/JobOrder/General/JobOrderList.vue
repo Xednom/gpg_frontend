@@ -8,7 +8,10 @@
             <b-container fluid>
               <!-- <b-row> -->
               <b-col sm="12" md="4" class="my-1 pull-left">
-                <b-button variant="success" @click="modals.classic = true"
+                <b-button
+                  class="create-button"
+                  variant="success"
+                  @click="modals.classic = true"
                   >Create Job order</b-button
                 >
               </b-col>
@@ -86,15 +89,56 @@
                 </template>
                 <template #cell(ticket_number)="row">
                   <nuxt-link
+                    class="text-dark"
                     :to="'/job-order/general/' + row.item.ticket_number"
                     @click="fetchJobOrder(row.item.id)"
                   >
-                    {{ row.item.ticket_number }}</nuxt-link
-                  >
+                    <b-badge variant="primary">{{
+                      row.item.ticket_number
+                    }}</b-badge>
+                  </nuxt-link>
+                </template>
+
+                <template #cell(status)="row">
+                  <span v-if="row.item.status">
+                    {{ row.item.status }}
+                  </span>
+                  <span v-else>
+                    -
+                  </span>
+                </template>
+
+                <template #cell(date_completed)="row">
+                  <span v-if="row.item.date_completed">
+                    {{ row.item.date_completed }}
+                  </span>
+                  <span v-else>
+                    -
+                  </span>
+                </template>
+
+                <template #cell(total_time_consumed)="row">
+                  <span v-if="row.item.total_time_consumed">
+                    {{ row.item.total_time_consumed }}
+                  </span>
+                  <span v-else>
+                    -
+                  </span>
                 </template>
 
                 <template #cell(url_of_the_completed_jo)="row">
-                  <a :href="row.item.url_of_the_completed_jo" v-if="row.item.url_of_the_completed_jo" target="_blank">view the completed request</a>
+                  <a
+                    :href="row.item.url_of_the_completed_jo"
+                    v-if="row.item.url_of_the_completed_jo"
+                    target="_blank"
+                  >
+                    <b-badge variant="primary"
+                      >view the completed request</b-badge
+                    >
+                  </a>
+                  <span v-else>
+                    -
+                  </span>
                 </template>
 
                 <template #row-details="row">
@@ -257,7 +301,7 @@ export default {
         { key: "status_", sortable: true },
         { key: "date_completed", sortable: true },
         { key: "total_time_consumed", sortable: true },
-        { key: "url_of_the_completed_jo", sortable: true }
+        { key: "url_of_the_completed_jo", sortable: true },
       ],
       offset: "",
       count: "",
@@ -303,16 +347,14 @@ export default {
     },
     async fetchClient(id) {
       try {
-        await this.$store.dispatch("user/fetchClientUser", id).then(() => {
-        });
+        await this.$store.dispatch("user/fetchClientUser", id).then(() => {});
       } catch (err) {
         console.error(err.response.data);
       }
     },
     async fetchStaff(id) {
       try {
-        await this.$store.dispatch("user/fetchStaff", id).then(() => {
-        });
+        await this.$store.dispatch("user/fetchStaff", id).then(() => {});
       } catch (err) {
         console.error(err);
       }
@@ -348,17 +390,31 @@ export default {
     // },
 
     async fetchJobOrders() {
+      this.isBusy = true;
       return await this.$axios
         .get(`/api/v1/job-order/?limit=${this.limit}`)
         .then((res) => {
+          this.isBusy = false;
           this.count = res.count;
           this.next = res.data.next;
           this.prev = res.data.prev;
           this.showing = res.data.results.length;
           this.currentPage = this.offset;
           this.jobOrders = res.data.results;
+          this.jobOrders.forEach((item) => {
+            if (item.status == "closed") {
+              item._rowVariant = "info";
+            } else if (item.status == "complete") {
+              item._rowVariant = "success";
+            } else if (item.status == "canceled") {
+              item._rowVariant = "danger";
+            } else {
+              item._rowVariant = "warning";
+            }
+          });
         })
         .catch((e) => {
+          this.isBusy = false;
           throw e;
         });
     },
@@ -419,5 +475,11 @@ export default {
 .page-number {
   color: black !important;
   background-color: white !important;
+}
+.create-button {
+  border-radius: 0px;
+}
+.ticket-button {
+  border-radius: 0px;
 }
 </style>
