@@ -248,7 +248,7 @@ export default {
      * Returns a page from the searched data or the whole data. Search is performed in the watch section below
      */
     ...mapGetters({
-      // jobOrders: "jobOrder/jobOrders",
+      jobOrders: "jobOrder/jobOrders",
       jobOrder: "jobOrder/jobOrder",
       pagination: "jobOrder/jobOrdersPagination",
       staff: "user/staff",
@@ -287,7 +287,6 @@ export default {
       searchQuery: "",
       tableData: users,
       searchedData: [],
-      jobOrders: [],
       currentJobOrder: {},
       fuseSearch: null,
       isBusy: false,
@@ -379,28 +378,12 @@ export default {
     async fetchJobOrder(id) {
       await this.$store.dispatch("jobOrder/fetchJobOrder", id);
     },
-    // async fetchJobOrders() {
-    //   this.isBusy = true;
-    //   await this.$store
-    //     .dispatch("jobOrder/fetchJobOrders", this.pagination)
-    //     .then(() => {
-    //       this.totalRows = this.jobOrders.length;
-    //       this.isBusy = false;
-    //     });
-    // },
-
     async fetchJobOrders() {
       this.isBusy = true;
-      return await this.$axios
-        .get(`/api/v1/job-order/?limit=${this.limit}`)
-        .then((res) => {
-          this.isBusy = false;
-          this.count = res.count;
-          this.next = res.data.next;
-          this.prev = res.data.prev;
-          this.showing = res.data.results.length;
-          this.currentPage = this.offset;
-          this.jobOrders = res.data.results;
+      await this.$store
+        .dispatch("jobOrder/fetchJobOrders", this.pagination)
+        .then(() => {
+          this.totalRows = this.jobOrders.length;
           this.jobOrders.forEach((item) => {
             if (item.status == "closed") {
               item._rowVariant = "info";
@@ -412,10 +395,7 @@ export default {
               item._rowVariant = "warning";
             }
           });
-        })
-        .catch((e) => {
           this.isBusy = false;
-          throw e;
         });
     },
 
@@ -460,7 +440,6 @@ export default {
   async mounted() {
     await this.fetchJobOrders();
     await this.fetchMe();
-    this.totalRows = this.jobOrders.length;
   },
 };
 </script>

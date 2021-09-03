@@ -228,7 +228,7 @@ export default {
      * Returns a page from the searched data or the whole data. Search is performed in the watch section below
      */
     ...mapGetters({
-      // jobOrderCategories: "jobOrderCategory/jobOrderCategories",
+      jobOrderCategories: "jobOrderCategory/jobOrderCategories",
       jobOrderCategory: "jobOrderCategory/jobOrderCategory",
       pagination: "jobOrderCategory/jobOrderCategoriesPagination",
       staff: "user/staff",
@@ -267,7 +267,6 @@ export default {
       searchQuery: "",
       tableData: users,
       searchedData: [],
-      jobOrderCategories: [],
       fuseSearch: null,
       isBusy: false,
       error: {
@@ -372,27 +371,13 @@ export default {
     async fetchJobOrderCategory(id) {
       await this.$store.dispatch("jobOrderCategory/fetchJobOrderCategory", id);
     },
-    // async fetchJobOrderCategories() {
-    //   this.isBusy = true;
-    //   await this.$store
-    //     .dispatch("jobOrderCategory/fetchJobOrderCategories", this.pagination)
-    //     .then(() => {
-    //       this.totalRows = this.jobOrderCategories.length;
-    //       this.isBusy = false;
-    //     });
-    // },
     async fetchJobOrderCategories() {
       this.isBusy = true;
-      return await this.$axios
-        .get(`/api/v1/job-order-by-category/?limit=${this.limit}`)
-        .then((res) => {
+      await this.$store
+        .dispatch("jobOrderCategory/fetchJobOrderCategories", this.pagination)
+        .then(() => {
+          this.totalRows = this.jobOrderCategories.length;
           this.isBusy = false;
-          this.count = res.count;
-          this.next = res.data.next;
-          this.prev = res.data.prev;
-          this.showing = res.data.results.length;
-          this.currentPage = this.offset;
-          this.jobOrderCategories = res.data.results;
           this.jobOrderCategories.forEach((item) => {
             if (item.status == "closed") {
               item._rowVariant = "info";
@@ -404,10 +389,6 @@ export default {
               item._rowVariant = "warning";
             }
           });
-        })
-        .catch((e) => {
-          this.isBusy = false;
-          throw e;
         });
     },
     async deletejobOrderCategory(id) {
@@ -496,7 +477,6 @@ export default {
   async mounted() {
     await this.fetchJobOrderCategories();
     await this.fetchMe();
-    this.totalRows = this.jobOrderCategories.length;
   },
 };
 </script>
