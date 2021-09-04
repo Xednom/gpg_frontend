@@ -82,6 +82,7 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/axios',
     '@nuxtjs/auth-next',
+    '@nuxtjs/robots',
     'bootstrap-vue/nuxt',
     'nuxt-i18n'
   ],
@@ -134,6 +135,10 @@ export default {
 			}
 		}
 	},
+  robots: {
+    UserAgent: '*',
+    Disallow: '/'
+  },
   i18n: {
     locales: [
       {
