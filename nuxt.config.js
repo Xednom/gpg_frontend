@@ -137,7 +137,7 @@ export default {
 	},
   robots: {
     UserAgent: '*',
-    Disallow: '/'
+    Disallow: ['/', '/login']
   },
   i18n: {
     locales: [
