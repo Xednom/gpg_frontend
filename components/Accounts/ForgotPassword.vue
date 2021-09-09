@@ -2,10 +2,6 @@
   <div class="container forgot-password-page login-page">
     <div class="col-lg-4 col-md-6 ml-auto mr-auto">
       <card class="card-login card-white">
-        <template slot="header">
-          <img src="img//card-primary.png" alt="" />
-          <h1 class="card-title">Forgot password</h1>
-        </template>
         <base-alert v-if="error" type="danger" dismissible>
           <span>
             {{ errorMessage(error) }}
@@ -16,6 +12,11 @@
             Password reset link sent!
           </span>
         </base-alert>
+        <div class="container mb-5">
+          <span class="text-muted text-center">
+            <h4>Forgot password</h4>
+          </span>
+        </div>
         <form @submit.prevent="forgotPassword">
           <div>
             <base-input
@@ -36,7 +37,7 @@
               v-if="loading"
               native-type="submit"
               type="primary"
-              class="mb-3"
+              class="mb-3 forgot-btn"
               size="lg"
               block
               disabled
@@ -47,7 +48,7 @@
               v-if="!loading"
               native-type="submit"
               type="primary"
-              class="mb-3"
+              class="mb-3 forgot-btn"
               size="lg"
               block
             >
@@ -71,14 +72,14 @@ import { BaseAlert } from "@/components";
 export default {
   name: "forgot-password-page",
   components: {
-    BaseAlert
+    BaseAlert,
   },
   data() {
     return {
       loading: false,
       success: false,
       email: "",
-      error: ""
+      error: "",
     };
   },
   methods: {
@@ -119,12 +120,15 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .navbar-nav .nav-item p {
   line-height: inherit;
   margin-left: 5px;
 }
 .forgot-password-page .card-title {
   font-size: 46px !important;
+}
+.forgot-btn {
+  border-radius: 0px !important;
 }
 </style>
