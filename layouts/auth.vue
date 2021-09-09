@@ -5,7 +5,7 @@
       type="white"
       :transparent="true"
       menu-classes="justify-content-end"
-      class="auth-navbar fixed-top"
+      class="container auth-navbar fixed-top"
     >
       <div slot="brand" class="navbar-wrapper brand-logo">
         <img src="~/static/img/landmaster_a.png" alt="Logo white" />
@@ -105,7 +105,7 @@ export default {
   background-repeat: no-repeat !important;
 }
 .brand-logo {
-  width: 12% !important;
+  width: 20% !important;
 }
 .navbar.auth-navbar {
   top: 0;
