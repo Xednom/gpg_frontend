@@ -67,9 +67,6 @@ export default {
       type: String,
       description: 'Input icon on the left'
     },
-    focused: {
-      type: Boolean
-    }
   },
   model: {
     prop: 'value',
