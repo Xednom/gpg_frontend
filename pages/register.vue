@@ -5,7 +5,9 @@
         <card class="card-register card-white">
           <div class="container mb-5">
             <span class="text-center">
-              <h4 class="text-muted">Please choose what kind of user you are.</h4>
+              <h4 class="text-muted">
+                Please choose what kind of user you are.
+              </h4>
             </span>
           </div>
           <div class="form-row">
@@ -32,6 +34,15 @@
                   Staff
                 </base-button></nuxt-link
               >
+            </div>
+          </div>
+          <div slot="footer">
+            <div class="pull-left">
+              <h6>
+                <nuxt-link class="link footer-link" :to="'/login'">
+                  Back to Login page
+                </nuxt-link>
+              </h6>
             </div>
           </div>
         </card>
