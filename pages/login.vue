@@ -3,15 +3,18 @@
     <div class="col-lg-4 col-md-6 ml-auto mr-auto">
       <form @submit.prevent="login">
         <card class="card-login card-white">
-          <template slot="header">
-            <img class="company-logo" src="img//landmaster.png" alt="" />
-            <h4 class="card-title">LandMaster.US Management System</h4>
-          </template>
+          <template slot="header"> </template>
           <base-alert v-if="error" type="danger" dismissible>
             <span>
               {{ errorMessage(error) }}
             </span>
           </base-alert>
+          <div class="container mb-5">
+            <span class="text-muted text-center">
+              <h4>Sign in with credentials</h4>
+            </span>
+          </div>
+
           <div>
             <base-input
               v-validate="'required'"
@@ -21,7 +24,6 @@
               placeholder="Username"
               autocomplete="username"
               addon-left-icon="tim-icons icon-single-02"
-              :focused="true"
             >
             </base-input>
 
@@ -33,7 +35,6 @@
               autocomplete="current-password"
               placeholder="Password"
               addon-left-icon="tim-icons icon-lock-circle"
-              :focused="true"
             >
             </base-input>
           </div>
@@ -192,6 +193,9 @@ export default {
   text-transform: none !important;
   padding-left: 10px;
   text-align: center;
+}
+.card-login {
+  border-radius: 0px;
 }
 @media only screen and (max-width: 767.98px) {
   .login-page .card-login .card-header img {

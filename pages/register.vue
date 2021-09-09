@@ -3,191 +3,35 @@
     <div class="col-md-8 ml-auto mr-auto">
       <form @submit.prevent="registerUser">
         <card class="card-register card-white">
-          <template slot="header">
-            <img class="card-img" src="img/card-primary.png" alt="Card image" />
-            <h4 class="card-title">Register</h4>
-          </template>
-          <div class="form-row">
-            <div class="col-sm-12 col-md-6">
-              <base-input
-                v-validate="'required'"
-                :error="getError('First Name')"
-                v-model="register.first_name"
-                name="First Name"
-                placeholder="First Name"
-                addon-left-icon="tim-icons icon-single-02"
-              >
-              </base-input>
-            </div>
-            <div class="col-sm-12 col-md-6">
-              <base-input
-                v-validate="'required'"
-                :error="getError('Last Name')"
-                v-model="register.last_name"
-                name="Last Name"
-                placeholder="Last Name"
-                addon-left-icon="tim-icons icon-single-02"
-              >
-              </base-input>
-            </div>
+          <div class="container mb-5">
+            <span class="text-center">
+              <h4 class="text-muted">Please choose what kind of user you are.</h4>
+            </span>
           </div>
           <div class="form-row">
             <div class="col-sm-12 col-md-6">
-              <base-input
-                v-validate="'required|email'"
-                :error="getError('email')"
-                v-model="register.email"
-                name="email"
-                placeholder="Email"
-                addon-left-icon="tim-icons icon-email-85"
-              >
-              </base-input>
-            </div>
-            <div class="col-sm-12 col-md-6">
-              <base-input
-                v-validate="'required'"
-                :error="getError('phone')"
-                v-model="register.phone"
-                name="phone"
-                placeholder="Phone"
-                addon-left-icon="tim-icons icon-mobile"
-              >
-              </base-input>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="col-sm-12 col-md-12">
-              <base-input
-                v-validate="'required'"
-                :error="getError('username')"
-                v-model="register.username"
-                name="username"
-                placeholder="Username"
-                autocomplete="username"
-                addon-left-icon="tim-icons icon-user-run"
-              >
-              </base-input>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="col-sm-12 col-md-6">
-              <base-input
-                v-validate="'required|min:8'"
-                :error="getError('password')"
-                v-model="register.password"
-                name="password"
-                type="password"
-                placeholder="Password"
-                autocomplete="current-password"
-                addon-left-icon="tim-icons icon-lock-circle"
-              >
-              </base-input>
-            </div>
-
-            <div class="col-sm-12 col-md-6">
-              <base-input
-                v-validate="'required|min:8'"
-                :error="getError('confirm password')"
-                v-model="register.re_password"
-                name="confirm password"
-                type="password"
-                placeholder="Confirm Password"
-                autocomplete="current-password"
-                addon-left-icon="tim-icons icon-lock-circle"
-              >
-              </base-input>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="col-sm-12 col-md-6">
-              <el-select
-                class="select-primary"
-                size="medium"
-                placeholder="Select your designation..."
-                v-model="register.designation_category"
-              >
-                <el-option
-                  v-for="option in designations.categories"
-                  class="select-primary"
-                  :value="option.value"
-                  :label="option.label"
-                  :key="option.label"
+              <nuxt-link to="/client-registration/"
+                ><base-button
+                  type="primary"
+                  class="mb-3 client"
+                  size="md"
+                  block
                 >
-                </el-option>
-              </el-select>
+                  Client
+                </base-button></nuxt-link
+              >
             </div>
-
             <div class="col-sm-12 col-md-6">
-              <el-select
-                class="select-primary"
-                size="medium"
-                placeholder="Select your company..."
-                v-model="register.company_category"
-              >
-                <el-option
-                  v-for="option in companies.categories"
-                  class="select-primary"
-                  :value="option.value"
-                  :label="option.label"
-                  :key="option.label"
+              <nuxt-link to="/staff-registration/"
+                ><base-button
+                  type="success"
+                  class="mb-3 client"
+                  size="md"
+                  block
                 >
-                </el-option>
-              </el-select>
-            </div>
-          </div>
-
-          <div class="form-row mt-5">
-            <div class="col-sm-12 col-md-12">
-              <base-checkbox class="text-left" v-model="termsPrivacy">
-                I agree to the
-                <nuxt-link
-                  class="link footer-link"
-                  :to="'/terms-and-condition'"
-                >
-                  terms and condition
-                </nuxt-link>
-                and
-                <nuxt-link class="link footer-link" :to="'/privacy-policy'"
-                  >privacy policy</nuxt-link
-                >.
-              </base-checkbox>
-            </div>
-          </div>
-
-          <div slot="footer">
-            <div class="pull-right">
-              <base-button
-                v-if="!loading"
-                native-type="submit"
-                slot="footer"
-                type="primary"
-                round
-                block
-                size="lg"
+                  Staff
+                </base-button></nuxt-link
               >
-                Register
-              </base-button>
-              <base-button
-                v-else
-                native-type="submit"
-                slot="footer"
-                type="primary"
-                round
-                block
-                size="lg"
-                disabled
-              >
-                Registering...
-              </base-button>
-            </div>
-            <div class="pull-left">
-              <h6>
-                <nuxt-link class="link footer-link" :to="'/login'">
-                  Back to Login page
-                </nuxt-link>
-              </h6>
             </div>
           </div>
         </card>
@@ -328,5 +172,8 @@ export default {
 <style scoped>
 .card-img {
   width: 50%;
+}
+.client {
+  border-radius: 0px;
 }
 </style>
