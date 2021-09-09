@@ -167,7 +167,9 @@
 }
 
 .full-page{
+    & > .header,
     & > .content,
+    & > .content-bottom,
     & > .footer{
         position: relative;
         z-index: 4;

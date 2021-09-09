@@ -1,83 +1,85 @@
 <template>
-  <div class="container login-page">
-    <div class="col-lg-4 col-md-6 ml-auto mr-auto">
-      <form @submit.prevent="login">
-        <card class="card-login card-white">
-          <template slot="header"> </template>
-          <base-alert v-if="error" type="danger" dismissible>
-            <span>
-              {{ errorMessage(error) }}
-            </span>
-          </base-alert>
-          <div class="container mb-5">
-            <span class="text-muted text-center">
-              <h4>Sign in with credentials</h4>
-            </span>
-          </div>
-
-          <div>
-            <base-input
-              v-validate="'required'"
-              name="username"
-              :error="getError('username')"
-              v-model="loginData.login"
-              placeholder="Username"
-              autocomplete="username"
-              addon-left-icon="tim-icons icon-single-02"
-            >
-            </base-input>
-
-            <base-input
-              name="password"
-              :error="getError('password')"
-              v-model="loginData.password"
-              type="password"
-              autocomplete="current-password"
-              placeholder="Password"
-              addon-left-icon="tim-icons icon-lock-circle"
-            >
-            </base-input>
-          </div>
-
-          <div slot="footer">
-            <base-button
-              v-if="loading"
-              native-type="submit"
-              type="primary"
-              class="mb-3"
-              size="lg"
-              block
-              disabled
-            >
-              Signing in...
-            </base-button>
-            <base-button
-              v-if="!loading"
-              native-type="submit"
-              type="primary"
-              class="mb-3"
-              size="lg"
-              block
-            >
-              Sign in
-            </base-button>
-            <div class="pull-left">
-              <h6>
-                <nuxt-link class="link footer-link" :to="'/register'">
-                  Create Account
-                </nuxt-link>
-              </h6>
+  <div>
+    <div class="container mt--8 login-page">
+      <div class="col-lg-4 col-md-6 ml-auto mr-auto">
+        <form @submit.prevent="login">
+          <card class="card-login card-white">
+            <template slot="header"> </template>
+            <base-alert v-if="error" type="danger" dismissible>
+              <span>
+                {{ errorMessage(error) }}
+              </span>
+            </base-alert>
+            <div class="container mb-5">
+              <span class="text-muted text-center">
+                <h4>Sign in with credentials</h4>
+              </span>
             </div>
-            <div class="pull-right">
-              <h6>
-                <nuxt-link class="link footer-link" to="/forgot-password">
-                  Forgot password?
-                </nuxt-link>
-              </h6>
+
+            <div>
+              <base-input
+                v-validate="'required'"
+                name="username"
+                :error="getError('username')"
+                v-model="loginData.login"
+                placeholder="Username"
+                autocomplete="username"
+                addon-left-icon="tim-icons icon-single-02"
+              >
+              </base-input>
+
+              <base-input
+                name="password"
+                :error="getError('password')"
+                v-model="loginData.password"
+                type="password"
+                autocomplete="current-password"
+                placeholder="Password"
+                addon-left-icon="tim-icons icon-lock-circle"
+              >
+              </base-input>
             </div>
-          </div>
-        </card>
-      </form>
+
+            <div slot="footer">
+              <base-button
+                v-if="loading"
+                native-type="submit"
+                type="primary"
+                class="mb-3 login-btn"
+                size="lg"
+                block
+                disabled
+              >
+                Signing in...
+              </base-button>
+              <base-button
+                v-if="!loading"
+                native-type="submit"
+                type="primary"
+                class="mb-3 login-btn"
+                size="lg"
+                block
+              >
+                Sign in
+              </base-button>
+              <div class="pull-left">
+                <h6>
+                  <nuxt-link class="link footer-link" :to="'/register'">
+                    Create Account
+                  </nuxt-link>
+                </h6>
+              </div>
+              <div class="pull-right">
+                <h6>
+                  <nuxt-link class="link footer-link" to="/forgot-password">
+                    Forgot password?
+                  </nuxt-link>
+                </h6>
+              </div>
+            </div>
+          </card>
+        </form>
+      </div>
     </div>
   </div>
 </template>
@@ -178,7 +180,10 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
+.header {
+  position: relative !important;
+}
 .navbar-nav .nav-item p {
   line-height: inherit;
   margin-left: 5px;
@@ -196,6 +201,16 @@ export default {
 }
 .card-login {
   border-radius: 0px;
+}
+.login-btn {
+  border-radius: 0px;
+}
+.bg-gradient-success {
+  height: 100% !important;
+  background-image: linear-gradient(87deg, #ffffff, #1001e0) !important;
+}
+.separator {
+  position: absolute !important;
 }
 @media only screen and (max-width: 767.98px) {
   .login-page .card-login .card-header img {
