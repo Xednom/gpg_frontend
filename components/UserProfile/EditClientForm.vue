@@ -54,15 +54,6 @@
             >
             </base-input>
           </div>
-          <div class="col-md-4">
-            <base-input
-              type="text"
-              label="Hourly rate"
-              v-model="clientUser.client_hourly_rate"
-              disabled
-            >
-            </base-input>
-          </div>
         </div>
 
         <div class="row"></div>
