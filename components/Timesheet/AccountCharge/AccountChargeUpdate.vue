@@ -162,15 +162,7 @@
                   $auth.user.designation_category == 'affiliate_partner'
               "
             >
-              <div class="col-sm-12 col-md-3">
-                <base-input
-                  label="Hourly rate charge"
-                  v-model="charge.clients_hourly_rate"
-                  disabled
-                >
-                </base-input>
-              </div>
-              <div class="col-sm-12 col-md-3">
+              <div class="col-sm-12 col-md-4">
                 <base-input
                   label="Other fee"
                   v-model="charge.clients_other_fee"
@@ -178,7 +170,7 @@
                 >
                 </base-input>
               </div>
-              <div class="col-sm-12 col-md-3">
+              <div class="col-sm-12 col-md-4">
                 <base-input
                   label="Total Charge"
                   v-model="charge.clients_total_charge"
@@ -186,7 +178,7 @@
                 >
                 </base-input>
               </div>
-              <div class="col-sm-12 col-md-3">
+              <div class="col-sm-12 col-md-4">
                 <base-input
                   label="Total due"
                   v-model="charge.clients_total_due"
