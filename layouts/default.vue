@@ -23,6 +23,14 @@
           </sidebar-item>
           <sidebar-item
             :link="{
+              name: 'Newsfeed',
+              icon: 'tim-icons icon-chat-33',
+              path: '/newsfeed',
+            }"
+          >
+          </sidebar-item>
+          <sidebar-item
+            :link="{
               name: 'Job order',
               icon: 'tim-icons icon-bullet-list-67',
               path: '/',
@@ -119,6 +127,14 @@
               name: $t('sidebar.dashboard'),
               icon: 'tim-icons icon-chart-pie-36',
               path: '/',
+            }"
+          >
+          </sidebar-item>
+          <sidebar-item
+            :link="{
+              name: 'Newsfeed',
+              icon: 'tim-icons icon-chat-33',
+              path: '/newsfeed',
             }"
           >
           </sidebar-item>
