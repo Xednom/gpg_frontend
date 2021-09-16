@@ -86,10 +86,9 @@
                     {{ row.item.client_code }}
                   </template>
                   <template v-else>
-                    <nuxt-link
-                    :to="'/login-credentials/' + row.item.id"
-                    >{{ row.item.client_code }}</nuxt-link
-                  >
+                    <nuxt-link :to="'/login-credentials/' + row.item.id">{{
+                      row.item.client_code
+                    }}</nuxt-link>
                   </template>
                 </template>
 
@@ -103,7 +102,7 @@
                     "
                     class="mr-1"
                   >
-                  Info
+                    Info
                   </b-button>
                 </template>
 
@@ -133,7 +132,8 @@
                 headerClasses="justify-content-center"
                 class="white-content"
               >
-                <login-detail :account="this.account"></login-detail>
+                <!-- <login-detail :account="this.account"></login-detail> -->
+                <login-update :account="this.account" :refresh="fetchAccounts"></login-update>
               </modal>
             </b-container>
           </div>
@@ -163,6 +163,7 @@ import { Table, TableColumn, Select, Option } from "element-ui";
 import { Modal } from "@/components";
 import LoginCreate from "@/components/LoginCredentials/LoginCreate";
 import LoginDetail from "@/components/LoginCredentials/LoginDetail";
+import LoginUpdate from "@/components/LoginCredentials/LoginUpdate";
 import swal from "sweetalert2";
 import { mapGetters } from "vuex";
 
@@ -175,7 +176,8 @@ export default {
     [Table.name]: Table,
     [TableColumn.name]: TableColumn,
     LoginCreate,
-    LoginDetail
+    LoginDetail,
+    LoginUpdate,
   },
   computed: {
     /***
@@ -183,7 +185,7 @@ export default {
      */
     ...mapGetters({
       accounts: "account/accounts",
-      account: "account/account",
+      // account: "account/account",
       pagination: "account/accountsPagination",
       staff: "user/staff",
       user: "user/user",
@@ -220,6 +222,7 @@ export default {
     return {
       searchQuery: "",
       searchedData: [],
+      account: {},
       fuseSearch: null,
       isBusy: false,
       error: {
@@ -305,8 +308,24 @@ export default {
         console.error(err.response.data);
       }
     },
+    // async fetchAccount(id) {
+    //   await this.$store.dispatch("account/fetchAccount", id);
+    //   console.log(this.account);
+    // },
     async fetchAccount(id) {
-      await this.$store.dispatch("account/fetchAccount", id);
+      this.loading = true;
+      let endpoint = `/api/v1/login-credentials/${id}/`;
+      return await this.$axios
+        .get(endpoint)
+        .then((res) => {
+          this.loading = false;
+          this.account = res.data;
+          console.log(this.account);
+        })
+        .catch((e) => {
+          this.loading = false;
+          throw e;
+        });
     },
     async fetchAccounts() {
       this.isBusy = true;

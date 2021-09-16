@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="">
-      <div class="col-md-6">
+      <div class="col-md-12">
         <b-skeleton-wrapper :loading="loading">
           <template #loading>
             <b-card>
@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import { DatePicker, Select, Option } from "element-ui";
 
 export default {
@@ -115,6 +115,16 @@ export default {
     [DatePicker.name]: DatePicker,
     [Select.name]: Select,
     [Option.name]: Option,
+  },
+  props: {
+    account: {
+      type: Object,
+      decription: "Login Credential data",
+    },
+    refresh: {
+      type: Function,
+      description: "fetch the list page"
+    }
   },
   data() {
     return {
@@ -124,27 +134,30 @@ export default {
       user: {},
       clientUser: {},
       staffUser: {},
-      account: {},
       current_account: {},
     };
   },
   methods: {
     ...mapActions("account", ["updateAccount"]),
-    async fetchAccount(payload) {
-      this.loading = true;
-      let endpoint = `/api/v1/login-credentials/${payload}/`;
-      return await this.$axios
-        .get(endpoint)
-        .then((res) => {
-          this.loading = false;
-          console.log(res.data)
-          this.account = res.data;
-        })
-        .catch((e) => {
-          this.loading = false;
-          throw e;
-        });
-    },
+    // async fetchAccount(id) {
+    //   await this.$store.dispatch("account/fetchAccount", id);
+    //   console.log(this.account);
+    // },
+    // async fetchAccount(payload) {
+    //   this.loading = true;
+    //   let endpoint = `/api/v1/login-credentials/${payload}/`;
+    //   return await this.$axios
+    //     .get(endpoint)
+    //     .then((res) => {
+    //       this.loading = false;
+    //       console.log(res.data)
+    //       this.account = res.data;
+    //     })
+    //     .catch((e) => {
+    //       this.loading = false;
+    //       throw e;
+    //     });
+    // },
     async fetchClient(id) {
       this.loading = true;
       let endpoint = `/api/v1/client/${id}/`;
@@ -205,6 +218,7 @@ export default {
         await this.updateAccount(clientPayload)
           .then(() => {
             this.saving = false;
+            this.refresh();
             this.successMessage("success");
           })
           .catch((e) => {
@@ -245,7 +259,7 @@ export default {
   },
   mounted() {
     this.fetchClient(this.$auth.user.id);
-    this.fetchAccount(this.$route.params.id);
+    // this.fetchAccount(this.account.id);
   },
 };
 </script>
