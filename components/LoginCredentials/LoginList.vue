@@ -132,8 +132,8 @@
                 headerClasses="justify-content-center"
                 class="white-content"
               >
-                <!-- <login-detail :account="this.account"></login-detail> -->
-                <login-update :account="this.account" :refresh="fetchAccounts"></login-update>
+                <login-detail :account="this.account" v-if="$auth.user.designation_category=='staff'"></login-detail>
+                <login-update :account="this.account" :refresh="fetchAccounts" v-else-if="$auth.user.designation_category!='staff'"></login-update>
               </modal>
             </b-container>
           </div>

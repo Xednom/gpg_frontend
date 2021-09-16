@@ -82,6 +82,7 @@
                   round
                   block
                   size="lg"
+                  :disabled="$auth.user.designation_category=='staff'"
                 >
                   Save
                 </base-button>
@@ -232,9 +233,6 @@ export default {
         this.errorMessage("danger", this.error);
       }
       this.saving = false;
-    },
-    refresh() {
-      this.fetchJobOrderComment(this.$route.params.ticket_number);
     },
   },
   computed: {
