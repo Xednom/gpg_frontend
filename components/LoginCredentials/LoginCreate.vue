@@ -208,7 +208,7 @@ export default {
           this.$auth.user.designation_category == "affiliate_partner"
         ) {
           const payload = {
-            client: this.clientUser.id,
+            client: this.clientUser.client_code,
             category: this.category,
             url: this.url,
             username: this.username,
