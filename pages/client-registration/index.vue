@@ -99,6 +99,7 @@
               size="medium"
               placeholder="Select your company..."
               v-model="register.company_category"
+              disabled
             >
               <el-option
                 v-for="option in companies.categories"
@@ -205,7 +206,7 @@ export default {
         email: "",
         phone: "",
         designation_category: "new_client",
-        company_category: "",
+        company_category: "land_master",
       },
       designations: {
         categories: [
