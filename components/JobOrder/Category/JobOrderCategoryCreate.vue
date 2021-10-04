@@ -244,7 +244,7 @@ export default {
     [DatePicker.name]: DatePicker,
     [Select.name]: Select,
     [Option.name]: Option,
-    VueTypeaheadBootstrap
+    VueTypeaheadBootstrap,
   },
   mixins: [CreateJobMixin],
   props: {
@@ -265,6 +265,7 @@ export default {
       loading: false,
       saving: false,
       success: false,
+      balance: "",
       query: "",
       selectedClientCode: "",
       clientCodes: [],
@@ -296,7 +297,7 @@ export default {
           { value: "weekly_tasks", label: "Weekly Tasks" },
           { value: "monthly_tasks", label: "Monthly Tasks" },
           { value: "redo", label: "Redo" },
-          { value: "pending", label: "Pending"},
+          { value: "pending", label: "Pending" },
           { value: "request_for_posting", label: "Request for Posting" },
           { value: "mark_as_sold_request", label: "Mark as Sold Request" },
           { value: "initial_dd_processing", label: "Initial DD Processing" },
@@ -363,15 +364,20 @@ export default {
             job_description: this.jobDescription,
           };
           try {
-            await this.saveJobOrderCategory(payload).then(() => {
+            if (this.balance <= 0) {
               this.loading = false;
-              this.success = true;
-              this.successMessage();
-              this.reset();
-              this.$validator.reset();
+              this.deficitMessage("danger");
+            } else {
+              await this.saveJobOrderCategory(payload).then(() => {
+                this.loading = false;
+                this.success = true;
+                this.successMessage();
+                this.reset();
+                this.$validator.reset();
 
-              this.fetch();
-            });
+                this.fetch();
+              });
+            }
           } catch (err) {
             console.error(err);
             this.success = false;
@@ -402,6 +408,22 @@ export default {
         }
       }
     },
+    async fetchAccountBalance() {
+      await this.$store.dispatch("accountBalance/fetchAccountBalances");
+      this.accountBalances.forEach((item) => {
+        this.balance = item.account_balance_amount;
+      });
+    },
+    deficitMessage(variant = null) {
+      this.$bvToast.toast(
+        "Your account is in deficit status. For you to continue using the service, please refill your account by going to TIMESHEET under Account Balance you can see the link to make a payment. Thank you.",
+        {
+          title: `Please be advised`,
+          variant: variant,
+          solid: true,
+        }
+      );
+    },
     successMessage() {
       return "Successfully added a new Job Order. Management is on it's way to process this.";
     },
@@ -425,7 +447,7 @@ export default {
     ...mapGetters({
       apnCategories: "jobOrderCategory/apnCategories",
       deadlines: "jobOrderCategory/deadlines",
-      // propertyDetails: "propertyDetail/propertyDetails",
+      accountBalances: "accountBalance/accountBalances",
     }),
     category: {
       get() {
@@ -520,6 +542,7 @@ export default {
     this.fetchCategory();
     this.fetchPropertyDetailApn();
     this.fetchDeadline();
+    this.fetchAccountBalance();
   },
 };
 </script>

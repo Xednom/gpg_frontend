@@ -161,7 +161,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import CreateJobMixin from "@/mixins/CreateJobOrderMixin.js";
 import { DatePicker, Select, Option } from "element-ui";
 import { BaseAlert } from "@/components";
@@ -195,6 +195,7 @@ export default {
       loading: false,
       saving: false,
       success: false,
+      balance: "",
       query: "",
       selectedClientCode: "",
       clientUser: {},
@@ -224,7 +225,7 @@ export default {
           { value: "weekly_tasks", label: "Weekly Tasks" },
           { value: "monthly_tasks", label: "Monthly Tasks" },
           { value: "redo", label: "Redo" },
-          { value: "pending", label: "Pending"},
+          { value: "pending", label: "Pending" },
           { value: "request_for_posting", label: "Request for Posting" },
           { value: "mark_as_sold_request", label: "Mark as Sold Request" },
           { value: "initial_dd_processing", label: "Initial DD Processing" },
@@ -233,10 +234,22 @@ export default {
           { value: "dd_call_out_complete", label: "DD Call Out Complete" },
           { value: "duplicate_request", label: "Duplicate Request" },
           { value: "multiple_task", label: "Multiple Task" },
-          { value: "va_assigned_multiple_task", label: "VA assigned Multiple Task" },
-          { value: "va_processing_multiple_task", label: "VA processing Multiple Task" },
-          { value: "va_complete_multiple_task", label: "VA Complete Multiple Task" },
-          { value: "for_quality_review_multiple_task", label: "For Quality Review Multiple Task" },
+          {
+            value: "va_assigned_multiple_task",
+            label: "VA assigned Multiple Task",
+          },
+          {
+            value: "va_processing_multiple_task",
+            label: "VA processing Multiple Task",
+          },
+          {
+            value: "va_complete_multiple_task",
+            label: "VA Complete Multiple Task",
+          },
+          {
+            value: "for_quality_review_multiple_task",
+            label: "For Quality Review Multiple Task",
+          },
         ],
       },
       error: "",
@@ -293,16 +306,21 @@ export default {
             job_description: this.job_description,
           };
           try {
-            await this.saveJobOrder(payload).then(() => {
+            if (this.balance <= 0) {
               this.loading = false;
-              this.success = true;
-              this.successMessage();
-              this.reset();
-              this.query = null;
-              this.$validator.reset();
+              this.deficitMessage("danger");
+            } else {
+              await this.saveJobOrder(payload).then(() => {
+                this.loading = false;
+                this.success = true;
+                this.successMessage();
+                this.reset();
+                this.query = null;
+                this.$validator.reset();
 
-              this.fetch();
-            });
+                this.fetch();
+              });
+            }
           } catch (err) {
             console.error(err);
             this.success = false;
@@ -318,7 +336,7 @@ export default {
             job_title: this.job_title,
             status: this.status,
             job_description: this.job_description,
-            url_of_the_completed_jo: this.url_of_the_completed_jo
+            url_of_the_completed_jo: this.url_of_the_completed_jo,
           };
           await this.saveJobOrder(payload);
           this.loading = false;
@@ -328,6 +346,22 @@ export default {
           this.fetch();
         }
       }
+    },
+    async fetchAccountBalance() {
+      await this.$store.dispatch("accountBalance/fetchAccountBalances");
+      this.accountBalances.forEach((item) => {
+        this.balance = item.account_balance_amount;
+      });
+    },
+    deficitMessage(variant = null) {
+      this.$bvToast.toast(
+        "Your account is in deficit status. For you to continue using the service, please refill your account by going to TIMESHEET under Account Balance you can see the link to make a payment. Thank you.",
+        {
+          title: `Please be advised`,
+          variant: variant,
+          solid: true,
+        }
+      );
     },
     successMessage() {
       return "Successfully added a new Job Order. Management is on it's way to process this.";
@@ -347,6 +381,9 @@ export default {
     },
   },
   computed: {
+    ...mapGetters({
+      accountBalances: "accountBalance/accountBalances",
+    }),
     request_date: {
       get() {
         return this.$store.getters["jobOrder/request_date"];
@@ -403,6 +440,7 @@ export default {
       this.$auth.user.designation_category == "affiliate_partner"
     ) {
       this.fetchClient(this.$auth.user.id);
+      this.fetchAccountBalance();
     }
   },
 };
