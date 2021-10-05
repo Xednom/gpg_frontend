@@ -364,7 +364,7 @@ export default {
             job_description: this.jobDescription,
           };
           try {
-            if (this.balance <= 0) {
+            if (this.balance < 0) {
               this.loading = false;
               this.deficitMessage("danger");
             } else {
