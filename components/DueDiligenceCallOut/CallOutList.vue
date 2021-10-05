@@ -320,14 +320,10 @@ export default {
 
     async fetchCallOuts() {
       return await this.$axios
-        .get(`/api/v1/call-out/?limit=${this.limit}`)
+        .get(`/api/v1/call-out/`)
         .then((res) => {
-          this.count = res.count;
-          this.next = res.data.next;
-          this.prev = res.data.prev;
-          this.showing = res.data.results.length;
-          this.currentPage = this.offset;
           this.callOuts = res.data.results;
+          this.totalRows = this.callOuts.length;
         })
         .catch((e) => {
           throw e;
@@ -380,7 +376,6 @@ export default {
   async mounted() {
     await this.fetchCallOuts();
     await this.fetchMe();
-    this.totalRows = this.callOuts.length;
   },
 };
 </script>

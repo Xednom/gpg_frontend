@@ -207,6 +207,81 @@
                   <div class="col-sm-12 col-md-4">
                     <div class="col-sm-10">
                       <div class="row">
+                        <label>Tax data status</label>
+                      </div>
+                      <el-select
+                        class="select-primary"
+                        size="large"
+                        name="status"
+                        placeholder="Status"
+                        v-model="callOut.tax_data_status"
+                        :disabled="isDisabled"
+                      >
+                        <el-option
+                          v-for="option in TaxChoices.status"
+                          class="select-primary"
+                          :value="option.value"
+                          :label="option.label"
+                          :key="option.label"
+                        >
+                        </el-option>
+                      </el-select>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12 col-md-4">
+                    <div class="col-sm-10">
+                      <div class="row">
+                        <label>Zoning data status</label>
+                      </div>
+                      <el-select
+                        class="select-primary"
+                        size="large"
+                        name="status"
+                        placeholder="Status"
+                        v-model="callOut.zoning_data_status"
+                        :disabled="isDisabled"
+                      >
+                        <el-option
+                          v-for="option in ZoningChoices.status"
+                          class="select-primary"
+                          :value="option.value"
+                          :label="option.label"
+                          :key="option.label"
+                        >
+                        </el-option>
+                      </el-select>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12 col-md-4 mt-3">
+                    <div class="col-sm-10">
+                      <div class="row">
+                        <label>Utilities data status</label>
+                      </div>
+                      <el-select
+                        class="select-primary"
+                        size="large"
+                        name="status"
+                        placeholder="Status"
+                        v-model="callOut.utilities_data_status"
+                        :disabled="isDisabled"
+                      >
+                        <el-option
+                          v-for="option in UtilitiesChoices.status"
+                          class="select-primary"
+                          :value="option.value"
+                          :label="option.label"
+                          :key="option.label"
+                        >
+                        </el-option>
+                      </el-select>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12 col-md-4 mt-3">
+                    <div class="col-sm-10">
+                      <div class="row">
                         <label>Call Out DD - Quality Review Status</label>
                       </div>
                       <el-select
@@ -229,7 +304,7 @@
                     </div>
                   </div>
 
-                  <div class="col-sm-12 col-md-4">
+                  <div class="col-sm-12 col-md-4 mt-3">
                     <base-input label="Call Out Due diligence date complete">
                       <el-date-picker
                         v-model="callOut.call_out_dd_date_complete"
@@ -573,6 +648,63 @@ export default {
           { value: "zoning_utilities_data_complete", label: "Zoning/Utilities Data- Complete" },
         ],
       },
+      TaxChoices: {
+        placeholder: "",
+        status: [
+          { value: "complete", label: "Completed" },
+          { value: "pending", label: "Pending" },
+          { value: "on_hold", label: "On Hold" },
+          { value: "cancelled", label: "Cancelled" },
+          { value: "for_follow_up", label: "For follow up" },
+          { value: "processing", label: "Processing" },
+          { value: "not_applicable", label: "Not Applicable" },
+          { value: "job_request", label: "Job order request" },
+          { value: "tax_data_complete", label: "Tax Data- Complete" },
+          { value: "zoning_data_complete", label: "Zoning Data - Complete" },
+          { value: "utilities_data_complete", label: "Utilities Data - Complete" },
+          { value: "tax_zoning_data_complete", label: "Tax/Zoning Data- Complete" },
+          { value: "tax_utlities_data_complete", label: "Tax/Utilies Data - Complete " },
+          { value: "zoning_utilities_data_complete", label: "Zoning/Utilities Data- Complete" },
+        ],
+      },
+      ZoningChoices: {
+        placeholder: "",
+        status: [
+          { value: "complete", label: "Completed" },
+          { value: "pending", label: "Pending" },
+          { value: "on_hold", label: "On Hold" },
+          { value: "cancelled", label: "Cancelled" },
+          { value: "for_follow_up", label: "For follow up" },
+          { value: "processing", label: "Processing" },
+          { value: "not_applicable", label: "Not Applicable" },
+          { value: "job_request", label: "Job order request" },
+          { value: "tax_data_complete", label: "Tax Data- Complete" },
+          { value: "zoning_data_complete", label: "Zoning Data - Complete" },
+          { value: "utilities_data_complete", label: "Utilities Data - Complete" },
+          { value: "tax_zoning_data_complete", label: "Tax/Zoning Data- Complete" },
+          { value: "tax_utlities_data_complete", label: "Tax/Utilies Data - Complete " },
+          { value: "zoning_utilities_data_complete", label: "Zoning/Utilities Data- Complete" },
+        ],
+      },
+      UtilitiesChoices: {
+        placeholder: "",
+        status: [
+          { value: "complete", label: "Completed" },
+          { value: "pending", label: "Pending" },
+          { value: "on_hold", label: "On Hold" },
+          { value: "cancelled", label: "Cancelled" },
+          { value: "for_follow_up", label: "For follow up" },
+          { value: "processing", label: "Processing" },
+          { value: "not_applicable", label: "Not Applicable" },
+          { value: "job_request", label: "Job order request" },
+          { value: "tax_data_complete", label: "Tax Data- Complete" },
+          { value: "zoning_data_complete", label: "Zoning Data - Complete" },
+          { value: "utilities_data_complete", label: "Utilities Data - Complete" },
+          { value: "tax_zoning_data_complete", label: "Tax/Zoning Data- Complete" },
+          { value: "tax_utlities_data_complete", label: "Tax/Utilies Data - Complete " },
+          { value: "zoning_utilities_data_complete", label: "Zoning/Utilities Data- Complete" },
+        ],
+      },
       QualityStatusChoices: {
         placeholder: "",
         status: [
@@ -707,6 +839,9 @@ export default {
           initial_dd_date_complete: this.callOut.initial_dd_date_complete,
           staff_assigned_for_call_out: this.callOut.staff_assigned_for_call_out,
           call_out_status: this.callOut.call_out_status,
+          tax_data_status: this.callOut.tax_data_status,
+          zoning_data_status: this.callOut.zoning_data_status,
+          utilities_data_status: this.callOut.utilities_data_status,
           call_out_dd_quality_review_status: this.callOut.call_out_dd_quality_review_status,
           call_out_dd_date_complete: this.callOut.call_out_dd_date_complete,
         };
