@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <!-- Big Chart -->
-    <div class="col-6">
+    <div class="col-6" v-if="$auth.user.designation_category !='staff'">
       <card type="chart">
         <template slot="header">
           <div class="row">
@@ -50,7 +50,7 @@
         </div>
       </card>
     </div>
-    <div class="col-6">
+    <div class="col-6" v-if="$auth.user.designation_category !='staff'">
       <card type="chart">
         <template slot="header">
           <div class="row">
