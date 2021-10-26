@@ -1,13 +1,12 @@
 <template>
   <div class="row">
     <!-- Big Chart -->
-    <!-- <div class="col-12">
+    <div class="col-6">
       <card type="chart">
         <template slot="header">
           <div class="row">
             <div class="col-sm-6" :class="isRTL ? 'text-right' : 'text-left'">
-              <h5 class="card-category">Total shipments</h5>
-              <h2 class="card-title">Performance</h2>
+              <h5 class="card-category">Total Job order by APN</h5>
             </div>
             <div class="col-sm-6 d-flex d-sm-block">
               <div
@@ -15,7 +14,7 @@
                 :class="isRTL ? 'float-left' : 'float-right'"
                 data-toggle="buttons"
               >
-                <label
+                <!-- <label
                   v-for="(option, index) in bigLineChartCategories"
                   :key="option.name"
                   class="btn btn-sm btn-primary btn-simple"
@@ -33,7 +32,7 @@
                   <span class="d-block d-sm-none">
                     <i :class="option.icon"></i>
                   </span>
-                </label>
+                </label> -->
               </div>
             </div>
           </div>
@@ -41,16 +40,65 @@
         <div class="chart-area">
           <line-chart
             style="height: 100%"
-            ref="bigChart"
-            :chart-data="bigLineChart.chartData"
-            :gradient-colors="bigLineChart.gradientColors"
-            :gradient-stops="bigLineChart.gradientStops"
-            :extra-options="bigLineChart.extraOptions"
+            ref="bigChartByApns"
+            :chart-data="bigLineChartByApns.chartData"
+            :gradient-colors="bigLineChartByApns.gradientColors"
+            :gradient-stops="bigLineChartByApns.gradientStops"
+            :extra-options="bigLineChartByApns.extraOptions"
           >
           </line-chart>
         </div>
       </card>
-    </div> -->
+    </div>
+    <div class="col-6">
+      <card type="chart">
+        <template slot="header">
+          <div class="row">
+            <div class="col-sm-6" :class="isRTL ? 'text-right' : 'text-left'">
+              <h5 class="card-category">Total Job order General</h5>
+            </div>
+            <div class="col-sm-6 d-flex d-sm-block">
+              <div
+                class="btn-group btn-group-toggle"
+                :class="isRTL ? 'float-left' : 'float-right'"
+                data-toggle="buttons"
+              >
+                <!-- <label
+                  v-for="(option, index) in bigLineChartCategories"
+                  :key="option.name"
+                  class="btn btn-sm btn-primary btn-simple"
+                  :class="{ active: bigLineChart.activeIndex === index }"
+                  :id="index"
+                >
+                  <input
+                    type="radio"
+                    @click="initBigChart(index)"
+                    name="options"
+                    autocomplete="off"
+                    :checked="bigLineChart.activeIndex === index"
+                  />
+                  <span class="d-none d-sm-block">{{ option.name }}</span>
+                  <span class="d-block d-sm-none">
+                    <i :class="option.icon"></i>
+                  </span>
+                </label> -->
+              </div>
+            </div>
+          </div>
+        </template>
+        <div class="chart-area">
+          <line-chart
+            style="height: 100%"
+            ref="bigChartGenerals"
+            :chart-data="bigLineChartGenerals.chartData"
+            :gradient-colors="bigLineChartGenerals.gradientColors"
+            :gradient-stops="bigLineChartGenerals.gradientStops"
+            :extra-options="bigLineChartGenerals.extraOptions"
+          >
+          </line-chart>
+        </div>
+      </card>
+    </div>
     <!-- Stats Cards -->
     <!-- <div class="col-lg-3 col-md-6" v-for="card in statsCards" :key="card.title">
       <stats-card
@@ -154,21 +202,34 @@
   </div>
 </template>
 <script>
-import LineChart from '@/components/Charts/LineChart';
-import BarChart from '@/components/Charts/BarChart';
-import * as chartConfigs from '@/components/Charts/config';
-import TaskList from '@/components/Dashboard/TaskList';
-import UserTable from '@/components/Dashboard/UserTable';
-import CountryMapCard from '@/components/Dashboard/CountryMapCard';
-import StatsCard from '@/components/Cards/StatsCard';
-import config from '@/config';
+import LineChart from "@/components/Charts/LineChart";
+import BarChart from "@/components/Charts/BarChart";
+import * as chartConfigs from "@/components/Charts/config";
+import TaskList from "@/components/Dashboard/TaskList";
+import UserTable from "@/components/Dashboard/UserTable";
+import CountryMapCard from "@/components/Dashboard/CountryMapCard";
+import StatsCard from "@/components/Cards/StatsCard";
+import config from "@/config";
 
 let bigChartData = [
-  [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100],
-  [80, 120, 105, 110, 95, 105, 90, 100, 80, 95, 70, 120],
-  [60, 80, 65, 130, 80, 105, 90, 130, 70, 115, 60, 130]
-]
-let bigChartLabels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+  [],
+  // [80, 120, 105, 110, 95, 105, 90, 100, 80, 95, 70, 120],
+  // [60, 80, 65, 130, 80, 105, 90, 130, 70, 115, 60, 130]
+];
+let bigChartLabels = [
+  "JAN",
+  "FEB",
+  "MAR",
+  "APR",
+  "MAY",
+  "JUN",
+  "JUL",
+  "AUG",
+  "SEP",
+  "OCT",
+  "NOV",
+  "DEC",
+];
 let bigChartDatasetOptions = {
   fill: true,
   borderColor: config.colors.primary,
@@ -176,179 +237,389 @@ let bigChartDatasetOptions = {
   borderDash: [],
   borderDashOffset: 0.0,
   pointBackgroundColor: config.colors.primary,
-  pointBorderColor: 'rgba(255,255,255,0)',
+  pointBorderColor: "rgba(255,255,255,0)",
   pointHoverBackgroundColor: config.colors.primary,
   pointBorderWidth: 20,
   pointHoverRadius: 4,
   pointHoverBorderWidth: 15,
   pointRadius: 4,
-}
+};
 
 export default {
-  name: 'dashboard',
-  middleware: ['auth'],
+  name: "dashboard",
+  middleware: ["auth"],
   components: {
     LineChart,
     BarChart,
     StatsCard,
     TaskList,
     CountryMapCard,
-    UserTable
+    UserTable,
   },
-  data () {
+  data() {
     return {
+      jobOrderByApns: [],
+      jobOrderGenerals: [],
+      months: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ],
+      // Category
+      jobOrderByApnCount: [],
+      jobOrderByApnCountJan: "",
+      jobOrderByApnCountFeb: "",
+      jobOrderByApnCountMar: "",
+      jobOrderByApnCountApr: "",
+      jobOrderByApnCountMay: "",
+      jobOrderByApnCountJun: "",
+      jobOrderByApnCountJul: "",
+      jobOrderByApnCountAug: "",
+      jobOrderByApnCountSep: "",
+      jobOrderByApnCountOct: "",
+      jobOrderByApnCountNov: "",
+      jobOrderByApnCountDec: "",
+      jobOrderByApnMonth: [],
+
+      // General
+      jobOrderGeneralCount: [],
+      jobOrderGeneralCountJan: "",
+      jobOrderGeneralCountFeb: "",
+      jobOrderGeneralCountMar: "",
+      jobOrderGeneralCountApr: "",
+      jobOrderGeneralCountMay: "",
+      jobOrderGeneralCountJun: "",
+      jobOrderGeneralCountJul: "",
+      jobOrderGeneralCountAug: "",
+      jobOrderGeneralCountSep: "",
+      jobOrderGeneralCountOct: "",
+      jobOrderGeneralCountNov: "",
+      jobOrderGeneralCountDec: "",
+      jobOrderGeneralMonth: [],
+      currentDate: new Date(),
       statsCards: [
         {
-          title: '150GB',
-          subTitle: 'Number',
-          type: 'warning',
-          icon: 'tim-icons icon-chat-33',
-          footer: '<i class="tim-icons icon-refresh-01"></i> Update Now'
+          title: "150GB",
+          subTitle: "Number",
+          type: "warning",
+          icon: "tim-icons icon-chat-33",
+          footer: '<i class="tim-icons icon-refresh-01"></i> Update Now',
         },
         {
-          title: '+45K',
-          subTitle: 'Followers',
-          type: 'primary',
-          icon: 'tim-icons icon-shape-star',
-          footer: '<i class="tim-icons icon-sound-wave"></i></i> Last Research'
+          title: "+45K",
+          subTitle: "Followers",
+          type: "primary",
+          icon: "tim-icons icon-shape-star",
+          footer: '<i class="tim-icons icon-sound-wave"></i></i> Last Research',
         },
         {
-          title: '150,000',
-          subTitle: 'Users',
-          type: 'info',
-          icon: 'tim-icons icon-single-02',
-          footer: '<i class="tim-icons icon-trophy"></i> Customer feedback'
+          title: "150,000",
+          subTitle: "Users",
+          type: "info",
+          icon: "tim-icons icon-single-02",
+          footer: '<i class="tim-icons icon-trophy"></i> Customer feedback',
         },
         {
-          title: '23',
-          subTitle: 'Errors',
-          type: 'danger',
-          icon: 'tim-icons icon-molecule-40',
-          footer: '<i class="tim-icons icon-watch-time"></i> In the last hours'
-        }
+          title: "23",
+          subTitle: "Errors",
+          type: "danger",
+          icon: "tim-icons icon-molecule-40",
+          footer: '<i class="tim-icons icon-watch-time"></i> In the last hours',
+        },
       ],
-      bigLineChart: {
+      bigLineChartByApns: {
         activeIndex: 0,
         chartData: {
-          datasets: [{
-            ...bigChartDatasetOptions,
-            data: bigChartData[0]
-          }],
-          labels: bigChartLabels
+          datasets: [
+            {
+              ...bigChartDatasetOptions,
+              data: bigChartData[0],
+            },
+          ],
+          labels: bigChartLabels,
         },
         extraOptions: chartConfigs.purpleChartOptions,
         gradientColors: config.colors.primaryGradient,
         gradientStops: [1, 0.4, 0],
-        categories: []
+        categories: [],
+      },
+      bigLineChartGenerals: {
+        activeIndex: 0,
+        chartData: {
+          datasets: [
+            {
+              ...bigChartDatasetOptions,
+              data: bigChartData[0],
+            },
+          ],
+          labels: bigChartLabels,
+        },
+        extraOptions: chartConfigs.purpleChartOptions,
+        gradientColors: config.colors.primaryGradient,
+        gradientStops: [1, 0.4, 0],
+        categories: [],
       },
       purpleLineChart: {
         extraOptions: chartConfigs.purpleChartOptions,
         chartData: {
-          labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+          labels: ["JUL", "AUG", "SEP", "OCT", "NOV", "DEC"],
           datasets: [
             {
-              label: 'Data',
+              label: "Data",
               fill: true,
               borderColor: config.colors.primary,
               borderWidth: 2,
               borderDash: [],
               borderDashOffset: 0.0,
               pointBackgroundColor: config.colors.primary,
-              pointBorderColor: 'rgba(255,255,255,0)',
+              pointBorderColor: "rgba(255,255,255,0)",
               pointHoverBackgroundColor: config.colors.primary,
               pointBorderWidth: 20,
               pointHoverRadius: 4,
               pointHoverBorderWidth: 15,
               pointRadius: 4,
-              data: [80, 100, 70, 80, 120, 80]
-            }
-          ]
+              data: [80, 100, 70, 80, 120, 80],
+            },
+          ],
         },
         gradientColors: config.colors.primaryGradient,
-        gradientStops: [1, 0.2, 0]
+        gradientStops: [1, 0.2, 0],
       },
       greenLineChart: {
         extraOptions: chartConfigs.greenChartOptions,
         chartData: {
-          labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV'],
+          labels: ["JUL", "AUG", "SEP", "OCT", "NOV"],
           datasets: [
             {
-              label: 'My First dataset',
+              label: "My First dataset",
               fill: true,
               borderColor: config.colors.danger,
               borderWidth: 2,
               borderDash: [],
               borderDashOffset: 0.0,
               pointBackgroundColor: config.colors.danger,
-              pointBorderColor: 'rgba(255,255,255,0)',
+              pointBorderColor: "rgba(255,255,255,0)",
               pointHoverBackgroundColor: config.colors.danger,
               pointBorderWidth: 20,
               pointHoverRadius: 4,
               pointHoverBorderWidth: 15,
               pointRadius: 4,
-              data: [90, 27, 60, 12, 80]
-            }
-          ]
+              data: [90, 27, 60, 12, 80],
+            },
+          ],
         },
         gradientColors: [
-          'rgba(66,134,121,0.15)',
-          'rgba(66,134,121,0.0)',
-          'rgba(66,134,121,0)'
+          "rgba(66,134,121,0.15)",
+          "rgba(66,134,121,0.0)",
+          "rgba(66,134,121,0)",
         ],
-        gradientStops: [1, 0.4, 0]
+        gradientStops: [1, 0.4, 0],
       },
       blueBarChart: {
         extraOptions: chartConfigs.barChartOptions,
         chartData: {
-          labels: ['USA', 'GER', 'AUS', 'UK', 'RO', 'BR'],
+          labels: ["USA", "GER", "AUS", "UK", "RO", "BR"],
           datasets: [
             {
-              label: 'Countries',
+              label: "Countries",
               fill: true,
               borderColor: config.colors.info,
               borderWidth: 2,
               borderDash: [],
               borderDashOffset: 0.0,
-              data: [53, 20, 10, 80, 100, 45]
-            }
-          ]
+              data: [53, 20, 10, 80, 100, 45],
+            },
+          ],
         },
         gradientColors: config.colors.primaryGradient,
-        gradientStops: [1, 0.4, 0]
-      }
+        gradientStops: [1, 0.4, 0],
+      },
     };
   },
   computed: {
-    enableRTL () {
+    enableRTL() {
       return this.$route.query.enableRTL;
     },
-    isRTL () {
+    isRTL() {
       return this.$rtl.isRTL;
     },
-    bigLineChartCategories () {
-      return [{ name: 'Accounts', icon: 'tim-icons icon-single-02' }, {
-        name: 'Purchases',
-        icon: 'tim-icons icon-gift-2'
-      }, { name: 'Sessions', icon: 'tim-icons icon-tap-02' }];
-    }
+    bigLineChartCategories() {
+      return [
+        { name: "Accounts", icon: "tim-icons icon-single-02" },
+        {
+          name: "Purchases",
+          icon: "tim-icons icon-gift-2",
+        },
+        { name: "Sessions", icon: "tim-icons icon-tap-02" },
+      ];
+    },
   },
   methods: {
-    // initBigChart (index) {
-    //   let chartData = {
-    //     datasets: [{
-    //       ...bigChartDatasetOptions,
-    //       data: bigChartData[index]
-    //     }],
-    //     labels: bigChartLabels
-    //   };
-    //   this.$refs.bigChart.updateGradients(chartData);
-    //   this.bigLineChart.chartData = chartData;
-    //   this.bigLineChart.activeIndex = index;
-    // }
+    initApnBigChart(index) {
+      var bigChartData = [
+        [
+          this.jobOrderByApnCountJan,
+          this.jobOrderByApnCountFeb,
+          this.jobOrderByApnCountMar,
+          this.jobOrderByApnCountApr,
+          this.jobOrderByApnCountMay,
+          this.jobOrderByApnCountJun,
+          this.jobOrderByApnCountJul,
+          this.jobOrderByApnCountAug,
+          this.jobOrderByApnCountSep,
+          this.jobOrderByApnCountOct,
+          this.jobOrderByApnCountNov,
+          this.jobOrderByApnCountDec,
+        ],
+      ];
+      let chartData = {
+        datasets: [
+          {
+            ...bigChartDatasetOptions,
+            data: bigChartData[index],
+          },
+        ],
+        labels: bigChartLabels,
+      };
+      this.$refs.bigChartByApns.updateGradients(chartData);
+      this.bigLineChartByApns.chartData = chartData;
+      this.bigLineChartByApns.activeIndex = index;
+    },
+
+    initGeneralBigChart(index) {
+      var bigChartData = [
+        [
+          this.jobOrderGeneralCountJan,
+          this.jobOrderGeneralCountFeb,
+          this.jobOrderGeneralCountMar,
+          this.jobOrderGeneralCountApr,
+          this.jobOrderGeneralCountMay,
+          this.jobOrderGeneralCountJun,
+          this.jobOrderGeneralCountJul,
+          this.jobOrderGeneralCountAug,
+          this.jobOrderGeneralCountSep,
+          this.jobOrderGeneralCountOct,
+          this.jobOrderGeneralCountNov,
+          this.jobOrderGeneralCountDec,
+        ],
+      ];
+      let chartData = {
+        datasets: [
+          {
+            ...bigChartDatasetOptions,
+            data: bigChartData[index],
+          },
+        ],
+        labels: bigChartLabels,
+      };
+      this.$refs.bigChartGenerals.updateGradients(chartData);
+      this.bigLineChartGenerals.chartData = chartData;
+      this.bigLineChartGenerals.activeIndex = index;
+    },
+
+    async fetchJobOrderByApnAnalytics(month, month_year) {
+      return await this.$axios
+        .get(
+          `/api/v1/job-order-by-category-analytics/?month=${month}&month_year=${month_year}`
+        )
+        .then((res) => {
+          this.jobOrderByApns = res.data.results;
+          this.jobOrderByApns.forEach((item) => {
+            if (month == "Jan") {
+              this.jobOrderByApnCountJan = item.job_count;
+            } else if (month == "Feb") {
+              this.jobOrderByApnCountFeb = item.job_count;
+            } else if (month == "Mar") {
+              this.jobOrderByApnCountMar = item.job_count;
+            } else if (month == "Apr") {
+              this.jobOrderByApnCountApr = item.job_count;
+            } else if (month == "May") {
+              this.jobOrderByApnCountMay = item.job_count;
+            } else if (month == "Jun") {
+              this.jobOrderByApnCountJun = item.job_count;
+            } else if (month == "Jul") {
+              this.jobOrderByApnCountJul = item.job_count;
+            } else if (month == "Aug") {
+              this.jobOrderByApnCountAug = item.job_count;
+            } else if (month == "Sep") {
+              this.jobOrderByApnCountSep = item.job_count;
+            } else if (month == "Oct") {
+              this.jobOrderByApnCountOct = item.job_count;
+            } else if (month == "Nov") {
+              this.jobOrderByApnCountNov = item.job_count;
+            } else if (month == "Dec") {
+              this.jobOrderByApnCountDec = item.job_count;
+            }
+            this.initApnBigChart(0);
+          });
+        })
+        .catch((e) => {
+          throw e;
+        });
+    },
+    async fetchJobOrderGeneralAnalytics(month, month_year) {
+      return await this.$axios
+        .get(
+          `/api/v1/job-order-by-general-analytics/?month=${month}&month_year=${month_year}`
+        )
+        .then((res) => {
+          this.jobOrderGenerals = res.data.results;
+          this.jobOrderGenerals.forEach((item) => {
+            if (month == "Jan") {
+              this.jobOrderGeneralCountJan = item.job_count;
+            } else if (month == "Feb") {
+              this.jobOrderGeneralCountFeb = item.job_count;
+            } else if (month == "Mar") {
+              this.jobOrderGeneralCountMar = item.job_count;
+            } else if (month == "Apr") {
+              this.jobOrderGeneralCountApr = item.job_count;
+            } else if (month == "May") {
+              this.jobOrderGeneralCountMay = item.job_count;
+            } else if (month == "Jun") {
+              this.jobOrderGeneralCountJun = item.job_count;
+            } else if (month == "Jul") {
+              this.jobOrderGeneralCountJul = item.job_count;
+            } else if (month == "Aug") {
+              this.jobOrderGeneralCountAug = item.job_count;
+            } else if (month == "Sep") {
+              this.jobOrderGeneralCountSep = item.job_count;
+            } else if (month == "Oct") {
+              this.jobOrderGeneralCountOct = item.job_count;
+            } else if (month == "Nov") {
+              this.jobOrderGeneralCountNov = item.job_count;
+            } else if (month == "Dec") {
+              this.jobOrderGeneralCountDec = item.job_count;
+            }
+            this.initGeneralBigChart(0);
+          });
+        })
+        .catch((e) => {
+          throw e;
+        });
+    },
+
+    initAnalytics() {
+      this.months.forEach((month) => {
+        this.fetchJobOrderByApnAnalytics(month, this.currentDate.getFullYear());
+      });
+
+      this.months.forEach((month) => {
+        this.fetchJobOrderGeneralAnalytics(month, this.currentDate.getFullYear());
+      });
+    },
   },
-  mounted () {
-    // this.initBigChart(0);
-  }
-}
+  mounted() {
+    this.initAnalytics();
+  },
+};
 </script>
 <style></style>
