@@ -13,5 +13,6 @@ export default {
     ],
     purpleGradient: ['rgba(253,93,147,0.8)', 'rgba(253,93,147,0)']
   },
-  MAPS_API_KEY: 'YOUR_GOOGLE_MAPS_API_KEY'
+  MAPS_API_KEY: 'YOUR_GOOGLE_MAPS_API_KEY',
+  PAYPAL_CLIENT_ID: "AeY079Z20ctaUfVGHyMBFKbSmr6xel_2j-wv-FQVu6J-PucE9AOvSRAy1RuHXSbP8JJVxrKVlpbGIJGu"
 };
