@@ -7,7 +7,13 @@
           <div>
             <b-container fluid>
               <!-- <b-row> -->
-
+              <b-col sm="12" md="4" class="my-1 pull-left">
+                <nuxt-link to="/payment"
+                  ><b-button class="create-payment" variant="success"
+                    >Make a payment</b-button
+                  ></nuxt-link
+                >
+              </b-col>
               <b-col sm="12" md="4" lg="4" class="my-1 pull-right">
                 <b-form-group
                   label="Filter"
@@ -94,13 +100,13 @@
                     Info
                   </b-button>
 
-                  <b-button
+                  <!-- <b-button
                     size="sm"
                     @click="payment(row.item, row.index, $event.target)"
                     class="mr-1"
                   >
                     Make a payment
-                  </b-button>
+                  </b-button> -->
                 </template>
               </b-table>
 
@@ -126,8 +132,7 @@
                 @hide="resetPaymentModal"
               >
                 <span class="mt-3">
-                  <account-payment-view
-                  ></account-payment-view>
+                  <account-payment-view></account-payment-view>
                 </span>
               </b-modal>
             </b-container>
@@ -399,5 +404,8 @@ export default {
 .page-number {
   color: black !important;
   background-color: white !important;
+}
+.create-payment {
+  border-radius: 0px;
 }
 </style>

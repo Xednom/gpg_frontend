@@ -1,10 +1,15 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6">
+  <div class="container mt--8">
+    <card card-body-classes="table-full-width">
+      <div class="col-lg-4 col-md-6 ml-auto mr-auto">
+        <center class="mb-5">
+          <h1>
+            Payment portal
+          </h1>
+        </center>
         <div id="smart-button-container">
           <div style="text-align: center">
-            <label for="description"> </label
+            <label for="description">Description </label
             ><input
               type="text"
               name="descriptionInput"
@@ -21,7 +26,7 @@
             Please enter a description
           </p>
           <div style="text-align: center">
-            <label for="amount"> </label
+            <label for="amount">Amount </label
             ><input
               name="amountInput"
               type="number"
@@ -67,7 +72,7 @@
         </base-input>
         <div ref="paypal"></div> -->
       </div>
-    </div>
+    </card>
   </div>
 </template>
 
@@ -207,7 +212,7 @@ export default {
               style: {
                 color: "gold",
                 shape: "rect",
-                label: "paypal",
+                label: "pay",
                 layout: "vertical",
               },
 
@@ -280,7 +285,10 @@ export default {
                     "paypal-button-container"
                   );
                   element.innerHTML = "";
-                  element.innerHTML = "<h3>Thank you for your payment!</h3>";
+                  element.innerHTML =
+                    "<h3>Thank you for your payment! You may refresh this page if you want to make another payment</h3>";
+                  amount.value = "";
+                  description.value = "";
 
                   // Or go to another URL:  actions.redirect('thank_you.html');
                 });
