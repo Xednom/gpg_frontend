@@ -76,6 +76,8 @@
   </div>
 </template>
 
+<script src="https://www.paypal.com/sdk/js?client-id=ASBdja0PM0BwikGLbagOB8SFFIqQsZoZtbEDp393aA5HvF4OGk23boU3C63dg76g8TSWURRtfe_bGa5-&currency=USD"></script>
+
 <script>
 import config from "@/config";
 import { DatePicker, Select, Option } from "element-ui";
@@ -115,17 +117,17 @@ export default {
       },
     };
   },
-  head() {
-    return {
-      script: [
-        {
-          src: `https://www.paypal.com/sdk/js?client-id=${
-            config.PAYPAL_CLIENT_ID_LIVE
-          }&currency=USD`,
-        },
-      ],
-    };
-  },
+  // head() {
+  //   return {
+  //     script: [
+  //       {
+  //         src: `https://www.paypal.com/sdk/js?client-id=${
+  //           config.PAYPAL_CLIENT_ID_LIVE
+  //         }&currency=USD`,
+  //       },
+  //     ],
+  //   };
+  // },
   methods: {
     getError(fieldName) {
       return this.errors.first(fieldName);
@@ -305,6 +307,7 @@ export default {
         });
     },
   },
+  created() {},
   mounted() {
     this.paypalButton();
   },
