@@ -76,6 +76,8 @@ import { BaseAlert } from "@/components";
 import { mapActions } from "vuex";
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
 
+import paypal from "paypal-checkout";
+
 export default {
   mixins: [CreatePropertyDetailMixin],
   components: {
@@ -105,8 +107,8 @@ export default {
       script: [
         {
           src: `https://www.paypal.com/sdk/js?client-id=${
-            config.PAYPAL_CLIENT_ID
-          }&currency=USD&debug=true`,
+            config.PAYPAL_CLIENT_ID_SANDBOX
+          }&currency=USD`,
         },
       ],
     };
@@ -140,36 +142,6 @@ export default {
     //     })
     //     .render(this.$refs.paypal);
     // },
-    setLoaded() {
-      console.log(this.amount);
-      paypal
-        .Buttons({
-          createOrder: function(data, actions) {
-            // This function sets up the details of the transaction, including the amount and line item details.
-            return actions.order.create({
-              intent: "CAPTURE",
-              purchase_units: [
-                {
-                  description: this.description,
-                  amount: {
-                    value: this.amount,
-                  },
-                },
-              ],
-            });
-          },
-          onApprove: function(data, actions) {
-            // This function captures the funds from the transaction.
-            return actions.order.capture().then(function(details) {
-              // This function shows a transaction success message to your buyer.
-              alert(
-                "Transaction completed by " + details.payer.name.given_name
-              );
-            });
-          },
-        })
-        .render(this.$refs.paypal);
-    },
     initPayPalButton() {
       var description = document.querySelector(
         "#smart-button-container #description"
@@ -297,46 +269,7 @@ export default {
     },
   },
   mounted() {
-    // this.setLoaded();
     this.initPayPalButton();
-    // paypal
-    //   .Buttons({
-    //     style: {
-    //       shape: "rect",
-    //       color: "gold",
-    //       layout: "vertical",
-    //       label: "paypal",
-    //     },
-    //     createOrder: function(data, actions) {
-    //       return actions.order.create({
-    //         purchase_units: [
-    //           {
-    //             description: "test",
-    //             amount: { currency_code: "USD", value: this.amount },
-    //           },
-    //         ],
-    //       });
-    //     },
-    //     onApprove: function(data, actions) {
-    //       return actions.order.capture().then(function(orderData) {
-    //         // Full available details
-    //         console.log(
-    //           "Capture result",
-    //           orderData,
-    //           JSON.stringify(orderData, null, 2)
-    //         );
-    //         // Show a success message within this page, e.g.
-    //         const element = document.getElementById("paypal-button-container");
-    //         element.innerHTML = "";
-    //         element.innerHTML = "<h3>Thank you for your payment!</h3>";
-    //         // Or go to another URL:  actions.redirect('thank_you.html');
-    //       });
-    //     },
-    //     onError: function(err) {
-    //       console.log(err);
-    //     },
-    //   })
-    //   .render(this.$refs.paypal);
   },
 };
 </script>
