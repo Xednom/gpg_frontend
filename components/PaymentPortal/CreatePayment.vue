@@ -11,6 +11,7 @@
               id="description"
               maxlength="127"
               value=""
+              class="form-control"
             />
           </div>
           <p
@@ -26,6 +27,7 @@
               type="number"
               id="amount"
               value=""
+              class="form-control"
             /><span> USD</span>
           </div>
           <p
@@ -76,7 +78,9 @@ import { BaseAlert } from "@/components";
 import { mapActions } from "vuex";
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
 
-import paypal from "paypal-checkout";
+import { loadScript } from "@paypal/paypal-js";
+
+// import paypal from "paypal-checkout";
 
 export default {
   mixins: [CreatePropertyDetailMixin],
@@ -93,6 +97,10 @@ export default {
       success: false,
       amount: 0.0,
       description: "",
+      descriptionError: "",
+      priceError: "",
+      invoiceId: "",
+      invoiceidError: "",
       priceStatusChoices: {
         placeholder: "",
         status: [
@@ -107,169 +115,190 @@ export default {
       script: [
         {
           src: `https://www.paypal.com/sdk/js?client-id=${
-            config.PAYPAL_CLIENT_ID_SANDBOX
+            config.PAYPAL_CLIENT_ID_LIVE
           }&currency=USD`,
         },
       ],
     };
   },
   methods: {
-    // setPaypal() {
-    //   paypal
-    //     .Buttons({
-    //       createOrder: function(data, actions) {
-    //         // This function sets up the details of the transaction, including the amount and line item details.
-    //         return actions.order.create({
-    //           purchase_units: [
-    //             {
-    //               description: this.description,
-    //               amount: {
-    //                 value: this.amount,
-    //               },
-    //             },
-    //           ],
-    //         });
-    //       },
-    //       onApprove: function(data, actions) {
-    //         // This function captures the funds from the transaction.
-    //         return actions.order.capture().then(function(details) {
-    //           // This function shows a transaction success message to your buyer.
-    //           alert(
-    //             "Transaction completed by " + details.payer.name.given_name
-    //           );
-    //         });
-    //       },
-    //     })
-    //     .render(this.$refs.paypal);
-    // },
-    initPayPalButton() {
-      var description = document.querySelector(
-        "#smart-button-container #description"
+    getError(fieldName) {
+      return this.errors.first(fieldName);
+    },
+    successMessage(variant = null) {
+      this.$bvToast.toast("Thank you for your payment!", {
+        title: `Successful`,
+        variant: variant,
+        solid: true,
+      });
+    },
+    errorMessage(variant = null, error) {
+      this.$bvToast.toast(
+        error.apn
+          ? "APN: " + error.apn
+          : error.state
+          ? "State: " + errors.state
+          : errors.county
+          ? "County" + error.county
+          : error.size
+          ? "Size: " + error.username
+          : error.property_status
+          ? "Property status: " + error.property_status
+          : error.asking_price
+          ? "Asking price: " + error.asking_price
+          : error.finance_terms
+          ? "Finance terms: " + error.finance_terms
+          : error.cash_terms
+          ? "Cash terms: " + error.cash_terms
+          : error.other_terms
+          ? "Other terms: " + error.other_terms
+          : error.notes
+          ? "Notes: " + error.notes
+          : error.non_field_errors
+          ? error.non_field_errors
+          : error,
+        {
+          title: `Something went wrong`,
+          variant: variant,
+          solid: true,
+        }
       );
-      var amount = document.querySelector("#smart-button-container #amount");
-      var descriptionError = document.querySelector(
-        "#smart-button-container #descriptionError"
-      );
-      var priceError = document.querySelector(
-        "#smart-button-container #priceLabelError"
-      );
-      var invoiceid = document.querySelector(
-        "#smart-button-container #invoiceid"
-      );
-      var invoiceidError = document.querySelector(
-        "#smart-button-container #invoiceidError"
-      );
-      var invoiceidDiv = document.querySelector(
-        "#smart-button-container #invoiceidDiv"
-      );
+    },
+    paypalButton() {
+      loadScript({ "client-id": config.PAYPAL_CLIENT_ID_LIVE })
+        .then((paypal) => {
+          var description = document.querySelector(
+            "#smart-button-container #description"
+          );
+          var amount = document.querySelector(
+            "#smart-button-container #amount"
+          );
+          var descriptionError = document.querySelector(
+            "#smart-button-container #descriptionError"
+          );
+          var priceError = document.querySelector(
+            "#smart-button-container #priceLabelError"
+          );
+          var invoiceid = document.querySelector(
+            "#smart-button-container #invoiceid"
+          );
+          var invoiceidError = document.querySelector(
+            "#smart-button-container #invoiceidError"
+          );
+          var invoiceidDiv = document.querySelector(
+            "#smart-button-container #invoiceidDiv"
+          );
 
-      var elArr = [description, amount];
+          var elArr = [description, amount];
 
-      if (invoiceidDiv.firstChild.innerHTML.length > 1) {
-        invoiceidDiv.style.display = "block";
-      }
+          if (invoiceidDiv.firstChild.innerHTML.length > 1) {
+            invoiceidDiv.style.display = "block";
+          }
 
-      var purchase_units = [];
-      purchase_units[0] = {};
-      purchase_units[0].amount = {};
+          var purchase_units = [];
+          purchase_units[0] = {};
+          purchase_units[0].amount = {};
 
-      function validate(event) {
-        return event.value.length > 0;
-      }
+          function validate(event) {
+            return event.value.length > 0;
+          }
+          paypal
+            .Buttons({
+              style: {
+                color: "gold",
+                shape: "rect",
+                label: "paypal",
+                layout: "vertical",
+              },
 
-      paypal
-        .Buttons({
-          style: {
-            color: "gold",
-            shape: "rect",
-            label: "paypal",
-            layout: "vertical",
-          },
+              // onInit: function(data, actions) {
+              //   actions.disable();
 
-          onInit: function(data, actions) {
-            actions.disable();
+              //   if (invoiceidDiv.style.display === "block") {
+              //     elArr.push(invoiceid);
+              //   }
 
-            if (invoiceidDiv.style.display === "block") {
-              elArr.push(invoiceid);
-            }
+              //   elArr.forEach(function(item) {
+              //     item.addEventListener("keyup", function(event) {
+              //       var result = elArr.every(validate);
+              //       if (result) {
+              //         actions.enable();
+              //       } else {
+              //         actions.disable();
+              //       }
+              //     });
+              //   });
+              // },
 
-            elArr.forEach(function(item) {
-              item.addEventListener("keyup", function(event) {
-                var result = elArr.every(validate);
-                if (result) {
-                  actions.enable();
+              onClick: function() {
+                if (description.value.length < 1) {
+                  descriptionError.style.visibility = "visible";
                 } else {
-                  actions.disable();
+                  descriptionError.style.visibility = "hidden";
                 }
-              });
-            });
-          },
 
-          onClick: function() {
-            if (description.value.length < 1) {
-              descriptionError.style.visibility = "visible";
-            } else {
-              descriptionError.style.visibility = "hidden";
-            }
+                if (amount.value.length < 1) {
+                  priceError.style.visibility = "visible";
+                } else {
+                  priceError.style.visibility = "hidden";
+                }
 
-            if (amount.value.length < 1) {
-              priceError.style.visibility = "visible";
-            } else {
-              priceError.style.visibility = "hidden";
-            }
+                if (
+                  invoiceid.value.length < 1 &&
+                  invoiceidDiv.style.display === "block"
+                ) {
+                  invoiceidError.style.visibility = "visible";
+                } else {
+                  invoiceidError.style.visibility = "hidden";
+                }
 
-            if (
-              invoiceid.value.length < 1 &&
-              invoiceidDiv.style.display === "block"
-            ) {
-              invoiceidError.style.visibility = "visible";
-            } else {
-              invoiceidError.style.visibility = "hidden";
-            }
+                purchase_units[0].description = description.value;
+                purchase_units[0].amount.value = amount.value;
 
-            purchase_units[0].description = description.value;
-            purchase_units[0].amount.value = amount.value;
+                if (invoiceid.value !== "") {
+                  purchase_units[0].invoice_id = invoiceid.value;
+                }
+              },
 
-            if (invoiceid.value !== "") {
-              purchase_units[0].invoice_id = invoiceid.value;
-            }
-          },
+              createOrder: function(data, actions) {
+                return actions.order.create({
+                  purchase_units: purchase_units,
+                });
+              },
 
-          createOrder: function(data, actions) {
-            return actions.order.create({
-              purchase_units: purchase_units,
-            });
-          },
+              onApprove: function(data, actions) {
+                return actions.order.capture().then(function(orderData) {
+                  // Full available details
+                  console.log(
+                    "Capture result",
+                    orderData,
+                    JSON.stringify(orderData, null, 2)
+                  );
 
-          onApprove: function(data, actions) {
-            return actions.order.capture().then(function(orderData) {
-              // Full available details
-              console.log(
-                "Capture result",
-                orderData,
-                JSON.stringify(orderData, null, 2)
-              );
+                  // Show a success message within this page, e.g.
+                  const element = document.getElementById(
+                    "paypal-button-container"
+                  );
+                  element.innerHTML = "";
+                  element.innerHTML = "<h3>Thank you for your payment!</h3>";
 
-              // Show a success message within this page, e.g.
-              const element = document.getElementById(
-                "paypal-button-container"
-              );
-              element.innerHTML = "";
-              element.innerHTML = "<h3>Thank you for your payment!</h3>";
+                  // Or go to another URL:  actions.redirect('thank_you.html');
+                });
+              },
 
-              // Or go to another URL:  actions.redirect('thank_you.html');
-            });
-          },
-
-          onError: function(err) {
-            console.log(err);
-          },
+              onError: function(err) {
+                console.log(err);
+              },
+            })
+            .render("#paypal-button-container");
         })
-        .render("#paypal-button-container");
+        .catch((error) => {
+          console.error("failed to load the PayPal JS SDK script", error);
+        });
     },
   },
   mounted() {
-    this.initPayPalButton();
+    this.paypalButton();
   },
 };
 </script>
