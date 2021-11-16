@@ -39,10 +39,13 @@
 </template>
 
 <script>
+import config from "@/config";
 import { DatePicker, Select, Option } from "element-ui";
 import { BaseAlert } from "@/components";
 import { mapActions } from "vuex";
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
+
+import { loadScript } from "@paypal/paypal-js";
 
 export default {
   mixins: [CreatePropertyDetailMixin],
@@ -126,62 +129,75 @@ export default {
       }
     },
     paypalButton() {
-      const amount = this.amount.toString();
-      var purchase_units = [];
-      purchase_units[0] = {};
-      purchase_units[0].amount = {};
-      const that = this;
-      paypal
-        .Buttons({
-          style: {
-            color: "gold",
-            shape: "rect",
-            label: "pay",
-            layout: "vertical",
-          },
-          onClick: () => {
-            if (this.amount == "" && this.description == "") {
-              this.warningMessage("warning");
-              return false;
-            }
-            purchase_units[0].description = this.description;
-            purchase_units[0].amount.value = this.amount;
-          },
-          createOrder: function(data, actions) {
-            return actions.order.create({
-              purchase_units: purchase_units,
-            });
-          },
-          onApprove(data, actions) {
-            return actions.order.capture().then(function(orderData) {
-              console.log(orderData);
-              var date = new Date().toLocaleDateString("en-CA");
-              const payload = {
-                payment_id: data.orderID,
-                client: that.clientUser.client_code,
-                client_name:
-                  orderData.payer.name.given_name +
-                  " " +
-                  orderData.payer.name.surname,
-                date: date,
-                amount: orderData.purchase_units[0].amount.value,
-                transaction_number: data.orderID,
-                payment_channel: "Paypal",
-                notes:
-                  "this is paid from the LM system payment portal(this is system generated).",
-              };
-              try {
-                that.savePayment(payload).then(() => {
-                  that.successMessage("success");
+      loadScript({ "client-id": config.PAYPAL_CLIENT_ID_LIVE })
+        .then((paypal) => {
+          const amount = this.amount.toString();
+          var purchase_units = [];
+          purchase_units[0] = {};
+          purchase_units[0].amount = {};
+          const that = this;
+          paypal
+            .Buttons({
+              style: {
+                color: "gold",
+                shape: "rect",
+                label: "pay",
+                layout: "vertical",
+              },
+              onClick: () => {
+                if (this.amount == "" && this.description == "") {
+                  this.warningMessage("warning");
+                  return false;
+                }
+                purchase_units[0].description = this.description;
+                purchase_units[0].amount.value = this.amount;
+              },
+              createOrder: function(data, actions) {
+                return actions.order.create({
+                  purchase_units: purchase_units,
                 });
-              } catch (err) {
-                this.errorMessage();
-                console.error(err);
-              }
-            });
-          },
+              },
+              onApprove(data, actions) {
+                return actions.order.capture().then(function(orderData) {
+                  console.log(orderData);
+                  var date = new Date().toLocaleDateString("en-CA");
+                  const payload = {
+                    payment_id: data.orderID,
+                    client: that.clientUser.client_code,
+                    client_name:
+                      orderData.payer.name.given_name +
+                      " " +
+                      orderData.payer.name.surname,
+                    date: date,
+                    amount: orderData.purchase_units[0].amount.value,
+                    transaction_number: data.orderID,
+                    payment_channel: "Paypal",
+                    notes:
+                      "this is paid from the LM system payment portal(this is system generated).",
+                  };
+                  try {
+                    that.savePayment(payload).then(() => {
+                      that.amount = "";
+                      that.description = "";
+                      that.successMessage("success");
+                    });
+                  } catch (err) {
+                    this.errorMessage();
+                    console.error(err);
+                  }
+                });
+              },
+              onError: (err) => {
+                that.errorMessage("danger");
+                console.error("error from the onError callback", err);
+              },
+            })
+            .render(this.$refs.paypal);
         })
-        .render(this.$refs.paypal);
+        .catch((error) => {
+          this.errorMessage("danger");
+          console.error("failed to load the PayPal JS SDK script", error);
+        });
     },
     testFunc() {
       var date = new Date().toLocaleDateString("en-CA");

@@ -40,11 +40,6 @@ export default {
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800'},
       { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css'}
     ],
-    script: [
-      {
-        src: "https://www.paypal.com/sdk/js?client-id=ASBdja0PM0BwikGLbagOB8SFFIqQsZoZtbEDp393aA5HvF4OGk23boU3C63dg76g8TSWURRtfe_bGa5-&currency=USD",
-      },
-    ],
     bodyAttrs: {
       // class: 'sidebar-mini' // delete the class to have the sidebar expanded by default. Add `white-content` class here to enable "white" mode.
       class: "white-content"
