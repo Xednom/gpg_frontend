@@ -123,6 +123,16 @@ const blankState = {
         console.error(err);
       }
     },
+    async saveCheckout({ commit }, payload) {
+      let url = "/api/v1/account-balance/checkout/";
+      try {
+        return await this.$axios.post(url, payload).then(() => {
+          commit("setBasicField", payload);
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    },
     async updatePayment({ commit }, payload) {
       let url = `/api/v1/payment-history/${payload.id}/`;
       let method = "put";

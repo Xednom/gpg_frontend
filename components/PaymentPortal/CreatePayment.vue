@@ -7,87 +7,42 @@
             Payment portal
           </h1>
         </center>
-        <div id="smart-button-container">
-          <div style="text-align: center">
-            <label for="description">Description </label
-            ><input
-              type="text"
-              name="descriptionInput"
-              id="description"
-              maxlength="127"
-              value=""
-              class="form-control"
-            />
+        <div class="row">
+          <div class="col-md-12">
+            <base-input
+              label="Amount"
+              v-validate="'required'"
+              :error="getError('Amount')"
+              :required="true"
+              name="Amount"
+              v-model="amount"
+              @keypress="isNumber"
+            >
+            </base-input>
           </div>
-          <p
-            id="descriptionError"
-            style="visibility: hidden; color:red; text-align: center;"
-          >
-            Please enter a description
-          </p>
-          <div style="text-align: center">
-            <label for="amount">Amount </label
-            ><input
-              name="amountInput"
-              type="number"
-              id="amount"
-              value=""
-              class="form-control"
-            /><span> USD</span>
-          </div>
-          <p
-            id="priceLabelError"
-            style="visibility: hidden; color:red; text-align: center;"
-          >
-            Please enter a price
-          </p>
-          <div id="invoiceidDiv" style="text-align: center; display: none;">
-            <label for="invoiceid"> </label
-            ><input
-              name="invoiceid"
-              maxlength="127"
-              type="text"
-              id="invoiceid"
-              value=""
-            />
-          </div>
-          <p
-            id="invoiceidError"
-            style="visibility: hidden; color:red; text-align: center;"
-          >
-            Please enter an Invoice ID
-          </p>
-          <div
-            style="text-align: center; margin-top: 0.625rem;"
-            id="paypal-button-container"
-          ></div>
         </div>
-        <!-- <base-input
-          label="Amount"
-          v-validate="'required'"
-          name="Amount"
-          value="number"
-          v-model="amount"
-        >
-        </base-input>
-        <div ref="paypal"></div> -->
+        <div class="row mb-5">
+          <div class="col-md-12">
+            <textarea
+              class="form-control"
+              placeholder="Description"
+              v-model="description"
+              required
+            >
+            </textarea>
+          </div>
+        </div>
+        <div ref="paypal"></div>
       </div>
     </card>
   </div>
 </template>
 
-<script src="https://www.paypal.com/sdk/js?client-id=ASBdja0PM0BwikGLbagOB8SFFIqQsZoZtbEDp393aA5HvF4OGk23boU3C63dg76g8TSWURRtfe_bGa5-&currency=USD"></script>
-
 <script>
-import config from "@/config";
 import { DatePicker, Select, Option } from "element-ui";
 import { BaseAlert } from "@/components";
 import { mapActions } from "vuex";
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
-
-import { loadScript } from "@paypal/paypal-js";
-
-// import paypal from "paypal-checkout";
 
 export default {
   mixins: [CreatePropertyDetailMixin],
@@ -115,22 +70,23 @@ export default {
           { value: "deactivate", label: "Deactivate" },
         ],
       },
+      clientUser: {},
     };
   },
-  // head() {
-  //   return {
-  //     script: [
-  //       {
-  //         src: `https://www.paypal.com/sdk/js?client-id=${
-  //           config.PAYPAL_CLIENT_ID_LIVE
-  //         }&currency=USD`,
-  //       },
-  //     ],
-  //   };
-  // },
   methods: {
+    ...mapActions("paymentHistory", ["reset", "savePayment"]),
     getError(fieldName) {
       return this.errors.first(fieldName);
+    },
+    async fetchClient(id) {
+      let endpoint = `/api/v1/client/${id}/`;
+      try {
+        await this.$axios.get(endpoint).then((res) => {
+          this.clientUser = res.data;
+        });
+      } catch (err) {
+        console.error(err.response.data);
+      }
     },
     successMessage(variant = null) {
       this.$bvToast.toast("Thank you for your payment!", {
@@ -139,176 +95,102 @@ export default {
         solid: true,
       });
     },
-    errorMessage(variant = null, error) {
+    warningMessage(variant = null) {
       this.$bvToast.toast(
-        error.apn
-          ? "APN: " + error.apn
-          : error.state
-          ? "State: " + errors.state
-          : errors.county
-          ? "County" + error.county
-          : error.size
-          ? "Size: " + error.username
-          : error.property_status
-          ? "Property status: " + error.property_status
-          : error.asking_price
-          ? "Asking price: " + error.asking_price
-          : error.finance_terms
-          ? "Finance terms: " + error.finance_terms
-          : error.cash_terms
-          ? "Cash terms: " + error.cash_terms
-          : error.other_terms
-          ? "Other terms: " + error.other_terms
-          : error.notes
-          ? "Notes: " + error.notes
-          : error.non_field_errors
-          ? error.non_field_errors
-          : error,
+        "Please don't leave the following field empty: Amount and Description",
         {
-          title: `Something went wrong`,
+          title: `Warning`,
           variant: variant,
           solid: true,
         }
       );
     },
+    errorMessage(variant = null, error) {
+      this.$bvToast.toast("Something went wrong, you can try later again.", {
+        title: `Something went wrong`,
+        variant: variant,
+        solid: true,
+      });
+    },
+    isNumber(evt) {
+      evt = evt ? evt : window.event;
+      var charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
+    },
     paypalButton() {
-      loadScript({ "client-id": config.PAYPAL_CLIENT_ID_LIVE })
-        .then((paypal) => {
-          var description = document.querySelector(
-            "#smart-button-container #description"
-          );
-          var amount = document.querySelector(
-            "#smart-button-container #amount"
-          );
-          var descriptionError = document.querySelector(
-            "#smart-button-container #descriptionError"
-          );
-          var priceError = document.querySelector(
-            "#smart-button-container #priceLabelError"
-          );
-          var invoiceid = document.querySelector(
-            "#smart-button-container #invoiceid"
-          );
-          var invoiceidError = document.querySelector(
-            "#smart-button-container #invoiceidError"
-          );
-          var invoiceidDiv = document.querySelector(
-            "#smart-button-container #invoiceidDiv"
-          );
-
-          var elArr = [description, amount];
-
-          if (invoiceidDiv.firstChild.innerHTML.length > 1) {
-            invoiceidDiv.style.display = "block";
-          }
-
-          var purchase_units = [];
-          purchase_units[0] = {};
-          purchase_units[0].amount = {};
-
-          function validate(event) {
-            return event.value.length > 0;
-          }
-          paypal
-            .Buttons({
-              style: {
-                color: "gold",
-                shape: "rect",
-                label: "pay",
-                layout: "vertical",
-              },
-
-              // onInit: function(data, actions) {
-              //   actions.disable();
-
-              //   if (invoiceidDiv.style.display === "block") {
-              //     elArr.push(invoiceid);
-              //   }
-
-              //   elArr.forEach(function(item) {
-              //     item.addEventListener("keyup", function(event) {
-              //       var result = elArr.every(validate);
-              //       if (result) {
-              //         actions.enable();
-              //       } else {
-              //         actions.disable();
-              //       }
-              //     });
-              //   });
-              // },
-
-              onClick: function() {
-                if (description.value.length < 1) {
-                  descriptionError.style.visibility = "visible";
-                } else {
-                  descriptionError.style.visibility = "hidden";
-                }
-
-                if (amount.value.length < 1) {
-                  priceError.style.visibility = "visible";
-                } else {
-                  priceError.style.visibility = "hidden";
-                }
-
-                if (
-                  invoiceid.value.length < 1 &&
-                  invoiceidDiv.style.display === "block"
-                ) {
-                  invoiceidError.style.visibility = "visible";
-                } else {
-                  invoiceidError.style.visibility = "hidden";
-                }
-
-                purchase_units[0].description = description.value;
-                purchase_units[0].amount.value = amount.value;
-
-                if (invoiceid.value !== "") {
-                  purchase_units[0].invoice_id = invoiceid.value;
-                }
-              },
-
-              createOrder: function(data, actions) {
-                return actions.order.create({
-                  purchase_units: purchase_units,
+      const amount = this.amount.toString();
+      var purchase_units = [];
+      purchase_units[0] = {};
+      purchase_units[0].amount = {};
+      const that = this;
+      paypal
+        .Buttons({
+          style: {
+            color: "gold",
+            shape: "rect",
+            label: "pay",
+            layout: "vertical",
+          },
+          onClick: () => {
+            if (this.amount == "" && this.description == "") {
+              this.warningMessage("warning");
+              return false;
+            }
+            purchase_units[0].description = this.description;
+            purchase_units[0].amount.value = this.amount;
+          },
+          createOrder: function(data, actions) {
+            return actions.order.create({
+              purchase_units: purchase_units,
+            });
+          },
+          onApprove(data, actions) {
+            return actions.order.capture().then(function(orderData) {
+              console.log(orderData);
+              var date = new Date().toLocaleDateString("en-CA");
+              const payload = {
+                payment_id: data.orderID,
+                client: that.clientUser.client_code,
+                client_name:
+                  orderData.payer.name.given_name +
+                  " " +
+                  orderData.payer.name.surname,
+                date: date,
+                amount: orderData.purchase_units[0].amount.value,
+                transaction_number: data.orderID,
+                payment_channel: "Paypal",
+                notes:
+                  "this is paid from the LM system payment portal(this is system generated).",
+              };
+              try {
+                that.savePayment(payload).then(() => {
+                  that.successMessage("success");
                 });
-              },
-
-              onApprove: function(data, actions) {
-                return actions.order.capture().then(function(orderData) {
-                  // Full available details
-                  console.log(
-                    "Capture result",
-                    orderData,
-                    JSON.stringify(orderData, null, 2)
-                  );
-
-                  // Show a success message within this page, e.g.
-                  const element = document.getElementById(
-                    "paypal-button-container"
-                  );
-                  element.innerHTML = "";
-                  element.innerHTML =
-                    "<h3>Thank you for your payment! You may refresh this page if you want to make another payment</h3>";
-                  amount.value = "";
-                  description.value = "";
-
-                  // Or go to another URL:  actions.redirect('thank_you.html');
-                });
-              },
-
-              onError: function(err) {
-                console.log(err);
-              },
-            })
-            .render("#paypal-button-container");
+              } catch (err) {
+                this.errorMessage();
+                console.error(err);
+              }
+            });
+          },
         })
-        .catch((error) => {
-          console.error("failed to load the PayPal JS SDK script", error);
-        });
+        .render(this.$refs.paypal);
+    },
+    testFunc() {
+      var date = new Date().toLocaleDateString("en-CA");
+      console.log(date);
     },
   },
   created() {},
   mounted() {
+    this.fetchClient(this.$auth.user.id);
     this.paypalButton();
   },
 };
