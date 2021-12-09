@@ -5,21 +5,23 @@
         <card card-body-classes="table-full-width">
           <div class="col-md-12">
             <form @submit.prevent="save">
-              <h4 class="card-title">Create Resolution</h4>
+              <h4 class="card-title">View/Update your Resolution</h4>
               <div class="form-row">
-                <div class="col-sm-12 col-md-6 mt-3">
+                <div class="col-sm-12 col-md-4 mt-3">
                   <base-input label="Date submitted">
                     <el-date-picker
-                      v-model="date_submitted"
+                      v-bind:value="dateSubmitted"
+                      v-model="resolution.date_submitted"
                       type="date"
                       format="yyyy-MM-dd"
                       value-format="yyyy-MM-dd"
                       placeholder="Choose date"
+                      disabled
                     >
                     </el-date-picker>
                   </base-input>
                 </div>
-                <div class="col-sm-12 col-md-6 mt-3">
+                <div class="col-sm-12 col-md-4 mt-3">
                   <div class="col-sm-12">
                     <div class="row">
                       <label>Category</label>
@@ -30,7 +32,9 @@
                       size="large"
                       name="Category"
                       placeholder="Category"
-                      v-model="category"
+                      v-bind:value="category"
+                      v-model="resolution.category"
+                      disabled
                     >
                       <el-option
                         v-for="option in categories"
@@ -43,18 +47,48 @@
                     </el-select>
                   </div>
                 </div>
+                <div class="col-sm-12 col-md-4 mt-3">
+                  <base-input label="Status">
+                    <base-input
+                      v-model="resolution.status"
+                      disabled
+                    ></base-input>
+                  </base-input>
+                </div>
               </div>
               <div class="form-row">
                 <div class="col-sm-12 col-md-12 mt-3">
                   <label>Description</label>
-                  <textarea class="form-control" v-model="description" required>
+                  <textarea
+                    class="form-control"
+                    v-model="resolution.description"
+                    disabled
+                  >
+                  </textarea>
+                </div>
+                <div class="col-sm-12 col-md-12 mt-3">
+                  <label>Resolution provided by Management</label>
+                  <textarea
+                    class="form-control"
+                    v-model="resolution.resolution_provided_by_management"
+                    disabled
+                  >
+                  </textarea>
+                </div>
+                <div class="col-sm-12 col-md-12 mt-3">
+                  <label>Additional notes</label>
+                  <textarea
+                    class="form-control"
+                    v-model="resolution.additional_notes"
+                    :disabled="resolution.status == 'closed'"
+                  >
                   </textarea>
                 </div>
               </div>
 
               <div slot="footer">
                 <div class="pull-left">
-                    <nuxt-link to="/resolution">Return back to list</nuxt-link>
+                  <nuxt-link to="/resolution">Return back to list</nuxt-link>
                 </div>
                 <div class="pull-right">
                   <base-button
@@ -119,6 +153,7 @@ export default {
       loading: false,
       saving: false,
       success: false,
+      resolution: {},
       balance: "",
       query: "",
       selectedClientCode: "",
@@ -169,10 +204,8 @@ export default {
           this.$auth.user.designation_category == "affiliate_partner"
         ) {
           const payload = {
-            client: this.clientUser.id,
-            date_submitted: this.date_submitted,
-            category: this.category,
-            description: this.description,
+            id: this.resolution.id,
+            additional_notes: this.resolution.additional_notes,
           };
           try {
             if (this.balance < 0) {
@@ -195,10 +228,8 @@ export default {
           }
         } else {
           const payload = {
-            date_submitted: this.date_submitted,
-            category: this.category,
-            description: this.description,
-            client: this.query,
+            id: this.resolution.id,
+            additional_notes: this.resolution.additional_notes,
           };
           await this.saveResolution(payload);
           this.loading = false;
@@ -220,6 +251,18 @@ export default {
       this.accountBalances.forEach((item) => {
         this.balance = item.account_balance_amount;
       });
+    },
+    async fetchResolution(id) {
+      try {
+        let endpoint = `/api/v1/resolution/${id}/`;
+        let response = await this.$axios.get(endpoint);
+        if (response.status == 200) {
+          this.resolution = response.data;
+        }
+        console.log(response.status == 200);
+      } catch (e) {
+        this.errorMessage("danger", e.response.data);
+      }
     },
     deficitMessage(variant = null) {
       this.$bvToast.toast(
@@ -266,6 +309,7 @@ export default {
     ...mapGetters({
       clientUser: "user/clientUser",
       categories: "resolution/categories",
+      resolution: "resolution/resolution",
     }),
     date_submitted: {
       get() {
@@ -291,10 +335,53 @@ export default {
         this.setBasicStoreValue("description", value);
       },
     },
+    assigned_to: {
+      get() {
+        return this.$store.getters["resolution/assigned_to"];
+      },
+      set(value) {
+        this.setBasicStoreValue("assigned_to", value);
+      },
+    },
+    client: {
+      get() {
+        return this.$store.getters["resolution/client"];
+      },
+      set(value) {
+        this.setBasicStoreValue("client", value);
+      },
+    },
+    resolution_provided_by_management: {
+      get() {
+        return this.$store.getters[
+          "resolution/resolution_provided_by_management"
+        ];
+      },
+      set(value) {
+        this.setBasicStoreValue("resolution_provided_by_management", value);
+      },
+    },
+    status: {
+      get() {
+        return this.$store.getters["resolution/status"];
+      },
+      set(value) {
+        this.setBasicStoreValue("status", value);
+      },
+    },
+    additional_notes: {
+      get() {
+        return this.$store.getters["resolution/additional_notes"];
+      },
+      set(value) {
+        this.setBasicStoreValue("additional_notes", value);
+      },
+    },
   },
   mounted() {
     this.fetchClient(this.$auth.user.id);
     this.fetchCategory();
+    this.fetchResolution(this.$route.params.id);
   },
 };
 </script>

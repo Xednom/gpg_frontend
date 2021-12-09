@@ -7,6 +7,13 @@
           <div>
             <b-container fluid>
               <!-- <b-row> -->
+              <b-col sm="12" md="4" class="my-1 pull-left">
+                <nuxt-link to="/resolution/create"
+                  ><b-button class="create-button" variant="success"
+                    >Create Resolution</b-button
+                  ></nuxt-link
+                >
+              </b-col>
 
               <b-col sm="12" md="4" lg="4" class="my-1 pull-right">
                 <b-form-group
@@ -76,27 +83,19 @@
                     <strong>Loading...</strong>
                   </div>
                 </template>
-                <template #cell(actions)="row">
-                  <b-button
-                    size="sm"
-                    @click="
-                      {
-                        info(row.item, row.index, $event.target),
-                          fetchAccountBalance(row.item.id);
-                      }
-                    "
-                    class="mr-1"
-                  >
-                    Info
-                  </b-button>
+                <template #cell(date_submitted)="row">
+                  <nuxt-link :to="'/resolution/' + row.item.id">{{
+                    row.item.date_submitted
+                  }}</nuxt-link>
+                </template>
 
-                  <b-button
-                    size="sm"
-                    @click="payment(row.item, row.index, $event.target)"
-                    class="mr-1"
-                  >
-                    Make a payment
-                  </b-button>
+                <template #cell(assigned_to)="row"> 
+                  <span v-if="row.item.assigned_to">
+                    {{ row.item.assigned_to }}
+                  </span>
+                  <span v-else-if="!row.item.assigned_to">
+                    -
+                  </span>
                 </template>
               </b-table>
 
@@ -227,11 +226,10 @@ export default {
       fields: [
         { key: "date_submitted", sortable: true },
         { key: "assigned_to", label: "Staff", sortable: true },
-        { key: "client", sortable: true },
+        { key: "client_name", sortable: true },
         { key: "category", sortable: true },
         { key: "description", sortable: true },
         { key: "status", sortable: true },
-        { key: "actions", label: "Actions" },
       ],
       totalRows: 1,
       currentPage: 1,
