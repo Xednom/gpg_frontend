@@ -111,6 +111,14 @@
             }"
           >
           </sidebar-item>
+          <sidebar-item
+            :link="{
+              name: 'Resolution center',
+              icon: 'tim-icons icon-bulb-63',
+              path: '/resolution/',
+            }"
+          >
+          </sidebar-item>
         </template>
       </side-bar>
     </div>
@@ -221,6 +229,14 @@
           <sidebar-item
             :link="{
               name: 'Account Files',
+              icon: 'tim-icons icon-paper',
+              path: '/account-files/',
+            }"
+          >
+          </sidebar-item>
+          <sidebar-item
+            :link="{
+              name: 'Resolution center',
               icon: 'tim-icons icon-paper',
               path: '/account-files/',
             }"
