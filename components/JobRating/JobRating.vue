@@ -27,7 +27,79 @@
         </div>
       </div>
     </div>
+    <div id="rating-section" v-else-if="isJobOrderCatRating">
+      <div class="col-md-12">
+        <div class="form-row">
+          <base-table
+            :data="job.job_category_ratings"
+            thead-classes="text-primary"
+            v-if="job.job_general_ratings != []"
+          >
+            <template slot-scope="{ row }" v-if="row.rating">
+              <td>
+                <p class="title">
+                  <label>Rate:</label>
+                  <b-form-rating
+                    class="job-rate"
+                    v-model="row.rating"
+                    color="#ff8800"
+                    readonly
+                  ></b-form-rating>
+                </p>
+                <hr />
+                <p class="text-muted comment ">{{ row.comment }}</p>
+              </td>
+            </template>
+          </base-table>
+        </div>
+      </div>
+    </div>
     <div v-else-if="!isJobRating">
+      <form class="mt-5" @submit.prevent="save">
+        <div class="form-row">
+          <div class="col-sm-12 col-md-12 mt-3">
+            <label>How do you feel about this task?</label>
+            <b-form-rating
+              class="job-rate"
+              v-model="rating"
+              color="#ff8800"
+            ></b-form-rating>
+          </div>
+          <div class="col-md-12 col-sm-12">
+            <b-form-textarea
+              class="form-control"
+              placeholder="Comment"
+              v-model="comment"
+              rows="5"
+              max-rows="15"
+              required
+            >
+            </b-form-textarea>
+          </div>
+        </div>
+
+        <div slot="footer">
+          <div class="pull-right">
+            <b-button
+              class="btn-rate"
+              v-if="!saving"
+              variant="success"
+              type="submit"
+              >Submit review</b-button
+            >
+            <b-button
+              v-else
+              class="btn-rate"
+              variant="success"
+              type="submit"
+              disabled
+              >Submitting...</b-button
+            >
+          </div>
+        </div>
+      </form>
+    </div>
+    <div v-else-if="!isJobOrderCatRating">
       <form class="mt-5" @submit.prevent="save">
         <div class="form-row">
           <div class="col-sm-12 col-md-12 mt-3">
@@ -103,6 +175,10 @@ export default {
       type: Object,
       description: "Job order object data",
     },
+    type: {
+      type: String,
+      description: "Job order type[general, category]",
+    },
   },
   data() {
     return {
@@ -112,7 +188,11 @@ export default {
     };
   },
   methods: {
-    ...mapActions("jobRating", ["reset", "saveJobOrderGeneralRating"]),
+    ...mapActions("jobRating", [
+      "reset",
+      "saveJobOrderGeneralRating",
+      "saveJobOrderCategoryRating",
+    ]),
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
@@ -149,6 +229,9 @@ export default {
         }
       );
     },
+    async test() {
+      console.log(this.type);
+    },
     async save() {
       this.saving = true;
       const payload = {
@@ -163,16 +246,30 @@ export default {
         this.$auth.user.designation_category == "current_client" ||
         this.$auth.user.designation_category == "affiliate_partner"
       ) {
-        try {
-          await this.saveJobOrderGeneralRating(payload);
-          this.successMessage();
-          this.reset();
-          this.saving = false;
-        } catch (err) {
-          console.error(err);
-          this.saving = false;
-          this.success = false;
-          this.errorMessage("danger", err.response.data);
+        if (this.type == "general") {
+          try {
+            await this.saveJobOrderGeneralRating(payload);
+            this.successMessage("success");
+            this.reset();
+            this.saving = false;
+          } catch (err) {
+            console.error(err);
+            this.saving = false;
+            this.success = false;
+            this.errorMessage("danger", err.response.data);
+          }
+        } else if (this.type == "category") {
+          try {
+            await this.saveJobOrderCategoryRating(payload);
+            this.successMessage("success");
+            this.reset();
+            this.saving = false;
+          } catch (err) {
+            console.error(err);
+            this.saving = false;
+            this.success = false;
+            this.errorMessage("danger", err.response.data);
+          }
         }
       }
     },
@@ -184,6 +281,21 @@ export default {
     isJobRating() {
       if (this.job.job_general_ratings) {
         if (this.job.job_general_ratings.length == 0) {
+          return false;
+        } else {
+          return true;
+        }
+      } else if (this.job.job_general_ratings) {
+        if (this.job.job_category_ratings.length == 0) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    },
+    isJobOrderCatRating() {
+      if (this.job.job_category_ratings) {
+        if (this.job.job_category_ratings.length == 0) {
           return false;
         } else {
           return true;

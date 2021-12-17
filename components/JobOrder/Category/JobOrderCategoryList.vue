@@ -139,6 +139,16 @@
                     -
                   </span>
                 </template>
+
+                <template #cell(job_category_ratings)="row">
+                  <a href="#" @click="modals.rate = true"
+                    ><b-badge
+                      variant="primary"
+                      @click="fetchJobOrderCategory(row.item.ticket_number)"
+                      >RATE THIS JOB</b-badge
+                    ></a
+                  >
+                </template>
               </b-table>
 
               <!-- Info modal -->
@@ -183,6 +193,19 @@
         :client="client"
       ></job-order-create>
     </modal>
+    <!-- modal for rating a job -->
+    <modal
+      :show.sync="modals.rate"
+      headerClasses="justify-content-center"
+      class="white-content"
+    >
+      <job-rate
+        :job="jobOrderCategory"
+        :type="type"
+        :fetch="fetchJobOrderCategories"
+        :clientId="$auth.user.id"
+      ></job-rate>
+    </modal>
 
     <!-- modal for comment -->
     <modal
@@ -211,12 +234,14 @@ import { mapGetters, mapActions } from "vuex";
 
 import jobOrderCreate from "@/components/JobOrder/Category/JobOrderCategoryCreate";
 import jobOrderCategoryComment from "@/components/JobOrder/Category/JobOrderCategoryComment";
+import JobRate from "@/components/JobRating/JobRating.vue";
 
 export default {
   name: "paginated",
   components: {
     jobOrderCreate,
     jobOrderCategoryComment,
+    JobRate,
     Modal,
     [Select.name]: Select,
     [Option.name]: Option,
@@ -267,6 +292,7 @@ export default {
       searchQuery: "",
       tableData: users,
       searchedData: [],
+      type: "category",
       fuseSearch: null,
       isBusy: false,
       error: {
@@ -293,6 +319,7 @@ export default {
         { key: "due_date", sortable: true },
         { key: "date_completed", sortable: true },
         { key: "url_of_the_completed_jo", sortable: true },
+        { key: "job_category_ratings", label: "rate", sortable: true },
       ],
       offset: "",
       count: "",
@@ -316,6 +343,7 @@ export default {
       modals: {
         classic: false,
         comments: false,
+        rate: false,
         info: false,
       },
     };

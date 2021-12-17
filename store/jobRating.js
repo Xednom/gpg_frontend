@@ -46,9 +46,8 @@ export const actions = {
       return res.data;
     });
   },
-  async saveobOrderCategoryRating({ commit }, payload) {
-    let url = `/api/v1/job-order-category/${payload.id}/rating`;
-    let method = "put";
+  async saveJobOrderCategoryRating({ commit }, payload) {
+    let url = `/api/v1/job-order-category/${payload.id}/rating/`;
     console.log(payload);
     return await this.$axios.post(url, payload).then((res) => {
       return res.data;

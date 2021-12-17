@@ -210,6 +210,7 @@
     >
       <job-rate
         :job="jobOrder"
+        :type="type"
         :fetch="fetchJobOrders"
         :clientId="$auth.user.id"
       ></job-rate>
@@ -310,6 +311,7 @@ export default {
       tableData: users,
       searchedData: [],
       currentJobOrder: {},
+      type: "general",
       fuseSearch: null,
       isBusy: false,
       fields: [
