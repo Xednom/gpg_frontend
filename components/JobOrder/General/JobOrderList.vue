@@ -132,13 +132,21 @@
                     v-if="row.item.url_of_the_completed_jo"
                     target="_blank"
                   >
-                    <b-badge variant="primary"
-                      >view the file</b-badge
-                    >
+                    <b-badge variant="primary">view the file</b-badge>
                   </a>
                   <span v-else>
                     -
                   </span>
+                </template>
+
+                <template #cell(job_general_ratings)="row">
+                  <a href="#" @click="modals.rate = true"
+                    ><b-badge
+                      variant="primary"
+                      @click="fetchJobOrder(row.item.ticket_number)"
+                      >RATE THIS JOB</b-badge
+                    ></a
+                  >
                 </template>
 
                 <template #row-details="row">
@@ -196,6 +204,18 @@
     </modal>
 
     <modal
+      :show.sync="modals.rate"
+      headerClasses="justify-content-center"
+      class="white-content"
+    >
+      <job-rate
+        :job="jobOrder"
+        :fetch="fetchJobOrders"
+        :clientId="$auth.user.id"
+      ></job-rate>
+    </modal>
+
+    <modal
       :show.sync="modals.info"
       headerClasses="justify-content-center"
       class="white-content"
@@ -230,6 +250,7 @@ import { mapGetters } from "vuex";
 import JobOrderCreate from "./JobOrderCreate.vue";
 import JobOrderComment from "./JobOrderComment.vue";
 import JobOrderInfo from "./JobOrderInfo.vue";
+import JobRate from "@/components/JobRating/JobRating.vue";
 
 export default {
   name: "paginated",
@@ -237,6 +258,7 @@ export default {
     JobOrderCreate,
     JobOrderComment,
     JobOrderInfo,
+    JobRate,
     Modal,
     [Select.name]: Select,
     [Option.name]: Option,
@@ -293,7 +315,7 @@ export default {
       fields: [
         { key: "ticket_number", sortable: true },
         { key: "created_at", sotrable: true },
-        { key: "client_code", sortable: true, requiredStaff: true },
+        { key: "client_code", sortable: true, requiresStaff: true },
         { key: "request_date", sortable: true },
         { key: "due_date", sortable: true },
         { key: "job_title", sortable: true },
@@ -301,6 +323,7 @@ export default {
         { key: "date_completed", sortable: true },
         { key: "total_time_consumed", sortable: true },
         { key: "url_of_the_completed_jo", sortable: true },
+        { key: "job_general_ratings", label: "Rate", sortable: true, requiresClient: true },
       ],
       offset: "",
       count: "",
@@ -324,6 +347,7 @@ export default {
       modals: {
         classic: false,
         comments: false,
+        rate: false,
         info: false,
       },
     };
@@ -456,6 +480,9 @@ export default {
   background-color: white !important;
 }
 .create-button {
+  border-radius: 0px;
+}
+.rate-button {
   border-radius: 0px;
 }
 .ticket-button {
