@@ -3,9 +3,13 @@
     <notifications></notifications>
     <sidebar-fixed-toggle-button />
 
-    <div v-if="$auth.user.designation_category == 'new_client' ||
-      $auth.user.designation_category == 'current_client' ||
-      $auth.user.designation_category == 'affiliate_partner'">
+    <div
+      v-if="
+        $auth.user.designation_category == 'new_client' ||
+          $auth.user.designation_category == 'current_client' ||
+          $auth.user.designation_category == 'affiliate_partner'
+      "
+    >
       <side-bar
         :background-color="sidebarBackground"
         :short-title="$t('sidebar.shortTitle')"
@@ -91,7 +95,7 @@
             <sidebar-item
               :link="{
                 name: 'Call out dashboard',
-                path: '/due-diligence/call-out'
+                path: '/due-diligence/call-out',
               }"
             ></sidebar-item>
           </sidebar-item>
@@ -208,7 +212,7 @@
             <sidebar-item
               :link="{
                 name: 'Call out dashboard',
-                path: '/due-diligence/call-out'
+                path: '/due-diligence/call-out',
               }"
             ></sidebar-item>
             <sidebar-item
@@ -252,6 +256,15 @@
       <router-view name="header"></router-view>
 
       <div :class="{ content: !isFullScreenRoute }" @click="toggleSidebar">
+        <div class="container-fluid storm-warning">
+          <center>
+            <b-alert show variant="warning" class="storm-warning-text"
+              ><i class="tim-icons icon-alert-circle-exc"></i> We're having
+              problems as of now, please bear with us. This is caused by the
+              Typhoon Odette (international name: Rai)</b-alert
+            >
+          </center>
+        </div>
         <zoom-center-transition :duration="200" mode="out-in">
           <!-- your content here -->
           <nuxt></nuxt>
@@ -362,5 +375,13 @@ $scaleSize: 0.95;
 
 .main-panel .zoomOut {
   animation-name: zoomOut95;
+}
+
+.storm-warning {
+  padding: 0px 30px 0px 50px !important;
+  position: sticky !important;
+}
+.storm-warning-text {
+  color: #856404 !important;
 }
 </style>
