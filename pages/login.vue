@@ -10,6 +10,11 @@
                 {{ errorMessage(error) }}
               </span>
             </base-alert>
+            <div class="container mb-5">
+              <span class="text-muted text-center">
+                <h4>Sign in with credentials</h4>
+              </span>
+            </div>
 
             <div>
               <base-input
