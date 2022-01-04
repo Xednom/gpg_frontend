@@ -10,16 +10,6 @@
                 {{ errorMessage(error) }}
               </span>
             </base-alert>
-            <div class="container mb-5">
-              <span class="text-muted text-center">
-                <h4>Sign in with credentials</h4>
-                <b-alert show variant="warning" class="storm-warning"
-                  ><i class="tim-icons icon-alert-circle-exc"></i> We're having
-                  problems as of now, please bear with us. This is caused by the
-                  Typhoon Odette (international name: Rai)</b-alert
-                >
-              </span>
-            </div>
 
             <div>
               <base-input

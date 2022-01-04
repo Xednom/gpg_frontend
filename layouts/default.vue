@@ -256,15 +256,6 @@
       <router-view name="header"></router-view>
 
       <div :class="{ content: !isFullScreenRoute }" @click="toggleSidebar">
-        <div class="container-fluid storm-warning">
-          <center>
-            <b-alert show variant="warning" class="storm-warning-text"
-              ><i class="tim-icons icon-alert-circle-exc"></i> We're having
-              problems as of now, please bear with us. This is caused by the
-              Typhoon Odette (international name: Rai)</b-alert
-            >
-          </center>
-        </div>
         <zoom-center-transition :duration="200" mode="out-in">
           <!-- your content here -->
           <nuxt></nuxt>
