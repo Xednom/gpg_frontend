@@ -68,6 +68,12 @@
           >
             <sidebar-item
               :link="{
+                name: 'Make a payment',
+                path: '/payment',
+              }"
+            ></sidebar-item>
+            <sidebar-item
+              :link="{
                 name: 'Account Balance',
                 path: '/timesheet/account-balance',
               }"
@@ -85,6 +91,13 @@
               }"
             ></sidebar-item>
           </sidebar-item>
+          <sidebar-item
+            :link="{
+              name: 'Make a payment',
+              icon: 'tim-icons icon-money-coins',
+              path: '/payment',
+            }"
+          ></sidebar-item>
           <sidebar-item
             :link="{
               name: 'Due diligence',
