@@ -257,21 +257,6 @@ export default {
     };
   },
   methods: {
-    handleLike(index, row) {
-      swal({
-        title: `You liked ${row.name}`,
-        buttonsStyling: false,
-        type: "success",
-        confirmButtonClass: "btn btn-success btn-fill",
-      });
-    },
-    handleEdit(index, row) {
-      swal({
-        title: `You want to edit ${row.name}`,
-        buttonsStyling: false,
-        confirmButtonClass: "btn btn-info btn-fill",
-      });
-    },
     async fetchResolutions() {
       this.isBusy = true;
       try {

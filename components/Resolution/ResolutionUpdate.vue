@@ -10,7 +10,6 @@
                 <div class="col-sm-12 col-md-4 mt-3">
                   <base-input label="Date submitted">
                     <el-date-picker
-                      v-bind:value="dateSubmitted"
                       v-model="resolution.date_submitted"
                       type="date"
                       format="yyyy-MM-dd"
