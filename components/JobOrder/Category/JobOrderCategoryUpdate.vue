@@ -203,7 +203,31 @@
                   </div>
                 </div>
               </card>
-
+              <div class="pull-right">
+                <base-button
+                  v-if="!saving"
+                  native-type="submit"
+                  slot="footer"
+                  type="submit"
+                  round
+                  block
+                  size="lg"
+                >
+                  Save
+                </base-button>
+                <base-button
+                  v-else
+                  native-type="submit"
+                  slot="footer"
+                  type="primary"
+                  round
+                  block
+                  size="lg"
+                  disabled
+                >
+                  Saving...
+                </base-button>
+              </div>
               <div
                 class="col-sm-5 mt-3"
                 v-if="
@@ -220,33 +244,21 @@
                 >
               </div>
             </div>
-            <div class="pull-right">
-              <base-button
-                v-if="!saving"
-                native-type="submit"
-                slot="footer"
-                type="submit"
-                round
-                block
-                size="lg"
-              >
-                Save
-              </base-button>
-              <base-button
-                v-else
-                native-type="submit"
-                slot="footer"
-                type="primary"
-                round
-                block
-                size="lg"
-                disabled
-              >
-                Saving...
-              </base-button>
-            </div>
           </form>
         </b-skeleton-wrapper>
+        &nbsp;
+        <div
+          class="col-sm-12 col-md-12"
+          v-if="jobOrderCategory.status == 'complete'"
+        >
+          <job-rate
+            :job="jobOrderCategory"
+            :type="type"
+            :clientId="$auth.user.id"
+            :ticket="ticket"
+            @refresh="refresh"
+          ></job-rate>
+        </div>
       </div>
       <div class="col-md-6">
         <b-skeleton-wrapper :loading="loading">
@@ -280,6 +292,7 @@ import { mapGetters, mapActions } from "vuex";
 import { DatePicker, Select, Option } from "element-ui";
 
 import JobOrderCatComment from "~/components/JobOrder/Category/JobOrderCategoryComment";
+import JobRate from "@/components/JobRating/JobRating.vue";
 
 import CreateJobOrderCategoryMixin from "@/mixins/CreateJobOrderCategoryMixin.js";
 import Card from "~/components/Cards/Card.vue";
@@ -291,6 +304,7 @@ export default {
     [Select.name]: Select,
     [Option.name]: Option,
     JobOrderCatComment,
+    JobRate,
   },
   mixins: ["CreateJobOrderCategoryMixin"],
   data() {
@@ -303,6 +317,8 @@ export default {
       staffUser: {},
       jobOrderCategory: {},
       apnCategories: [],
+      type: "category",
+      ticket: "",
       error: {
         client: "",
         staff: "",
@@ -443,9 +459,23 @@ export default {
         .then((res) => {
           this.loading = false;
           this.jobOrderCategory = res.data;
+          this.ticket = res.data.ticket_number;
+          console.log(this.ticket);
         })
         .catch((e) => {
           this.loading = false;
+          console.log(e);
+          throw e;
+        });
+    },
+    async fetchJobOrderCategoryRating(payload) {
+      let endpoint = `/api/v1/job-order-by-category/${payload}/`;
+      await this.$axios
+        .get(endpoint)
+        .then((res) => {
+          this.jobOrderCategory = res.data;
+        })
+        .catch((e) => {
           console.log(e);
           throw e;
         });
@@ -636,8 +666,8 @@ export default {
         this.reset();
       }
     },
-    refresh() {
-      this.fetchJobOrderCategoryComment(this.$route.params.ticket_number);
+    refresh(ticket) {
+      this.fetchJobOrderCategoryComment(ticket);
     },
   },
   computed: {

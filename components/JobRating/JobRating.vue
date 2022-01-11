@@ -153,6 +153,7 @@ import CreateJobRatingMixin from "@/mixins/CreateJobRatingMixin.js";
 import { DatePicker, Select } from "element-ui";
 import { BaseAlert } from "@/components";
 import { BaseTable } from "@/components";
+import { event } from 'd3';
 
 export default {
   name: "JobRating",
@@ -168,8 +169,8 @@ export default {
       type: Number,
       description: "Client id",
     },
-    fetch: {
-      type: Function,
+    ticket: {
+      type: String,
     },
     job: {
       type: Object,
@@ -263,6 +264,7 @@ export default {
             await this.saveJobOrderCategoryRating(payload);
             this.successMessage("success");
             this.reset();
+            this.$emit("refresh", this.ticket);
             this.saving = false;
           } catch (err) {
             console.error(err);
