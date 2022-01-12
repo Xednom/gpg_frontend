@@ -94,7 +94,7 @@
                       placeholder="Status"
                       v-model="jobOrderCategory.status"
                       :disabled="
-                        jobOrderCategory.status == 'complete' || 'closed'
+                        jobOrderCategory.status == 'complete' || jobOrderCategory.status == 'closed'
                       "
                     >
                       <el-option
@@ -134,8 +134,8 @@
                         value-format="yyyy-MM-dd"
                         placeholder="Choose date"
                         :disabled="
-                          (staffDisable &&
-                            jobOrderCategory.status == 'complete') ||
+                          staffDisable &&
+                            jobOrderCategory.status == 'complete' ||
                             'closed'
                         "
                       >
@@ -180,7 +180,7 @@
                       placeholder="Job description"
                       v-model="jobOrderCategory.job_description"
                       :disabled="
-                        jobOrderCategory.status == 'complete' && 'closed'
+                        jobOrderCategory.status == 'complete' || jobOrderCategory.status == 'closed'
                       "
                       required
                     >
@@ -220,7 +220,7 @@
                 <base-button
                   v-if="!saving"
                   native-type="submit"
-                  :disabled="jobOrderCategory.status == 'complete' || 'closed'"
+                  :disabled="jobOrderCategory.status == 'closed'"
                   slot="footer"
                   type="submit"
                   round
@@ -262,7 +262,7 @@
           &nbsp;
           <div
             class="col-sm-12 col-md-12"
-            v-if="jobOrderCategory.status == 'complete' || 'closed'"
+            v-if="jobOrderCategory.status == 'complete' || jobOrderCategory.status == 'closed'"
           >
             <job-rate
               :job="jobOrderCategory"

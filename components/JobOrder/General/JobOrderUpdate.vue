@@ -112,7 +112,7 @@
                     name="status"
                     placeholder="Status"
                     v-model="jobOrder.status"
-                    :disabled="jobOrder.status == 'complete' || 'closed'"
+                    :disabled="jobOrder.status == 'complete' || jobOrder.status == 'closed'"
                   >
                     <el-option
                       v-for="option in StatusChoices.status"
@@ -130,7 +130,7 @@
                 <base-input
                   label="Job title"
                   v-model="jobOrder.job_title"
-                  :disabled="jobOrder.status == 'complete' || 'closed'"
+                  :disabled="jobOrder.status == 'complete' || jobOrder.status == 'closed'"
                 >
                 </base-input>
               </div>
@@ -144,7 +144,7 @@
                   placeholder="Job description"
                   v-model="jobOrder.job_description"
                   :disabled="
-                    (staffDisable && jobOrder.status == 'complete') || 'closed'
+                    staffDisable || jobOrder.status == 'complete' || jobOrder.status == 'closed'
                   "
                 >
                 </textarea>
@@ -175,7 +175,7 @@
             <div class="pull-right">
               <base-button
                 v-if="!saving"
-                :disabled="jobOrder.status == 'complete' || 'closed'"
+                :disabled="jobOrder.status == 'complete' || jobOrder.status == 'closed'"
                 native-type="submit"
                 slot="footer"
                 type="submit"
