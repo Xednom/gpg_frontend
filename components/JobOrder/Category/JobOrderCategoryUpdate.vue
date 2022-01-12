@@ -257,7 +257,7 @@
             :type="type"
             :clientId="$auth.user.id"
             :ticket="ticket"
-            @refresh="refresh"
+            @refresh="refreshAfterRating"
           ></job-rate>
         </div>
       </div>
@@ -667,9 +667,12 @@ export default {
         this.reset();
       }
     },
-    refresh(ticket) {
-      this.fetchJobOrderCategoryComment(ticket);
+    refresh() {
+      this.fetchJobOrderCategoryComment(this.jobOrderCategory.ticket_number);
     },
+    refreshAfterRating() {
+      this.fetchJobOrderCategoryRating(this.jobOrderCategory.ticket_number);
+    }
   },
   computed: {
     isDisabled() {
