@@ -10,7 +10,10 @@
             <b-container fluid>
               <!-- <b-row> -->
               <b-col sm="12" md="4" class="my-1 pull-left">
-                <b-button class="create-button" variant="success" @click="modals.classic = true"
+                <b-button
+                  class="create-button"
+                  variant="success"
+                  @click="modals.classic = true"
                   >Create Job order</b-button
                 >
               </b-col>
@@ -131,13 +134,32 @@
                     target="_blank"
                     v-if="row.item.url_of_the_completed_jo"
                   >
-                    <b-badge variant="primary"
-                      >view the file</b-badge
-                    >
+                    <b-badge variant="primary">view the file</b-badge>
                   </a>
                   <span v-else-if="!row.item.url_of_the_completed_jo">
                     -
                   </span>
+                </template>
+
+                <template #cell(job_category_ratings)="row">
+                  <div v-if="row.item.job_rating <= 0">
+                    <!-- <a href="#" @click="modals.rate = true"
+                      ><b-badge
+                        variant="primary"
+                        @click="fetchJobOrderCategory(row.item.ticket_number)"
+                        >RATE THIS JOB</b-badge
+                      ></a
+                    > -->
+                    <span>No Ratings yet</span>
+                  </div>
+                  <div v-else>
+                    <b-form-rating
+                      class="job-rate"
+                      v-model="row.item.job_rating"
+                      color="#ff8800"
+                      readonly
+                    ></b-form-rating>
+                  </div>
                 </template>
               </b-table>
 
@@ -183,6 +205,19 @@
         :client="client"
       ></job-order-create>
     </modal>
+    <!-- modal for rating a job -->
+    <modal
+      :show.sync="modals.rate"
+      headerClasses="justify-content-center"
+      class="white-content"
+    >
+      <job-rate
+        :job="jobOrderCategory"
+        :type="type"
+        :fetch="fetchJobOrderCategories"
+        :clientId="$auth.user.id"
+      ></job-rate>
+    </modal>
 
     <!-- modal for comment -->
     <modal
@@ -211,12 +246,14 @@ import { mapGetters, mapActions } from "vuex";
 
 import jobOrderCreate from "@/components/JobOrder/Category/JobOrderCategoryCreate";
 import jobOrderCategoryComment from "@/components/JobOrder/Category/JobOrderCategoryComment";
+import JobRate from "@/components/JobRating/JobRating.vue";
 
 export default {
   name: "paginated",
   components: {
     jobOrderCreate,
     jobOrderCategoryComment,
+    JobRate,
     Modal,
     [Select.name]: Select,
     [Option.name]: Option,
@@ -267,6 +304,8 @@ export default {
       searchQuery: "",
       tableData: users,
       searchedData: [],
+      type: "category",
+      rating: 0,
       fuseSearch: null,
       isBusy: false,
       error: {
@@ -293,6 +332,7 @@ export default {
         { key: "due_date", sortable: true },
         { key: "date_completed", sortable: true },
         { key: "url_of_the_completed_jo", sortable: true },
+        { key: "job_category_ratings", label: "rating", sortable: true },
       ],
       offset: "",
       count: "",
@@ -316,6 +356,7 @@ export default {
       modals: {
         classic: false,
         comments: false,
+        rate: false,
         info: false,
       },
     };
@@ -494,5 +535,8 @@ export default {
 }
 .create-button {
   border-radius: 0px;
+}
+.job-rate {
+  border: 0px;
 }
 </style>

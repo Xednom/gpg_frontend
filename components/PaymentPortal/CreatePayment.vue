@@ -170,7 +170,7 @@ export default {
                       orderData.payer.name.surname,
                     date: date,
                     amount: orderData.purchase_units[0].amount.value,
-                    transaction_number: data.orderID,
+                    transaction_number: orderData.purchase_units[0].invoiceId,
                     payment_channel: "Paypal",
                     notes:
                       "this is paid from the LM system payment portal(this is system generated).",
