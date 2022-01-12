@@ -536,4 +536,7 @@ export default {
 .create-button {
   border-radius: 0px;
 }
+.job-rate {
+  border: 0px;
+}
 </style>

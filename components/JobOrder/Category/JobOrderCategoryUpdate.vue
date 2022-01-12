@@ -90,6 +90,7 @@
                       name="status"
                       placeholder="Status"
                       v-model="jobOrderCategory.status"
+                      :disabled="jobOrderCategory.status == 'complete'"
                     >
                       <el-option
                         v-for="option in StatusChoices.status"

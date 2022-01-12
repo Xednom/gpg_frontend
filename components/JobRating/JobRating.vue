@@ -47,7 +47,11 @@
                   ></b-form-rating>
                 </p>
                 <hr />
-                <p class="text-muted comment ">{{ row.comment }}</p>
+                  <blockquote class="blockquote text-center">
+                    <p class="text-muted comment ">{{ row.comment }}</p>
+                    <footer class="blockquote-footer">{{ job.client }}</footer>
+                  </blockquote>
+                
               </td>
             </template>
           </base-table>
@@ -58,7 +62,7 @@
       <form class="mt-5" @submit.prevent="save">
         <div class="form-row">
           <div class="col-sm-12 col-md-12 mt-3">
-            <label>How do you feel about this task?</label>
+            <label>Please tell us how do you feel about this task?</label>
             <b-form-rating
               class="job-rate"
               v-model="rating"
@@ -347,5 +351,8 @@ export default {
 }
 .btn-rate {
   border-radius: 0px;
+}
+.blockquote {
+  border: 0px;
 }
 </style>
