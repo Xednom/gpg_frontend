@@ -208,7 +208,7 @@
           <job-rate
             :job="jobOrder"
             :type="type"
-            :clientId="$auth.user.id"
+            :clientId="clientUser.id"
             :ticket="ticket"
             @refresh="refreshAfterRating"
           ></job-rate>

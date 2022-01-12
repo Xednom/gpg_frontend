@@ -255,7 +255,7 @@
           <job-rate
             :job="jobOrderCategory"
             :type="type"
-            :clientId="$auth.user.id"
+            :clientId="clientUser.id"
             :ticket="ticket"
             @refresh="refreshAfterRating"
           ></job-rate>
@@ -510,6 +510,7 @@ export default {
       try {
         await this.$axios.get(endpoint).then((res) => {
           this.clientUser = res.data;
+          console.log(this.clientUser.id);
           this.loading = false;
         });
       } catch (err) {
