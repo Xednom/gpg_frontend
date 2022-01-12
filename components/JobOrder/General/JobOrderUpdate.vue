@@ -109,6 +109,7 @@
                     name="status"
                     placeholder="Status"
                     v-model="jobOrder.status"
+                    :disabled="jobOrder.status === 'complete'"
                   >
                     <el-option
                       v-for="option in StatusChoices.status"
@@ -123,10 +124,7 @@
               </div>
 
               <div class="col-sm-12 col-md-6">
-                <base-input
-                  label="Job title"
-                  v-model="jobOrder.job_title"
-                >
+                <base-input label="Job title" v-model="jobOrder.job_title">
                 </base-input>
               </div>
             </div>
@@ -160,9 +158,35 @@
                 <textarea
                   class="form-control"
                   v-model="jobOrder.management_notes"
-                  disabled>
+                  disabled
+                >
                 </textarea>
               </div>
+            </div>
+            <div class="pull-right">
+              <base-button
+                v-if="!saving"
+                native-type="submit"
+                slot="footer"
+                type="submit"
+                round
+                block
+                size="lg"
+              >
+                Save
+              </base-button>
+              <base-button
+                v-else
+                native-type="submit"
+                slot="footer"
+                type="primary"
+                round
+                block
+                size="lg"
+                disabled
+              >
+                Saving...
+              </base-button>
             </div>
             <div
               class="col-sm-5 mt-3"
@@ -177,35 +201,18 @@
                 >here</a
               >
             </div>
-            <div slot="footer">
-              <div class="pull-right mt-5">
-                <base-button
-                  v-if="!saving"
-                  native-type="submit"
-                  slot="footer"
-                  type="submit"
-                  round
-                  block
-                  size="lg"
-                >
-                  Save
-                </base-button>
-                <base-button
-                  v-else
-                  native-type="submit"
-                  slot="footer"
-                  type="primary"
-                  round
-                  block
-                  size="lg"
-                  disabled
-                >
-                  Saving...
-                </base-button>
-              </div>
-            </div>
           </form>
         </b-skeleton-wrapper>
+        &nbsp;
+        <div class="col-sm-12 col-md-12" v-if="jobOrder.status == 'complete'">
+          <job-rate
+            :job="jobOrder"
+            :type="type"
+            :clientId="$auth.user.id"
+            :ticket="ticket"
+            @refresh="refreshAfterRating"
+          ></job-rate>
+        </div>
       </div>
       <div class="col-md-6">
         <b-skeleton-wrapper :loading="loading">
@@ -238,18 +245,22 @@ import { DatePicker, Select, Option } from "element-ui";
 import JobOrderComment from "~/components/JobOrder/General/JobOrderComment";
 import Card from "~/components/Cards/Card.vue";
 
+import JobRate from "@/components/JobRating/JobRating.vue";
+
 export default {
   components: {
     [DatePicker.name]: DatePicker,
     [Select.name]: Select,
     [Option.name]: Option,
     JobOrderComment,
+    JobRate,
   },
   data() {
     return {
       saving: false,
       loading: false,
       error: "",
+      type: "general",
       clientUser: {},
       staffUser: {},
       jobOrder: {},
@@ -280,10 +291,22 @@ export default {
           { value: "dd_call_out_complete", label: "DD Call Out Complete" },
           { value: "duplicate_request", label: "Duplicate Request" },
           { value: "multiple_task", label: "Multiple Task" },
-          { value: "va_assigned_multiple_task", label: "VA assigned Multiple Task" },
-          { value: "va_processing_multiple_task", label: "VA processing Multiple Task" },
-          { value: "va_complete_multiple_task", label: "VA Complete Multiple Task" },
-          { value: "for_quality_review_multiple_task", label: "For Quality Review Multiple Task" },
+          {
+            value: "va_assigned_multiple_task",
+            label: "VA assigned Multiple Task",
+          },
+          {
+            value: "va_processing_multiple_task",
+            label: "VA processing Multiple Task",
+          },
+          {
+            value: "va_complete_multiple_task",
+            label: "VA Complete Multiple Task",
+          },
+          {
+            value: "for_quality_review_multiple_task",
+            label: "For Quality Review Multiple Task",
+          },
         ],
       },
     };
@@ -301,6 +324,17 @@ export default {
         })
         .catch((e) => {
           this.loading = false;
+          throw e;
+        });
+    },
+    async fetchJobOrderRating(payload) {
+      let endpoint = `/api/v1/job-order/${payload}/`;
+      return await this.$axios
+        .get(endpoint)
+        .then((res) => {
+          this.jobOrder = res.data;
+        })
+        .catch((e) => {
           throw e;
         });
     },
@@ -446,6 +480,10 @@ export default {
     refresh() {
       this.fetchJobOrderComment(this.$route.params.ticket_number);
     },
+    refreshAfterRating(ticket) {
+      ticket = this.jobOrder.ticket_number;
+      this.fetchJobOrderRating(ticket);
+    }
   },
   computed: {
     isDisabled() {

@@ -256,6 +256,7 @@ export default {
             await this.saveJobOrderGeneralRating(payload);
             this.successMessage("success");
             this.reset();
+            this.$emit("refresh", this.ticket);
             this.saving = false;
           } catch (err) {
             console.error(err);

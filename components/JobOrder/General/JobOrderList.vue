@@ -140,13 +140,17 @@
                 </template>
 
                 <template #cell(job_general_ratings)="row">
-                  <a href="#" @click="modals.rate = true"
-                    ><b-badge
-                      variant="primary"
-                      @click="fetchJobOrder(row.item.ticket_number)"
-                      >RATE THIS JOB</b-badge
-                    ></a
-                  >
+                  <div v-if="row.item.job_rating <= 0">
+                    <span>No Ratings yet</span>
+                  </div>
+                  <div v-else>
+                    <b-form-rating
+                      class="job-rate"
+                      v-model="row.item.job_rating"
+                      color="#ff8800"
+                      readonly
+                    ></b-form-rating>
+                  </div>
                 </template>
 
                 <template #row-details="row">
@@ -489,5 +493,8 @@ export default {
 }
 .ticket-button {
   border-radius: 0px;
+}
+.job-rate {
+  border: 0px;
 }
 </style>
