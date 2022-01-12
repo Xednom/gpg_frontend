@@ -20,7 +20,10 @@
                   ></b-form-rating>
                 </p>
                 <hr />
-                <p class="text-muted comment ">{{ row.comment }}</p>
+                <blockquote class="blockquote text-center">
+                  <p class="text-muted comment ">{{ row.comment }}</p>
+                  <footer class="blockquote-footer">{{ job.client }}</footer>
+                </blockquote>
               </td>
             </template>
           </base-table>
@@ -47,11 +50,10 @@
                   ></b-form-rating>
                 </p>
                 <hr />
-                  <blockquote class="blockquote text-center">
-                    <p class="text-muted comment ">{{ row.comment }}</p>
-                    <footer class="blockquote-footer">{{ job.client }}</footer>
-                  </blockquote>
-                
+                <blockquote class="blockquote text-center">
+                  <p class="text-muted comment ">{{ row.comment }}</p>
+                  <footer class="blockquote-footer">{{ job.client }}</footer>
+                </blockquote>
               </td>
             </template>
           </base-table>
@@ -157,7 +159,7 @@ import CreateJobRatingMixin from "@/mixins/CreateJobRatingMixin.js";
 import { DatePicker, Select } from "element-ui";
 import { BaseAlert } from "@/components";
 import { BaseTable } from "@/components";
-import { event } from 'd3';
+import { event } from "d3";
 
 export default {
   name: "JobRating",
