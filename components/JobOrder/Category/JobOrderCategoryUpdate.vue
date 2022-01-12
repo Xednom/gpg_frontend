@@ -49,6 +49,9 @@
                 </div>
               </div>
             </card>
+            <div class="col-sm-12 col-md-12">
+              <b-skeleton width="85%"></b-skeleton>
+            </div>
           </template>
 
           <form @submit.prevent="save">
@@ -90,7 +93,9 @@
                       name="status"
                       placeholder="Status"
                       v-model="jobOrderCategory.status"
-                      :disabled="jobOrderCategory.status == 'complete'"
+                      :disabled="
+                        jobOrderCategory.status == 'complete' || 'closed'
+                      "
                     >
                       <el-option
                         v-for="option in StatusChoices.status"
@@ -128,7 +133,11 @@
                         format="yyyy-MM-dd"
                         value-format="yyyy-MM-dd"
                         placeholder="Choose date"
-                        :disabled="staffDisable"
+                        :disabled="
+                          (staffDisable &&
+                            jobOrderCategory.status == 'complete') ||
+                            'closed'
+                        "
                       >
                       </el-date-picker>
                     </base-input>
@@ -170,6 +179,9 @@
                       class="form-control"
                       placeholder="Job description"
                       v-model="jobOrderCategory.job_description"
+                      :disabled="
+                        jobOrderCategory.status == 'complete' && 'closed'
+                      "
                       required
                     >
                     </textarea>
@@ -208,6 +220,7 @@
                 <base-button
                   v-if="!saving"
                   native-type="submit"
+                  :disabled="jobOrderCategory.status == 'complete' || 'closed'"
                   slot="footer"
                   type="submit"
                   round
@@ -246,20 +259,20 @@
               </div>
             </div>
           </form>
+          &nbsp;
+          <div
+            class="col-sm-12 col-md-12"
+            v-if="jobOrderCategory.status == 'complete' || 'closed'"
+          >
+            <job-rate
+              :job="jobOrderCategory"
+              :type="type"
+              :clientId="clientUser.id"
+              :ticket="ticket"
+              @refresh="refreshAfterRating"
+            ></job-rate>
+          </div>
         </b-skeleton-wrapper>
-        &nbsp;
-        <div
-          class="col-sm-12 col-md-12"
-          v-if="jobOrderCategory.status == 'complete'"
-        >
-          <job-rate
-            :job="jobOrderCategory"
-            :type="type"
-            :clientId="clientUser.id"
-            :ticket="ticket"
-            @refresh="refreshAfterRating"
-          ></job-rate>
-        </div>
       </div>
       <div class="col-md-6">
         <b-skeleton-wrapper :loading="loading">
@@ -673,7 +686,7 @@ export default {
     },
     refreshAfterRating() {
       this.fetchJobOrderCategoryRating(this.jobOrderCategory.ticket_number);
-    }
+    },
   },
   computed: {
     isDisabled() {
