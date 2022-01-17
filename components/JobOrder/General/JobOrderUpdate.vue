@@ -45,6 +45,9 @@
               Job order informations: Ticket #<b>{{
                 jobOrder.ticket_number
               }}</b>
+              <b-badge href="#" variant="primary" @click="modals.classic = true"
+                >Please rate our agents who did this task!</b-badge
+              >
             </h4>
             <div class="form-row">
               <div class="col-sm-12 col-md-6">
@@ -112,7 +115,10 @@
                     name="status"
                     placeholder="Status"
                     v-model="jobOrder.status"
-                    :disabled="jobOrder.status == 'complete' || jobOrder.status == 'closed'"
+                    :disabled="
+                      jobOrder.status == 'complete' ||
+                        jobOrder.status == 'closed'
+                    "
                   >
                     <el-option
                       v-for="option in StatusChoices.status"
@@ -130,7 +136,9 @@
                 <base-input
                   label="Job title"
                   v-model="jobOrder.job_title"
-                  :disabled="jobOrder.status == 'complete' || jobOrder.status == 'closed'"
+                  :disabled="
+                    jobOrder.status == 'complete' || jobOrder.status == 'closed'
+                  "
                 >
                 </base-input>
               </div>
@@ -144,7 +152,9 @@
                   placeholder="Job description"
                   v-model="jobOrder.job_description"
                   :disabled="
-                    staffDisable || jobOrder.status == 'complete' || jobOrder.status == 'closed'
+                    staffDisable ||
+                      jobOrder.status == 'complete' ||
+                      jobOrder.status == 'closed'
                   "
                 >
                 </textarea>
@@ -175,7 +185,9 @@
             <div class="pull-right">
               <base-button
                 v-if="!saving"
-                :disabled="jobOrder.status == 'complete' || jobOrder.status == 'closed'"
+                :disabled="
+                  jobOrder.status == 'complete' || jobOrder.status == 'closed'
+                "
                 native-type="submit"
                 slot="footer"
                 type="submit"
@@ -249,24 +261,40 @@
         </b-skeleton-wrapper>
       </div>
     </div>
+    <modal
+      :show.sync="modals.classic"
+      headerClasses="justify-content-center"
+      class="white-content"
+    >
+      <scoring-add
+        :job="jobOrder"
+        :fetch="fetchJobOrder"
+        :client="clientUser.id"
+        :type="type"
+      ></scoring-add>
+    </modal>
   </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
 import { DatePicker, Select, Option } from "element-ui";
+import { Modal } from "@/components";
 import JobOrderComment from "~/components/JobOrder/General/JobOrderComment";
-import Card from "~/components/Cards/Card.vue";
+
+import ScoringAdd from "@/components/AgentScoring/ScoringAdd.vue";
 
 import JobRate from "@/components/JobRating/JobRating.vue";
 
 export default {
   components: {
+    Modal,
     [DatePicker.name]: DatePicker,
     [Select.name]: Select,
     [Option.name]: Option,
     JobOrderComment,
     JobRate,
+    ScoringAdd,
   },
   data() {
     return {
@@ -277,6 +305,9 @@ export default {
       clientUser: {},
       staffUser: {},
       jobOrder: {},
+      modals: {
+        classic: false,
+      },
       StatusChoices: {
         placeholder: "",
         status: [
@@ -289,7 +320,6 @@ export default {
           { value: "canceled", label: "Canceled" },
           { value: "follow_up", label: "Follow up" },
           { value: "dispute", label: "Dispute" },
-          { value: "complete", label: "Complete" },
           { value: "under_quality_review", label: "Under Quality Review" },
           { value: "daily_tasks", label: "Daily Tasks" },
           { value: "weekly_tasks", label: "Weekly Tasks" },
