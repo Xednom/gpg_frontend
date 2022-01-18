@@ -1,81 +1,156 @@
 <template>
   <div class="col-md-12">
-    <form @submit.prevent="save">
-      <h4 class="card-title">
-        Please honeslty rate the agent(s) that handled this Job Order!
-      </h4>
+    <div class="col-md-12" v-if="!isGeneralScoring">
+      <form @submit.prevent="save">
+        <div class="form-row">
+          <div class="col-sm-12 col-md-12 mt-3">
+            <label>Accuracy:</label>
+            <b-form-rating v-model="accuracy"></b-form-rating>
+          </div>
+          <div class="col-sm-12 col-md-12 mt-3">
+            <label>Speed:</label>
+            <b-form-rating v-model="speed"></b-form-rating>
+          </div>
+          <div class="col-sm-12 col-md-12 mt-3">
+            <label>Quality of work:</label>
+            <b-form-rating v-model="quality_of_work"></b-form-rating>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-sm-12 col-md-12 mt-3">
+            <b-form-checkbox v-model="delivered_on_time"
+              >Delivered on time?</b-form-checkbox
+            >
+          </div>
+          <div class="col-sm-12 col-md-12 mt-3" v-if="!delivered_on_time">
+            <label>Delivery issue/note</label>
+            <textarea cols="30" rows="10" v-model="delivery_note"></textarea>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-sm-12 col-md-12 mt-3">
+            <b-form-checkbox v-model="job_completed"
+              >Job completed</b-form-checkbox
+            >
+          </div>
+          <div class="col-sm-12 col-md-12 mt-3" v-if="!job_completed">
+            <label>Job completed issue/note</label>
+            <textarea
+              cols="30"
+              rows="10"
+              v-model="job_completed_note"
+            ></textarea>
+            <b-form-text id="input-live-help"
+              >Was the job completed based on your instruction or
+              expectations?</b-form-text
+            >
+          </div>
+        </div>
 
-      <div class="form-row">
-        <div class="col-sm-12 col-md-12">
-          <label>Accuracy:</label>
-          <b-form-rating v-model="accuracy"></b-form-rating>
+        <div class="form-row">
+          <div class="col-sm-12 col-md-12 mt-3">
+            <b-form-checkbox v-model="satisfied">Satisfied</b-form-checkbox>
+          </div>
         </div>
-        <div class="col-sm-12 col-md-12">
-          <label>Speed:</label>
-          <b-form-rating v-model="speed"></b-form-rating>
-        </div>
-        <div class="col-sm-12 col-md-12">
-          <label>Quality of work:</label>
-          <b-form-rating v-model="quality_of_work"></b-form-rating>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="col-sm-12 col-md-12">
-          <b-form-checkbox v-model="delivered_on_time"
-            >Delivered on time?</b-form-checkbox
-          >
-        </div>
-        <div class="col-sm-12 col-md-12" v-if="!delivered_on_time">
-          <label>Delivery issue/note</label>
-          <textarea cols="30" rows="10" v-model="delivery_note"></textarea>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="col-sm-12 col-md-12">
-          <b-form-checkbox v-model="job_completed"
-            >Job completed</b-form-checkbox
-          >
-        </div>
-        <div class="col-sm-12 col-md-12" v-if="!job_completed">
-          <label>Job completed issue/note</label>
-          <textarea cols="30" rows="10" v-model="job_completed_note"></textarea>
-        </div>
-      </div>
 
-      <div class="form-row">
-        <div class="col-sm-12 col-md-12">
-          <b-form-checkbox v-model="satisfied">Satisfied</b-form-checkbox>
+        <div slot="footer">
+          <div class="pull-right mt-3">
+            <base-button
+              v-if="!loading"
+              native-type="submit"
+              slot="footer"
+              type="submit"
+              round
+              block
+              size="lg"
+            >
+              Save
+            </base-button>
+            <base-button
+              v-else
+              native-type="submit"
+              slot="footer"
+              type="primary"
+              round
+              block
+              size="lg"
+              disabled
+            >
+              Saving...
+            </base-button>
+          </div>
         </div>
-      </div>
+      </form>
+    </div>
+    <div class="col-md-12" v-else-if="isGeneralScoring">
+      <div v-for="item in job.job_order_general_scorings" :key="item.id">
+        <h4 class="card-title">
+          <center>Thank you for giving us a review &hearts;</center>
+        </h4>
 
-      <div slot="footer">
-        <div class="pull-right mt-3">
-          <base-button
-            v-if="!loading"
-            native-type="submit"
-            slot="footer"
-            type="submit"
-            round
-            block
-            size="lg"
-          >
-            Save
-          </base-button>
-          <base-button
-            v-else
-            native-type="submit"
-            slot="footer"
-            type="primary"
-            round
-            block
-            size="lg"
-            disabled
-          >
-            Saving...
-          </base-button>
+        <div class="form-row">
+          <div class="col-sm-12 col-md-12">
+            <label>Accuracy:</label>
+            <b-form-rating v-model="item.accuracy" disabled></b-form-rating>
+          </div>
+          <div class="col-sm-12 col-md-12 mt-3">
+            <label>Speed:</label>
+            <b-form-rating v-model="item.speed" disabled></b-form-rating>
+          </div>
+          <div class="col-sm-12 col-md-12 mt-3">
+            <label>Quality of work:</label>
+            <b-form-rating
+              v-model="item.quality_of_work"
+              disabled
+            ></b-form-rating>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-sm-12 col-md-12 mt-3">
+            <b-form-checkbox v-model="item.delivered_on_time" disabled
+              >Delivered on time?</b-form-checkbox
+            >
+          </div>
+          <div class="col-sm-12 col-md-12 mt-3" v-if="!item.delivered_on_time">
+            <label>Delivery issue/note</label>
+            <textarea
+              cols="30"
+              rows="10"
+              v-model="item.delivery_note"
+              disabled
+            ></textarea>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-sm-12 col-md-12 mt-3">
+            <b-form-checkbox v-model="item.job_completed" disabled
+              >Job completed</b-form-checkbox
+            >
+          </div>
+          <div class="col-sm-12 col-md-12" v-if="!item.job_completed">
+            <label>Job completed issue/note</label>
+            <textarea
+              cols="30"
+              rows="10"
+              v-model="item.job_completed_note"
+              disabled
+            ></textarea>
+            <b-form-text id="input-live-help"
+              >Was the job completed based on your instruction or
+              expectations?</b-form-text
+            >
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-sm-12 col-md-12 mt-3">
+            <b-form-checkbox v-model="item.satisfied" disabled
+              >Satisfied</b-form-checkbox
+            >
+          </div>
         </div>
       </div>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -160,15 +235,8 @@ export default {
         console.error(err.response.data);
       }
     },
-    async fetchCallerInteraction(id) {
-      let endpoint = `/api/v1/post-paid/customer-interaction-post-paid/`;
-      try {
-        await this.$axios.get(endpoint);
-      } catch (err) {
-        console.error(err.response.data);
-      }
-    },
     async save() {
+      this.$forceUpdate();
       let isValidForm = await this.$validator.validateAll();
       if (isValidForm) {
         this.loading = true;
@@ -195,7 +263,8 @@ export default {
               await this.saveGeneralScore(payload).then(() => {
                 this.loading = false;
                 this.success = true;
-                this.successMessage();
+                this.$emit("refresh", this.job.ticket_number);
+                this.successMessage("success");
                 this.reset();
                 this.query = null;
                 this.$validator.reset();
@@ -218,6 +287,7 @@ export default {
               };
               await this.saveCategoryScore(payload);
               this.loading = false;
+              this.successMessage("success");
               this.query = "";
               this.reset();
               this.$validator.reset();
@@ -242,8 +312,15 @@ export default {
         }
       );
     },
-    successMessage() {
-      return "Successfully added a new Job Order. Management is on it's way to process this.";
+    successMessage(variant = null) {
+      this.$bvToast.toast(
+        "You have successfully scored the staff in this job order!",
+        {
+          title: `Thank you!`,
+          variant: variant,
+          solid: true,
+        }
+      );
     },
     errorMessage(error) {
       if (error.request_date) {
@@ -259,104 +336,26 @@ export default {
       }
     },
   },
-  // computed: {
-  //   client: {
-  //     get() {
-  //       return this.$store.getters["agentScoring/client"];
-  //     },
-  //     set(value) {
-  //       this.setBasicStoreValue("client", value);
-  //     },
-  //   },
-  //   staff: {
-  //     get() {
-  //       return this.$store.getters["agentScoring/staff"];
-  //     },
-  //     set(value) {
-  //       this.setBasicStoreValue("staff", value);
-  //     },
-  //   },
-  //   job_order_general: {
-  //     get() {
-  //       return this.$store.getters["agentScoring/job_order_general"];
-  //     },
-  //     set(value) {
-  //       this.setBasicStoreValue("job_order_general", value);
-  //     },
-  //   },
-  //   accuracy: {
-  //     get() {
-  //       return this.$store.getters["jobOrder/accuracy"];
-  //     },
-  //     set(value) {
-  //       this.setBasicStoreValue("accuracy", value);
-  //     },
-  //   },
-  //   speed: {
-  //     get() {
-  //       return this.$store.getters["jobOrder/speed"];
-  //     },
-  //     set(value) {
-  //       this.setBasicStoreValue("speed", value);
-  //     },
-  //   },
-  //   speed: {
-  //     get() {
-  //       return this.$store.getters["jobOrder/speed"];
-  //     },
-  //     set(value) {
-  //       this.setBasicStoreValue("speed", value);
-  //     },
-  //   },
-  //   quality_of_work: {
-  //     get() {
-  //       return this.$store.getters["jobOrder/quality_of_work"];
-  //     },
-  //     set(value) {
-  //       this.setBasicStoreValue("quality_of_work", value);
-  //     },
-  //   },
-  //   delivered_on_time: {
-  //     get() {
-  //       return this.$store.getters["jobOrder/delivered_on_time"];
-  //     },
-  //     set(value) {
-  //       this.setBasicStoreValue("delivered_on_time", value);
-  //     },
-  //   },
-  //   delivery_note: {
-  //     get() {
-  //       return this.$store.getters["jobOrder/delivery_note"];
-  //     },
-  //     set(value) {
-  //       this.setBasicStoreValue("delivery_note", value);
-  //     },
-  //   },
-  //   job_completed: {
-  //     get() {
-  //       return this.$store.getters["jobOrder/job_completed"];
-  //     },
-  //     set(value) {
-  //       this.setBasicStoreValue("job_completed", value);
-  //     },
-  //   },
-  //   job_completed_note: {
-  //     get() {
-  //       return this.$store.getters["jobOrder/job_completed_note"];
-  //     },
-  //     set(value) {
-  //       this.setBasicStoreValue("job_completed_note", value);
-  //     },
-  //   },
-  //   statisfied: {
-  //     get() {
-  //       return this.$store.getters["agentScoring/satisfied"];
-  //     },
-  //     set(value) {
-  //       this.setBasicStoreValue("satisfied", value);
-  //     },
-  //   }
-  // },
+  computed: {
+    isGeneralScoring() {
+      if (this.job.job_order_general_scorings) {
+        if (this.job.job_order_general_scorings.length == 0) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    },
+    isCategoryScoring() {
+      if (this.job.job_order_category_scorings) {
+        if (this.job.job_order_category_scorings.length == 0) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    },
+  },
   mounted() {
     if (
       this.$auth.user.designation_category == "new_client" ||
