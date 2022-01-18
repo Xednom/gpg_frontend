@@ -45,7 +45,10 @@
               Job order informations: Ticket #<b>{{
                 jobOrder.ticket_number
               }}</b>
-              <b-badge href="#" variant="primary" @click="modals.classic = true"
+              <b-badge
+                href="#"
+                variant="primary"
+                @click.native="modals.classic = true"
                 >Please rate our agents who did this task!</b-badge
               >
             </h4>
@@ -265,12 +268,19 @@
       :show.sync="modals.classic"
       headerClasses="justify-content-center"
       class="white-content"
+      centered
+      close-button
     >
+      <h4 slot="header" class="col-sm-12 col-md-12 card-title">
+        <center>Job order staff scoring</center> 
+      </h4>
       <scoring-add
         :job="jobOrder"
         :fetch="fetchJobOrder"
         :client="clientUser.id"
         :type="type"
+        @close="closeModal"
+        @refresh="refreshAfterRating"
       ></scoring-add>
     </modal>
   </div>
@@ -356,6 +366,9 @@ export default {
   },
   methods: {
     ...mapActions("jobOrder", ["updateJobOrder"]),
+    closeModal() {
+      this.modals.classic = false;
+    },
     async fetchJobOrder(payload) {
       this.loading = true;
       let endpoint = `/api/v1/job-order/${payload}/`;
