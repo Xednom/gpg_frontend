@@ -49,6 +49,7 @@
                 href="#"
                 variant="primary"
                 @click.native="modals.classic = true"
+                v-if="jobOrder.status == 'complete' || jobOrder.status == 'closed'"
                 >Please rate our agents who did this task!</b-badge
               >
             </h4>

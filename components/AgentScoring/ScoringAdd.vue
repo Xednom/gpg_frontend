@@ -1,6 +1,144 @@
 <template>
   <div class="col-md-12">
-    <div class="col-md-12" v-if="!isGeneralScoring">
+    <div class="col-md-12" v-if="isGeneralScoring">
+      <div v-for="item in job.job_order_general_scorings" :key="item.id">
+        <h4 class="card-title">
+          <center>Thank you for giving us a review &hearts;</center>
+        </h4>
+
+        <div class="form-row">
+          <div class="col-sm-12 col-md-12">
+            <label>Accuracy:</label>
+            <b-form-rating v-model="item.accuracy" disabled></b-form-rating>
+          </div>
+          <div class="col-sm-12 col-md-12 mt-3">
+            <label>Speed:</label>
+            <b-form-rating v-model="item.speed" disabled></b-form-rating>
+          </div>
+          <div class="col-sm-12 col-md-12 mt-3">
+            <label>Quality of work:</label>
+            <b-form-rating
+              v-model="item.quality_of_work"
+              disabled
+            ></b-form-rating>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-sm-12 col-md-12 mt-3">
+            <b-form-checkbox v-model="item.delivered_on_time" disabled
+              >Delivered on time?</b-form-checkbox
+            >
+          </div>
+          <div class="col-sm-12 col-md-12 mt-3" v-if="!item.delivered_on_time">
+            <label>Delivery issue/note</label>
+            <textarea
+              cols="30"
+              rows="10"
+              v-model="item.delivery_note"
+              disabled
+            ></textarea>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-sm-12 col-md-12 mt-3">
+            <b-form-checkbox v-model="item.job_completed" disabled
+              >Job completed</b-form-checkbox
+            >
+          </div>
+          <div class="col-sm-12 col-md-12" v-if="!item.job_completed">
+            <label>Job completed issue/note</label>
+            <textarea
+              cols="30"
+              rows="10"
+              v-model="item.job_completed_note"
+              disabled
+            ></textarea>
+            <b-form-text id="input-live-help"
+              >Was the job completed based on your instruction or
+              expectations?</b-form-text
+            >
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-sm-12 col-md-12 mt-3">
+            <b-form-checkbox v-model="item.satisfied" disabled
+              >Satisfied</b-form-checkbox
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12" v-else-if="isCategoryScoring">
+      <div v-for="item in job.job_order_category_scorings" :key="item.id">
+        <h4 class="card-title">
+          <center>Thank you for giving us a review &hearts;</center>
+        </h4>
+
+        <div class="form-row">
+          <div class="col-sm-12 col-md-12">
+            <label>Accuracy:</label>
+            <b-form-rating v-model="item.accuracy" disabled></b-form-rating>
+          </div>
+          <div class="col-sm-12 col-md-12 mt-3">
+            <label>Speed:</label>
+            <b-form-rating v-model="item.speed" disabled></b-form-rating>
+          </div>
+          <div class="col-sm-12 col-md-12 mt-3">
+            <label>Quality of work:</label>
+            <b-form-rating
+              v-model="item.quality_of_work"
+              disabled
+            ></b-form-rating>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-sm-12 col-md-12 mt-3">
+            <b-form-checkbox v-model="item.delivered_on_time" disabled
+              >Delivered on time?</b-form-checkbox
+            >
+          </div>
+          <div class="col-sm-12 col-md-12 mt-3" v-if="!item.delivered_on_time">
+            <label>Delivery issue/note</label>
+            <textarea
+              cols="30"
+              rows="10"
+              v-model="item.delivery_note"
+              disabled
+            ></textarea>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-sm-12 col-md-12 mt-3">
+            <b-form-checkbox v-model="item.job_completed" disabled
+              >Job completed</b-form-checkbox
+            >
+          </div>
+          <div class="col-sm-12 col-md-12" v-if="!item.job_completed">
+            <label>Job completed issue/note</label>
+            <textarea
+              cols="30"
+              rows="10"
+              v-model="item.job_completed_note"
+              disabled
+            ></textarea>
+            <b-form-text id="input-live-help"
+              >Was the job completed based on your instruction or
+              expectations?</b-form-text
+            >
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-sm-12 col-md-12 mt-3">
+            <b-form-checkbox v-model="item.satisfied" disabled
+              >Satisfied</b-form-checkbox
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12" v-else-if="!isGeneralScoring">
       <form @submit.prevent="save">
         <div class="form-row">
           <div class="col-sm-12 col-md-12 mt-3">
@@ -82,58 +220,45 @@
         </div>
       </form>
     </div>
-    <div class="col-md-12" v-else-if="isGeneralScoring">
-      <div v-for="item in job.job_order_general_scorings" :key="item.id">
-        <h4 class="card-title">
-          <center>Thank you for giving us a review &hearts;</center>
-        </h4>
-
+    <div class="col-sm-12 col-md-12" v-else-if="!isCategoryScoring">
+      <form @submit.prevent="save">
         <div class="form-row">
-          <div class="col-sm-12 col-md-12">
+          <div class="col-sm-12 col-md-12 mt-3">
             <label>Accuracy:</label>
-            <b-form-rating v-model="item.accuracy" disabled></b-form-rating>
+            <b-form-rating v-model="accuracy"></b-form-rating>
           </div>
           <div class="col-sm-12 col-md-12 mt-3">
             <label>Speed:</label>
-            <b-form-rating v-model="item.speed" disabled></b-form-rating>
+            <b-form-rating v-model="speed"></b-form-rating>
           </div>
           <div class="col-sm-12 col-md-12 mt-3">
             <label>Quality of work:</label>
-            <b-form-rating
-              v-model="item.quality_of_work"
-              disabled
-            ></b-form-rating>
+            <b-form-rating v-model="quality_of_work"></b-form-rating>
           </div>
         </div>
         <div class="form-row">
           <div class="col-sm-12 col-md-12 mt-3">
-            <b-form-checkbox v-model="item.delivered_on_time" disabled
+            <b-form-checkbox v-model="delivered_on_time"
               >Delivered on time?</b-form-checkbox
             >
           </div>
-          <div class="col-sm-12 col-md-12 mt-3" v-if="!item.delivered_on_time">
+          <div class="col-sm-12 col-md-12 mt-3" v-if="!delivered_on_time">
             <label>Delivery issue/note</label>
-            <textarea
-              cols="30"
-              rows="10"
-              v-model="item.delivery_note"
-              disabled
-            ></textarea>
+            <textarea cols="30" rows="10" v-model="delivery_note"></textarea>
           </div>
         </div>
         <div class="form-row">
           <div class="col-sm-12 col-md-12 mt-3">
-            <b-form-checkbox v-model="item.job_completed" disabled
+            <b-form-checkbox v-model="job_completed"
               >Job completed</b-form-checkbox
             >
           </div>
-          <div class="col-sm-12 col-md-12" v-if="!item.job_completed">
+          <div class="col-sm-12 col-md-12 mt-3" v-if="!job_completed">
             <label>Job completed issue/note</label>
             <textarea
               cols="30"
               rows="10"
-              v-model="item.job_completed_note"
-              disabled
+              v-model="job_completed_note"
             ></textarea>
             <b-form-text id="input-live-help"
               >Was the job completed based on your instruction or
@@ -144,13 +269,40 @@
 
         <div class="form-row">
           <div class="col-sm-12 col-md-12 mt-3">
-            <b-form-checkbox v-model="item.satisfied" disabled
-              >Satisfied</b-form-checkbox
-            >
+            <b-form-checkbox v-model="satisfied">Satisfied</b-form-checkbox>
           </div>
         </div>
-      </div>
+
+        <div slot="footer">
+          <div class="pull-right mt-3">
+            <base-button
+              v-if="!loading"
+              native-type="submit"
+              slot="footer"
+              type="submit"
+              round
+              block
+              size="lg"
+            >
+              Save
+            </base-button>
+            <base-button
+              v-else
+              native-type="submit"
+              slot="footer"
+              type="primary"
+              round
+              block
+              size="lg"
+              disabled
+            >
+              Saving...
+            </base-button>
+          </div>
+        </div>
+      </form>
     </div>
+    <!-- category scoring -->
   </div>
 </template>
 
@@ -196,13 +348,6 @@ export default {
       selectedClientCode: "",
       clientUser: {},
       clientCodes: [],
-      job: {
-        request_date: "",
-        due_date: "",
-        job_title: "",
-        job_description: "",
-        client_notes: "",
-      },
       error: "",
     };
   },
@@ -236,7 +381,6 @@ export default {
       }
     },
     async save() {
-      this.$forceUpdate();
       let isValidForm = await this.$validator.validateAll();
       if (isValidForm) {
         this.loading = true;
@@ -273,9 +417,9 @@ export default {
               });
             } else if (this.type == "category") {
               const payload = {
-                staff: this.jobOrder.va_assigned,
+                staff: this.job.va_assigned,
                 client: this.clientUser.id,
-                job_order_category: this.jobOrder.ticket_number,
+                job_order_category: this.job.ticket_number,
                 accuracy: this.accuracy,
                 speed: this.speed,
                 quality_of_work: this.quality_of_work,
@@ -287,6 +431,7 @@ export default {
               };
               await this.saveCategoryScore(payload);
               this.loading = false;
+              this.$emit("refresh", this.job.ticket_number);
               this.successMessage("success");
               this.query = "";
               this.reset();

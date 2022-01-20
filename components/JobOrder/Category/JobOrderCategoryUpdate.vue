@@ -59,6 +59,16 @@
               <card>
                 <h5 class="info-text">
                   Job Order by Category Information
+                  <b-badge
+                    href="#"
+                    variant="primary"
+                    @click.native="modals.classic = true"
+                    v-if="
+                      jobOrderCategory.status == 'complete' ||
+                        jobOrderCategory.status == 'closed'
+                    "
+                    >Please rate our agents who did this task!</b-badge
+                  >
                 </h5>
                 <div class="row justify-content-center mt-5">
                   <div class="col-sm-4 col-md-5">
@@ -94,7 +104,8 @@
                       placeholder="Status"
                       v-model="jobOrderCategory.status"
                       :disabled="
-                        jobOrderCategory.status == 'complete' || jobOrderCategory.status == 'closed'
+                        jobOrderCategory.status == 'complete' ||
+                          jobOrderCategory.status == 'closed'
                       "
                     >
                       <el-option
@@ -134,8 +145,8 @@
                         value-format="yyyy-MM-dd"
                         placeholder="Choose date"
                         :disabled="
-                          staffDisable &&
-                            jobOrderCategory.status == 'complete' ||
+                          (staffDisable &&
+                            jobOrderCategory.status == 'complete') ||
                             'closed'
                         "
                       >
@@ -299,14 +310,35 @@
         </b-skeleton-wrapper>
       </div>
     </div>
+    <modal
+      :show.sync="modals.classic"
+      headerClasses="justify-content-center"
+      class="white-content"
+      centered
+      close-button
+    >
+      <h4 slot="header" class="col-sm-12 col-md-12 card-title">
+        <center>Job order staff scoring</center>
+      </h4>
+      <scoring-add
+        :job="jobOrderCategory"
+        :fetch="fetchJobOrderCategory"
+        :client="clientUser.id"
+        :type="type"
+        @close="closeModal"
+        @refresh="refreshAfterRating"
+      ></scoring-add>
+    </modal>
   </div>
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { DatePicker, Select, Option } from "element-ui";
+import { Modal } from "@/components";
 
 import JobOrderCatComment from "~/components/JobOrder/Category/JobOrderCategoryComment";
 import JobRate from "@/components/JobRating/JobRating.vue";
+import ScoringAdd from "@/components/AgentScoring/ScoringAdd.vue";
 
 import CreateJobOrderCategoryMixin from "@/mixins/CreateJobOrderCategoryMixin.js";
 import Card from "~/components/Cards/Card.vue";
@@ -318,7 +350,9 @@ export default {
     [Select.name]: Select,
     [Option.name]: Option,
     JobOrderCatComment,
+    ScoringAdd,
     JobRate,
+    Modal
   },
   mixins: ["CreateJobOrderCategoryMixin"],
   data() {
@@ -333,6 +367,9 @@ export default {
       apnCategories: [],
       type: "category",
       ticket: "",
+      modals: {
+        classic: false,
+      },
       error: {
         client: "",
         staff: "",
@@ -450,6 +487,9 @@ export default {
   },
   methods: {
     ...mapActions("jobOrderCategory", ["updateJobOrderCategory", "reset"]),
+    closeModal() {
+      this.modals.classic = false;
+    },
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
