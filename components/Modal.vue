@@ -167,4 +167,7 @@ export default {
 .modal.show {
   background-color: rgba(0, 0, 0, 0.3);
 }
+.modal.show .modal-dialog {
+  transform: translate(0, 0);
+}
 </style>
