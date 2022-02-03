@@ -119,7 +119,7 @@ export const actions = {
       return await this.$axios[method](url, payload);
     }
     return await this.$axios[method](url, payload).then((res) => {
-      this.$router.push({ name: "resolution-id___en", params: { id: res.data.id } });
+      this.$router.push({ name: "resolution-id", params: { id: res.data.id } });
     });
   },
   reset({ commit }) {
