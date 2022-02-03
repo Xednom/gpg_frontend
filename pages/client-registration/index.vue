@@ -249,7 +249,7 @@ export default {
                   data: this.register,
                 })
                 .then((res) => {
-                  this.$router.push("/");
+                  this.$router.push("/client-registration/leads");
                 });
             })
             .catch((e) => {
