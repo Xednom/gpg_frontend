@@ -39,13 +39,19 @@
           :key="index"
         >
           <div v-if="notif.staff">
-            <a :href="'/job-order/general/' + notif.target.ticket_number" class="nav-item dropdown-item"
-              >{{ notif.staff }} {{ notif.verb }} the job order {{ notif.target.ticket_number }} in {{ notif.timestamp }}</a
+            <a
+              :href="'/job-order/general/' + notif.target.ticket_number"
+              class="nav-item dropdown-item"
+              >{{ notif.staff }} {{ notif.verb }} the job order
+              {{ notif.target.ticket_number }} in {{ notif.timestamp }}</a
             >
           </div>
           <div v-else-if="notif.client">
-            <a :href="'/job-order/general/' + notif.target.ticket_number" class="nav-item dropdown-item"
-              >{{ notif.client }} {{ notif.verb }} the job order {{ notif.target.ticket_number }} in {{ notif.timestamp }}</a
+            <a
+              :href="'/job-order/general/' + notif.target.ticket_number"
+              class="nav-item dropdown-item"
+              >{{ notif.client }} {{ notif.verb }} the job order
+              {{ notif.target.ticket_number }} in {{ notif.timestamp }}</a
             >
           </div>
         </li>
@@ -86,6 +92,8 @@
 import { CollapseTransition } from "vue2-transitions";
 import { BaseNav, Modal } from "@/components";
 import SidebarToggleButton from "./SidebarToggleButton";
+
+import { debounce } from "lodash";
 
 export default {
   components: {
@@ -148,7 +156,6 @@ export default {
   },
   created() {
     this.fetchNotifications();
-    // this.interval = setInterval(() => this.fetchNotifications(), 5000);
   },
 };
 </script>
