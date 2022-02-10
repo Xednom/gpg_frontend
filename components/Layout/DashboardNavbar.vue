@@ -21,41 +21,27 @@
     </div>
 
     <ul class="navbar-nav" :class="$rtl.isRTL ? 'mr-auto' : 'ml-auto'">
-      <base-dropdown
-        tag="li"
-        :menu-on-right="!$rtl.isRTL"
-        title-tag="a"
-        title-classes="nav-link"
-        class="nav-item"
-      >
+      <li class="current-user">
+        <div class="text-center">
+          <b-badge href="#" variant="info"
+            ><nuxt-link :to="'/notification/'"
+              >Notifications
+              <b-badge variant="light">{{ unread }}</b-badge></nuxt-link
+            ></b-badge
+          >
+        </div>
         <template slot="title">
-          <div class="notification d-none d-lg-block d-xl-block"></div>
-          <i class="tim-icons icon-bell-55"></i>
-          <p class="d-lg-none">New Notifications</p>
+          <div
+            class="notification d-none d-lg-block d-xl-block"
+            v-if="unread != 0"
+          ></div>
+          <i
+            class="tim-icons icon-bell-55"
+            @click="fetchUnread"
+            v-b-tooltip.hover.bottom="'You have ' + unread + ' notifications'"
+          ></i>
         </template>
-        <li
-          class="nav-link"
-          v-for="(notif, index) in notifications"
-          :key="index"
-        >
-          <div v-if="notif.staff">
-            <a
-              :href="'/job-order/general/' + notif.target.ticket_number"
-              class="nav-item dropdown-item"
-              >{{ notif.staff }} {{ notif.verb }} the job order
-              {{ notif.target.ticket_number }} in {{ notif.timestamp }}</a
-            >
-          </div>
-          <div v-else-if="notif.client">
-            <a
-              :href="'/job-order/general/' + notif.target.ticket_number"
-              class="nav-item dropdown-item"
-              >{{ notif.client }} {{ notif.verb }} the job order
-              {{ notif.target.ticket_number }} in {{ notif.timestamp }}</a
-            >
-          </div>
-        </li>
-      </base-dropdown>
+      </li>
       <li class="current-user">
         <span>
           {{ this.$auth.user.first_name }} {{ this.$auth.user.last_name }}
@@ -119,6 +105,8 @@ export default {
       searchModalVisible: false,
       searchQuery: "",
       notifications: [],
+      loading: false,
+      unread: 0,
     };
   },
   methods: {
@@ -142,20 +130,17 @@ export default {
         this.$router.push("/login");
       });
     },
-    async fetchNotifications() {
+    async fetchUnread() {
+      this.loading = true;
       let endpoint = `/api/v1/alerts/`;
-      return await this.$axios
-        .get(endpoint)
-        .then((res) => {
-          this.notifications = res.data.results;
-        })
-        .catch((e) => {
-          throw e;
-        });
+      let response = await this.$axios.get(endpoint);
+      if (response.status == 200) {
+        this.unread = response.data.count;
+      }
     },
   },
   created() {
-    this.fetchNotifications();
+    this.fetchUnread();
   },
 };
 </script>
