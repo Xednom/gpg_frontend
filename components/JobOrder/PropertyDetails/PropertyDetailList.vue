@@ -350,6 +350,7 @@ export default {
           this.showing = res.data.results.length;
           this.currentPage = this.offset;
           this.propertyDetails = res.data.results;
+          this.$root.$emit('fetchUnread');
         })
         .catch((e) => {
           throw e;

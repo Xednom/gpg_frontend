@@ -418,6 +418,7 @@ export default {
         .dispatch("jobOrderCategory/fetchJobOrderCategories", this.pagination)
         .then(() => {
           this.totalRows = this.jobOrderCategories.length;
+          this.$root.$emit('fetchUnread');
           this.isBusy = false;
           this.jobOrderCategories.forEach((item) => {
             if (item.status == "closed") {

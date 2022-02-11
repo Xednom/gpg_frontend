@@ -414,6 +414,7 @@ export default {
         .dispatch("jobOrder/fetchJobOrders", this.pagination)
         .then(() => {
           this.totalRows = this.jobOrders.length;
+          this.$root.$emit('fetchUnread');
           this.jobOrders.forEach((item) => {
             if (item.status == "closed") {
               item._rowVariant = "info";
