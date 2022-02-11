@@ -23,11 +23,10 @@
     <ul class="navbar-nav" :class="$rtl.isRTL ? 'mr-auto' : 'ml-auto'">
       <li class="current-user">
         <div class="text-center">
-          <b-badge href="#" variant="info"
-            ><nuxt-link :to="'/notification/'"
-              >Notifications
-              <b-badge variant="light">{{ unread }}</b-badge></nuxt-link
-            ></b-badge
+          <nuxt-link :to="'/notification/'"
+            >
+            <i class="tim-icons icon-bell-55" v-b-tooltip.hover.bottom="'You have ' + unread + ' notifications'"></i>
+            <b-badge variant="danger" v-if="unread > 0">{{ unread }}</b-badge></nuxt-link
           >
         </div>
         <template slot="title">
@@ -142,6 +141,11 @@ export default {
   created() {
     this.fetchUnread();
   },
+  mounted() {
+    this.$root.$on('fetchUnread', () => {
+      this.fetchUnread();
+    })
+  }
 };
 </script>
 <style scoped>

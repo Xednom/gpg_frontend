@@ -66,8 +66,6 @@ export const actions = {
     let response = await this.$axios.get(endpoint);
     if (response.status == 200) {
       commit("setNotif", response.data.count);
-      console.log("hehe called");
-      console.log(response.data.count);
     }
   },
   async unread({ commit }, payload) {

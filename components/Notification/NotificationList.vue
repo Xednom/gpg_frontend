@@ -26,6 +26,7 @@
                 :sort-direction="sortDirection"
                 :select-mode="selectMode"
                 selectable
+                hover
                 ref="selectableTable"
                 stacked="md"
                 show-empty
@@ -53,12 +54,22 @@
 
                 <template #cell(actor)="row">
                   <div v-if="row.item.staff">
-                    <nuxt-link
-                      :to="
-                        '/job-order/general/' + row.item.target.ticket_number
-                      "
-                      >{{ row.item.staff }} updated the job order ticket #{{ row.item.target.ticket_number }}</nuxt-link
-                    >
+                    <div v-if="row.item.job_order == 'general'">
+                      <nuxt-link
+                        :to="
+                          '/job-order/general/' + row.item.target.ticket_number
+                        "
+                        >{{ row.item.staff }} updated the Job order General ticket #{{ row.item.target.ticket_number }}</nuxt-link
+                      >
+                    </div>
+                    <div v-else-if="row.item.job_order == 'category'">
+                      <nuxt-link
+                        :to="
+                          '/job-order/category/' + row.item.target.ticket_number
+                        "
+                        >{{ row.item.staff }} updated the Job order request by APN ticket #{{ row.item.target.ticket_number }}</nuxt-link
+                      >
+                    </div>
                   </div>
                   <div v-else-if="row.item.client">
                     <nuxt-link
@@ -139,6 +150,7 @@ export default {
      */
     ...mapGetters({
       notifications: "notifications/notifications",
+      clientUser: "user/clientUser",
       pagination: "notifications/notificationsPagination",
       staff: "user/staff",
       user: "user/user",
@@ -230,6 +242,7 @@ export default {
         .dispatch("notifications/fetchNotifications", this.pagination)
         .then(() => {
           this.totalRows = this.notifications.length;
+          this.$root.$emit('fetchUnread');
           this.isBusy = false;
         });
     },
@@ -240,6 +253,7 @@ export default {
             let url = `/api/v1/alerts/${item.id}/`;
             this.$axios.put(url).then(() => {
               this.fetchNotifications();
+              this.$root.$emit('fetchUnread');
               this.fetchUnread();
             });
         })
@@ -275,38 +289,6 @@ export default {
           solid: true,
         }
       );
-    },
-    handleDelete(row) {
-      swal({
-        title: "Are you sure?",
-        text: `You won't be able to revert this!`,
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonClass: "btn btn-success btn-fill",
-        cancelButtonClass: "btn btn-danger btn-fill",
-        confirmButtonText: "Yes, delete it!",
-        buttonsStyling: false,
-      }).then((result) => {
-        if (result.value) {
-          this.deletePropertyDetail(row);
-          let url = `/api/v1/property-detail/${row}/`;
-          try {
-            this.$axios.delete(url);
-            this.fetchPropertyDetails();
-          } catch (err) {
-            console.error(err);
-            this.error = err.response.data;
-            this.errorMessage("danger", this.error);
-          }
-          swal({
-            title: "Deleted!",
-            text: `You deleted ${row}`,
-            type: "success",
-            confirmButtonClass: "btn btn-success btn-fill",
-            buttonsStyling: false,
-          });
-        }
-      });
     },
   },
   async mounted() {
