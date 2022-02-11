@@ -255,7 +255,7 @@
             :link="{
               name: 'Resolution center',
               icon: 'tim-icons icon-paper',
-              path: '/account-files/',
+              path: '/resolution/',
             }"
           >
           </sidebar-item>
@@ -348,6 +348,7 @@ export default {
   },
   mounted() {
     this.initScrollbar();
+    this.$root.$emit('fetchUnread');
   },
 };
 </script>
