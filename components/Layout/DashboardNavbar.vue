@@ -22,10 +22,31 @@
 
     <ul class="navbar-nav" :class="$rtl.isRTL ? 'mr-auto' : 'ml-auto'">
       <li class="current-user">
+        <div class="text-center">
+          <nuxt-link :to="'/notification/'"
+            >
+            <i class="tim-icons icon-bell-55" v-b-tooltip.hover.bottom="'You have ' + unread + ' notifications'"></i>
+            <b-badge variant="danger" v-if="unread > 0">{{ unread }}</b-badge></nuxt-link
+          >
+        </div>
+        <template slot="title">
+          <div
+            class="notification d-none d-lg-block d-xl-block"
+            v-if="unread != 0"
+          ></div>
+          <i
+            class="tim-icons icon-bell-55"
+            @click="fetchUnread"
+            v-b-tooltip.hover.bottom="'You have ' + unread + ' notifications'"
+          ></i>
+        </template>
+      </li>
+      <li class="current-user">
         <span>
           {{ this.$auth.user.first_name }} {{ this.$auth.user.last_name }}
         </span>
       </li>
+
       <base-dropdown
         tag="li"
         :menu-on-right="!$rtl.isRTL"
@@ -57,6 +78,8 @@ import { CollapseTransition } from "vue2-transitions";
 import { BaseNav, Modal } from "@/components";
 import SidebarToggleButton from "./SidebarToggleButton";
 
+import { debounce } from "lodash";
+
 export default {
   components: {
     SidebarToggleButton,
@@ -80,6 +103,9 @@ export default {
       showMenu: false,
       searchModalVisible: false,
       searchQuery: "",
+      notifications: [],
+      loading: false,
+      unread: 0,
     };
   },
   methods: {
@@ -103,7 +129,23 @@ export default {
         this.$router.push("/login");
       });
     },
+    async fetchUnread() {
+      this.loading = true;
+      let endpoint = `/api/v1/alerts/`;
+      let response = await this.$axios.get(endpoint);
+      if (response.status == 200) {
+        this.unread = response.data.count;
+      }
+    },
   },
+  created() {
+    this.fetchUnread();
+  },
+  mounted() {
+    this.$root.$on('fetchUnread', () => {
+      this.fetchUnread();
+    })
+  }
 };
 </script>
 <style scoped>
