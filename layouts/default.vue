@@ -136,6 +136,14 @@
             }"
           >
           </sidebar-item>
+          <sidebar-item
+            :link="{
+              name: 'Forum',
+              icon: 'tim-icons icon-notes',
+              path: '/forums/',
+            }"
+          >
+          </sidebar-item>
         </template>
       </side-bar>
     </div>
@@ -256,6 +264,14 @@
               name: 'Resolution center',
               icon: 'tim-icons icon-paper',
               path: '/resolution/',
+            }"
+          >
+          </sidebar-item>
+          <sidebar-item
+            :link="{
+              name: 'Forum',
+              icon: 'tim-icons icon-notes',
+              path: '/forums/',
             }"
           >
           </sidebar-item>
