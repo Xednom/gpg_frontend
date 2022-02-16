@@ -1,18 +1,16 @@
 <template>
-  <div class="content">
+  <div class="container content">
     <div class="row mt-5">
       <div class="col-12">
         <card card-body-classes="table-full-width">
-          <h4 slot="header" class="card-title">General Job Order</h4>
           <div>
             <b-container fluid>
               <!-- <b-row> -->
               <b-col sm="12" md="4" class="my-1 pull-left">
-                <b-button
-                  class="create-button"
-                  variant="success"
-                  @click="modals.classic = true"
-                  >Create a Thread</b-button
+                <nuxt-link :to="'/forums/create'"
+                  ><b-button class="create-button" variant="success"
+                    >Create a Thread</b-button
+                  ></nuxt-link
                 >
               </b-col>
 
@@ -112,29 +110,11 @@
                   </b-card>
                 </template>
               </b-table>
-
             </b-container>
-          </div>
-          <div
-            slot="footer"
-            class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
-          >
-            <div class="">
-              <p class="card-category"></p>
-            </div>
-            <b-pagination
-              v-model="currentPage"
-              :total-rows="totalRows"
-              :per-page="perPage"
-              align="fill"
-              size="sm"
-              class="my-0"
-            ></b-pagination>
           </div>
         </card>
       </div>
     </div>
-
   </div>
 </template>
 <script>
@@ -198,9 +178,9 @@ export default {
       fuseSearch: null,
       isBusy: false,
       fields: [
-        { key: "title", sortable: true },
-        { key: "author_name", sotrable: true },
-        { key: "is_active", label: "active", sortable: true },
+        { key: "title", label: "topic", sortable: true },
+        { key: "author_name", label: "author", sotrable: true },
+        { key: "is_active", label: "status", sortable: true },
       ],
       totalRows: 1,
       currentPage: 1,
