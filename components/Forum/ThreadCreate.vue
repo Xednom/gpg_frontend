@@ -20,36 +20,51 @@
               </div>
               <div class="form-row">
                 <div class="col-sm-6 col-md-6">
-                  <label for="tags-basic">Staff cc:</label>
-                  <b-form-tags
-                    class="staff-cc"
-                    input-id="tags-basic"
+                  <div class="row">
+                    <label>Staff cc:</label>
+                  </div>
+                  <el-select
+                  multiple
+                    class="select-primary"
+                    filterable
+                    size="large"
+                    name="status"
+                    placeholder="Search here"
                     v-model="staff_carbon_copy"
-                    placeholder="Enter new tags separated by space"
-                    size="sm"
-                    separator=" ,;"
-                    remove-on-delete
-                  ></b-form-tags>
-                  {{ staff_carbon_copy }}
-                  <b-form-text id="tags-remove-on-delete-help" class="mt-2">
-                    Press <kbd>Backspace</kbd> to remove the last tag entered
-                  </b-form-text>
+                  >
+                    <el-option
+                      v-for="option in optionStaffs"
+                      class="select-primary"
+                      :value="option.id"
+                      :label="option.staff_id"
+                      :key="option.staff_id"
+                    >
+                    </el-option>
+                  </el-select>
                 </div>
 
                 <div class="col-sm-6 col-md-6">
-                  <label for="tags-basic">Client cc:</label>
-                  <b-form-tags
-                    class="staff-cc"
-                    input-id="tags-basic"
+                  <div class="row">
+                    <label>Client cc:</label>
+                  </div>
+                  <el-select
+                  multiple
+                    class="select-primary"
+                    filterable
+                    size="large"
+                    name="status"
+                    placeholder="Search here"
                     v-model="client_carbon_copy"
-                    placeholder="Enter new tags separated by space"
-                    size="sm"
-                    separator=" ,;"
-                    remove-on-delete
-                  ></b-form-tags>
-                  <b-form-text id="tags-remove-on-delete-help" class="mt-2">
-                    Press <kbd>Backspace</kbd> to remove the last tag entered
-                  </b-form-text>
+                  >
+                    <el-option
+                      v-for="option in optionClients"
+                      class="select-primary"
+                      :value="option.id"
+                      :label="option.client_code"
+                      :key="option.client_code"
+                    >
+                    </el-option>
+                  </el-select>
                 </div>
               </div>
               <div class="form-row mt-3">
@@ -101,6 +116,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import ForumMixin from "@/mixins/ForumMixin.js";
+import UserMixin from "@/mixins/UserMixin.js";
 import VueTypeaheadBootstrap from "vue-typeahead-bootstrap";
 import { DatePicker, Select, Option } from "element-ui";
 import { BaseAlert } from "@/components";
@@ -114,7 +130,7 @@ export default {
     [Option.name]: Option,
     VueTypeaheadBootstrap,
   },
-  mixins: [ForumMixin],
+  mixins: [ForumMixin, UserMixin],
   props: {
     fetch: {
       type: Function,
@@ -126,32 +142,33 @@ export default {
       loading: false,
       saving: false,
       success: false,
-      staff_carbon_copy: [
-        {
-          staff_id: "",
-        },
-      ],
-      client_carbon_copy: [
-        {
-          client_id: "",
-        },
-      ],
       error: "",
+      optionStaffs: [],
+      optionClients: [],
+      selected: [],
     };
   },
   methods: {
-    ...mapActions("forum", ["reset", "saveThread"]),
+    ...mapActions("forum", ["resetThread", "saveThread"]),
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
-    async fetchCategory() {
-      await this.$store.dispatch("resolution/fetchCategory");
-    },
-    async fetchClient(id) {
+    async fetchAllStaff() {
       try {
-        await this.$store.dispatch("user/fetchClientUser", id);
+        await this.$store.dispatch("user/fetchStaffCode");
+        this.optionStaffs = this.staffs;
+        console.log(this.staffs);
       } catch (e) {
-        this.errorMessage("danger", e.response.data);
+        throw e;
+      }
+    },
+    async fetchAllClientCode() {
+      try {
+        await this.$store.dispatch("user/fetchClientCode");
+        this.optionClients = this.clients;
+        console.log(this.clients);
+      } catch (e) {
+        throw e;
       }
     },
     async save() {
@@ -170,7 +187,7 @@ export default {
             let response = await this.saveThread(payload);
             console.log(response);
             this.loading = false;
-            this.reset();
+            this.resetThread();
           } catch (err) {
             console.error(err);
             this.loading = false;
@@ -182,15 +199,14 @@ export default {
           const payload = {
             title: this.title,
             content: this.content,
-            author: this.author,
+            author: this.$auth.user.id,
             staff_carbon_copy: this.staff_carbon_copy,
             client_carbon_copy: this.client_carbon_copy,
           };
-          await this.saveResolution(payload);
+          await this.saveThread(payload);
           this.loading = false;
-          this.reset();
+          this.resetThread();
           this.$validator.reset();
-          this.fetch();
         }
       }
     },
@@ -218,8 +234,8 @@ export default {
     },
   },
   mounted() {
-    this.fetchClient(this.$auth.user.id);
-    this.fetchCategory();
+    this.fetchAllStaff();
+    this.fetchAllClientCode();
   },
 };
 </script>
