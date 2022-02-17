@@ -77,14 +77,18 @@ const threadState = {
       let url = "/api/v1/thread/";
       try {
         return await this.$axios.post(url, payload).then(() => {
+          this.$router.push({
+            name: "forums-id___en",
+            params: { id: res.data.id }
+          });
           commit("setBasicField", payload);
         })
       } catch(err) {
         console.error(err)
       }
     },
-    reset({commit}) {
-      commit("reset");
+    resetThread({commit}) {
+      commit("resetThread");
     }
   };
   

@@ -1,3 +1,5 @@
+import { mapGetters } from "vuex";
+
 export default {
   methods: {
     setBasicStoreValue(fieldName, value) {
@@ -8,6 +10,9 @@ export default {
     },
   },
   computed: {
+    ...mapGetters({
+      thread: "forum/thread",
+    }),
     title: {
       get() {
         return this.$store.getters["forum/title"];
@@ -33,12 +38,12 @@ export default {
       },
     },
     client_carbon_copy: {
-        get() {
-          return this.$store.getters["forum/client_carbon_copy"];
-        },
-        set(value) {
-          this.setBasicStoreValue("client_carbon_copy", value);
-        },
+      get() {
+        return this.$store.getters["forum/client_carbon_copy"];
       },
+      set(value) {
+        this.setBasicStoreValue("client_carbon_copy", value);
+      },
+    },
   },
 };
