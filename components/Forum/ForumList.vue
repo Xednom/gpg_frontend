@@ -79,20 +79,19 @@
                     <strong>Loading...</strong>
                   </div>
                 </template>
-                <template #cell(ticket_number)="row">
+                <template #cell(title)="row">
                   <nuxt-link
                     class="text-dark"
-                    :to="'/job-order/general/' + row.item.ticket_number"
-                    @click="fetchJobOrder(row.item.id)"
+                    :to="'/forums/' + row.item.id"
                   >
                     <b-badge variant="primary">{{
-                      row.item.ticket_number
+                      row.item.title
                     }}</b-badge>
                   </nuxt-link>
                 </template>
 
                 <template #cell(is_active)="row">
-                  <span v-if="row.item.status">
+                  <span v-if="row.item.is_active">
                     <b-badge variant="success">active</b-badge>
                   </span>
                   <span v-else>
