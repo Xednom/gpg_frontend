@@ -33,6 +33,7 @@
       <div class="form-row">
         <div class="col-sm-12 col-md-12">
           <b-form-textarea
+            v-if="threadComment.is_active"
             class="form-control"
             placeholder="Comment"
             v-model="comment"
@@ -47,7 +48,7 @@
       <div slot="footer">
         <div class="pull-right">
           <base-button
-            v-if="!saving"
+            v-if="!saving && threadComment.is_active"
             native-type="submit"
             slot="footer"
             type="submit"
@@ -58,7 +59,7 @@
             Post
           </base-button>
           <base-button
-            v-else
+            v-else-if="saving"
             native-type="submit"
             slot="footer"
             type="primary"
@@ -123,7 +124,7 @@ export default {
         } catch (err) {
           this.saving = false;
           this.error = err;
-          this.errorMessage("danger", this.error);
+          this.errorMessage("danger", e.response.data);
         }
       } else {
         try {
@@ -137,7 +138,7 @@ export default {
           this.resetComment();
         } catch (e) {
           this.saving = false;
-          this.errorMessage("danger", this.error);
+          this.errorMessage("danger", e.response.data);
         }
       }
     },
