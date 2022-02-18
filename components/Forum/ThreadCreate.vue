@@ -19,12 +19,43 @@
                 </div>
               </div>
               <div class="form-row">
+                <div
+                  class="col-sm-12 col-md-12"
+                  v-if="$auth.user.designation_category != 'staff'"
+                >
+                  <div class="row">
+                    <label>Staff cc:</label>
+                  </div>
+                  <el-select
+                    multiple
+                    class="select-primary col-sm-12 col-md-12"
+                    filterable
+                    size="large"
+                    name="status"
+                    placeholder="Search here"
+                    v-model="staff_carbon_copy"
+                  >
+                    <el-option
+                      v-for="option in optionStaffs"
+                      class="select-primary"
+                      :value="option.id"
+                      :label="option.staff_id"
+                      :key="option.staff_id"
+                    >
+                    </el-option>
+                  </el-select>
+                </div>
+              </div>
+              <div
+                class="form-row"
+                v-if="$auth.user.designation_category == 'staff'"
+              >
                 <div class="col-sm-6 col-md-6">
                   <div class="row">
                     <label>Staff cc:</label>
                   </div>
                   <el-select
-                  multiple
+                    multiple
                     class="select-primary"
                     filterable
                     size="large"
@@ -48,7 +79,7 @@
                     <label>Client cc:</label>
                   </div>
                   <el-select
-                  multiple
+                    multiple
                     class="select-primary"
                     filterable
                     size="large"

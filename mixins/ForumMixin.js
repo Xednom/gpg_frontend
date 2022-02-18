@@ -45,5 +45,13 @@ export default {
         this.setBasicStoreValue("client_carbon_copy", value);
       },
     },
+    comment: {
+      get() {
+        return this.$store.getters["forum/comment"];
+      },
+      set(value) {
+        this.setBasicStoreValue("comment", value);
+      },
+    }
   },
 };

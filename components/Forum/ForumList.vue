@@ -80,13 +80,8 @@
                   </div>
                 </template>
                 <template #cell(title)="row">
-                  <nuxt-link
-                    class="text-dark"
-                    :to="'/forums/' + row.item.id"
-                  >
-                    <b-badge variant="primary">{{
-                      row.item.title
-                    }}</b-badge>
+                  <nuxt-link class="text-dark" :to="'/forums/' + row.item.id">
+                    {{ row.item.title }}
                   </nuxt-link>
                 </template>
 
@@ -178,7 +173,7 @@ export default {
       isBusy: false,
       fields: [
         { key: "title", label: "topic", sortable: true },
-        { key: "author_name", label: "author", sotrable: true },
+        { key: "author_username", label: "author", sotrable: true },
         { key: "is_active", label: "status", sortable: true },
       ],
       totalRows: 1,

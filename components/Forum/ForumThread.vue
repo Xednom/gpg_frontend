@@ -1,44 +1,60 @@
 <template>
   <div class="content">
     <div class="container">
-      <div class="row">
-        <card card-body-classes="table-full-width">
-          <div class="col-md-12">
-            <form @submit.prevent="save">
-              <h2 class="card-title">{{ thread.title }}</h2>
-              <hr />
-              <div class="form-row">
-                <div class="col-sm-12 col-md-12">
-                  <b-form-input
-                    v-model="thread.author_name"
-                    lazy-formatter
-                    plaintext
-                  ></b-form-input>
+      <b-overlay :show="show" rounded="sm">
+        <div class="row">
+          <card card-body-classes="table-full-width">
+            <div class="col-md-12">
+              <form @submit.prevent="save">
+                <h2 class="card-title">{{ thread.title }}</h2> <div class="pull-right">
+                  <nuxt-link to="/forums">Return back to list</nuxt-link>
                 </div>
-                <div class="col-sm-12 col-md-12 mt-3">
-                  <blockquote>
-                    <b-form-textarea
-                      id="textarea-plaintext"
+                <hr />
+                <div class="form-row">
+                  <div class="col-sm-12 col-md-12">
+                    <b-form-input
+                      v-model="thread.author_username"
+                      lazy-formatter
                       plaintext
-                      :value="thread.content"
-                    ></b-form-textarea>
-                  </blockquote>
+                      v-b-tooltip.hover
+                      title="Author"
+                    ></b-form-input>
+                  </div>
+                  <div class="col-sm-12 col-md-12 mt-3">
+                    <blockquote>
+                      <b-form-textarea
+                        id="textarea-plaintext"
+                        plaintext
+                        :value="thread.content"
+                      ></b-form-textarea>
+                    </blockquote>
+                  </div>
                 </div>
+              </form>
+              <hr />
+              <!-- comment goes here -->
+              <div class="col-md-12">
+                <forum-comment
+                  :thread-comment="thread"
+                  :fetch="refresh"
+                ></forum-comment>
               </div>
-            </form>
-          </div>
-        </card>
-      </div>
+            </div>
+          </card>
+        </div>
+      </b-overlay>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 import ForumMixin from "@/mixins/ForumMixin.js";
 import VueTypeaheadBootstrap from "vue-typeahead-bootstrap";
 import { DatePicker, Select, Option } from "element-ui";
 import { BaseAlert } from "@/components";
+
+import ForumComment from "@/components/Forum/ForumComment.vue";
 
 export default {
   name: "resolution_create",
@@ -48,6 +64,7 @@ export default {
     [Select.name]: Select,
     [Option.name]: Option,
     VueTypeaheadBootstrap,
+    ForumComment,
   },
   mixins: [ForumMixin],
   data() {
@@ -55,10 +72,8 @@ export default {
       loading: false,
       saving: false,
       success: false,
-      resolution: {},
-      balance: "",
-      query: "",
       error: "",
+      show: false,
     };
   },
   methods: {
@@ -66,12 +81,16 @@ export default {
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
-    async fetchCategory() {
-      await this.$store.dispatch("resolution/fetchCategory");
-    },
     async fetchClient(id) {
       try {
         await this.$store.dispatch("user/fetchClientUser", id);
+      } catch (e) {
+        this.errorMessage("danger", e.response.data);
+      }
+    },
+    async fetchThreadComment(id) {
+      try {
+        await this.$store.dispatch("forum/fetchThread", id);
       } catch (e) {
         this.errorMessage("danger", e.response.data);
       }
@@ -102,7 +121,6 @@ export default {
               this.$validator.reset();
             }
           } catch (err) {
-            console.error(err);
             this.loading = false;
             this.success = false;
             this.error = err;
@@ -122,12 +140,17 @@ export default {
       }
     },
     async fetchThread(id) {
+      this.show = true;
       try {
         await this.$store.dispatch("forum/fetchThread", id);
-        console.log(this.thread);
+        this.show = false;
       } catch (e) {
+        this.show = false;
         this.errorMessage("danger", e.response.data);
       }
+    },
+    refresh() {
+      this.fetchThreadComment(this.$route.params.id);
     },
     successMessage(variant = null) {
       this.$bvToast.toast("A successful update", {
@@ -138,12 +161,12 @@ export default {
     },
     errorMessage(variant = null, error) {
       this.$bvToast.toast(
-        error.date_submitted
-          ? "Date submitted: " + error.date_submitted
-          : error.category
-          ? "Category: " + error.category
-          : error.description
-          ? "Description: " + error.description
+        error.thread
+          ? "Thread: " + error.thread
+          : error.author
+          ? "Author: " + error.author
+          : error.comment
+          ? "Comment: " + error.comment
           : error.detail
           ? "Detail: " + error.detail
           : error.non_field_errors
