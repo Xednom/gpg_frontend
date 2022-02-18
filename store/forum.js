@@ -64,7 +64,6 @@ export const actions = {
       .get("/api/v1/thread/", { params: params })
       .then((res) => {
         commit("setThreads", { threads: res.data.results });
-        console.log(res.data.results);
         return res;
       })
       .catch((e) => {
@@ -85,7 +84,7 @@ export const actions = {
   async saveThread({ commit }, payload) {
     let url = "/api/v1/thread/";
     try {
-      return await this.$axios.post(url, payload).then(() => {
+      return await this.$axios.post(url, payload).then((res) => {
         this.$router.push({
           name: "forums-id___en",
           params: { id: res.data.id },
