@@ -226,7 +226,6 @@ export default {
       try {
         await this.$axios.get(endpoint).then((res) => {
           this.clientUser = res.data;
-          console.log(this.clientUser);
         });
       } catch (err) {
         console.error(err.response.data);
@@ -237,7 +236,6 @@ export default {
       try {
         await this.$axios.get(endpoint).then((res) => {
           this.staffUser = res.data;
-          console.log(this.staffUser.hourly_rate);
         });
       } catch (err) {
         console.error(err.response.data);
