@@ -95,7 +95,7 @@
                   >
                 </template>
 
-                <template #cell(property_detail)="row">
+                <template #cell(property_detail__apn)="row">
                   <nuxt-link
                     :to="
                       '/job-order/property-detail/' +
@@ -104,7 +104,7 @@
                     target="_blank"
                   >
                     <b-badge variant="primary">{{
-                      row.item.property_detail
+                      row.item.property_detail__apn
                     }}</b-badge></nuxt-link
                   >
                 </template>
@@ -325,7 +325,7 @@ export default {
       fields: [
         { key: "ticket_number", sortable: true },
         { key: "created_at", sortable: true },
-        { key: "property_detail", label: "APN", sortable: true },
+        { key: "property_detail__apn", label: "APN", sortable: true },
         { key: "client_code", sortable: true, requiredStaff: true },
         { key: "category_", sortable: true },
         { key: "status_", sortable: true },

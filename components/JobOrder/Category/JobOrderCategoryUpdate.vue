@@ -130,10 +130,10 @@
                     <nuxt-link
                       :to="
                         '/job-order/property-detail/' +
-                          jobOrderCategory.property_detail
+                          jobOrderCategory.ticket_number
                       "
                       target="_blank"
-                      >{{ jobOrderCategory.property_detail }}</nuxt-link
+                      >{{ jobOrderCategory.property_detail__apn }}</nuxt-link
                     >
                   </div>
                   <div class="col-sm-5 col-md-5">

@@ -74,7 +74,7 @@
               <el-option
                 v-for="option in propertyDetails"
                 class="select-primary"
-                :value="option.apn"
+                :value="option.id"
                 :label="option.apn"
                 :key="option.id"
               >
