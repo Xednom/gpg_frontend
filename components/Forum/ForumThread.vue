@@ -80,7 +80,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions("forum", ["reset", "saveResolution"]),
+    ...mapActions("forum", ["reset"]),
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
@@ -96,50 +96,6 @@ export default {
         await this.$store.dispatch("forum/fetchThread", id);
       } catch (e) {
         this.errorMessage("danger", e.response.data);
-      }
-    },
-    async save() {
-      let isValidForm = await this.$validator.validateAll();
-      if (isValidForm) {
-        this.loading = true;
-        if (
-          this.$auth.user.designation_category == "new_client" ||
-          this.$auth.user.designation_category == "current_client" ||
-          this.$auth.user.designation_category == "affiliate_partner"
-        ) {
-          const payload = {
-            id: this.resolution.id,
-            additional_notes: this.resolution.additional_notes,
-          };
-          try {
-            if (this.balance < 0) {
-              this.loading = false;
-              this.deficitMessage("danger");
-            } else {
-              let response = await this.saveResolution(payload);
-              console.log(response);
-              this.loading = false;
-              this.successMessage("success");
-              this.reset();
-              this.$validator.reset();
-            }
-          } catch (err) {
-            this.loading = false;
-            this.success = false;
-            this.error = err;
-            this.errorMessage("danger", err.response.data);
-          }
-        } else {
-          const payload = {
-            id: this.resolution.id,
-            additional_notes: this.resolution.additional_notes,
-          };
-          await this.saveResolution(payload);
-          this.loading = false;
-          this.reset();
-          this.$validator.reset();
-          this.fetch();
-        }
       }
     },
     async fetchThread(id) {
