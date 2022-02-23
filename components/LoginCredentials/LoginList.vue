@@ -238,7 +238,6 @@ export default {
         { key: "client", sortable: true, requiredStaff: true },
         { key: "category", sortable: true },
         { key: "url", sortable: true },
-        { key: "username", sortable: true },
         { key: "actions", label: "Actions" },
       ],
       totalRows: 1,
