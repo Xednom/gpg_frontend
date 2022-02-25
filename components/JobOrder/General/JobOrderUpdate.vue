@@ -49,7 +49,9 @@
                 href="#"
                 variant="primary"
                 @click.native="modals.classic = true"
-                v-if="jobOrder.status == 'complete' || jobOrder.status == 'closed'"
+                v-if="
+                  jobOrder.status == 'complete' || jobOrder.status == 'closed'
+                "
                 >Please rate our agents who did this task!</b-badge
               >
             </h4>
@@ -231,7 +233,7 @@
           &nbsp;
           <div
             class="col-sm-12 col-md-12"
-            v-if="jobOrder.status == 'complete' || 'closed'"
+            v-if="jobOrder.status == 'complete' || jobOrder.status == 'closed'"
           >
             <job-rate
               :job="jobOrder"
@@ -273,7 +275,7 @@
       close-button
     >
       <h4 slot="header" class="col-sm-12 col-md-12 card-title">
-        <center>Job order staff scoring</center> 
+        <center>Job order staff scoring</center>
       </h4>
       <scoring-add
         :job="jobOrder"
@@ -502,6 +504,7 @@ export default {
           await this.updateJobOrder(staffPayload)
             .then(() => {
               this.saving = false;
+              this.successMessage("success");
             })
             .catch((e) => {
               this.saving = false;
