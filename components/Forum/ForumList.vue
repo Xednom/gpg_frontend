@@ -178,7 +178,7 @@ export default {
       ],
       totalRows: 1,
       currentPage: 1,
-      perPage: 10,
+      perPage: 15,
       pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
       sortBy: "",
       sortDesc: false,
