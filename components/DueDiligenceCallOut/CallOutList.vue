@@ -56,6 +56,7 @@
 
               <!-- Main table element -->
               <b-table
+                responsive
                 :items="callOuts"
                 :fields="fields"
                 :current-page="currentPage"
@@ -65,7 +66,7 @@
                 :sort-by.sync="sortBy"
                 :sort-desc.sync="sortDesc"
                 :sort-direction="sortDirection"
-                stacked="md"
+                stacked="sm"
                 show-empty
                 small
                 @filtered="onFiltered"
@@ -81,8 +82,65 @@
                 </template>
 
                 <template #cell(dd_link)="row">
-                  <a :href="row.item.dd_link" v-if="row.item.dd_link" target="_blank">link</a>
-                   </template>
+                  <a
+                    :href="row.item.dd_link"
+                    v-if="row.item.dd_link"
+                    target="_blank"
+                    >link</a
+                  >
+                </template>
+
+                <template #cell(initial_due_diligence_status)="row">
+                    <span v-if="row.item.initial_due_diligence_status">
+                      <b-badge variant="success">{{
+                        row.item.initial_due_diligence_status
+                      }}</b-badge>
+                    </span>
+                    <span v-else>-</span>
+                </template>
+
+                <template #cell(initial_dd_date_complete)="row">
+                    <span v-if="row.item.initial_dd_date_complete">
+                      {{ row.item.initial_dd_date_complete }}
+                    </span>
+                    <span v-else>-</span>
+                </template>
+
+                <template #cell(call_out_status)="row">
+                    <span v-if="row.item.call_out_status">
+                      <b-badge variant="success">{{
+                        row.item.call_out_status
+                      }}</b-badge>
+                    </span>
+                    <span v-else>-</span>
+                </template>
+
+                <template #cell(tax_data_status)="row">
+                    <span v-if="row.item.tax_data_status">
+                      <b-badge variant="success">{{
+                        row.item.tax_data_status
+                      }}</b-badge>
+                    </span>
+                    <span v-else>-</span>
+                </template>
+
+                <template #cell(zoning_data_status)="row">
+                    <span v-if="row.item.zoning_data_status">
+                      <b-badge variant="success">{{
+                        row.item.zoning_data_status
+                      }}</b-badge>
+                    </span>
+                    <span v-else>-</span>
+                </template>
+
+                <template #cell(utilities_data_status)="row">
+                    <span v-if="row.item.utilities_data_status">
+                      <b-badge variant="success">{{
+                        row.item.utilities_data_status
+                      }}</b-badge>
+                    </span>
+                    <span v-else>-</span>
+                </template>
 
                 <template #cell(actions)="row">
                   <b-button size="sm" @click="row.toggleDetails">
@@ -230,6 +288,9 @@ export default {
         { key: "initial_due_diligence_status", sortable: true },
         { key: "initial_dd_date_complete", sortable: true },
         { key: "call_out_status", sortable: true },
+        { key: "tax_data_status", sortable: true },
+        { key: "zoning_data_status", sortable: true },
+        { key: "utilities_data_status", sortable: true },
         { key: "call_out_dd_date_complete", sortable: true },
         { key: "actions", label: "Actions" },
       ],
@@ -319,13 +380,16 @@ export default {
     // },
 
     async fetchCallOuts() {
+      this.isBusy = true;
       return await this.$axios
         .get(`/api/v1/call-out/`)
         .then((res) => {
+          this.isBusy = false;
           this.callOuts = res.data.results;
           this.totalRows = this.callOuts.length;
         })
         .catch((e) => {
+          this.isBusy = false;
           throw e;
         });
     },
