@@ -97,6 +97,23 @@
                     -
                   </span>
                 </template>
+                <template #cell(status)="row">
+                  <span v-if="row.item.status == 'pending'">
+                    <b-badge variant="warning">Pending</b-badge>
+                  </span>
+                  <span v-if="row.item.status == 'in_progress'">
+                    <b-badge variant="info">In progress</b-badge>
+                  </span>
+                  <span v-if="row.item.status == 'resolution_provided'">
+                    <b-badge variant="success">Resolution provided</b-badge>
+                  </span>
+                  <span v-if="row.item.status == 'on_hold'">
+                    <b-badge variant="secondary">On hold</b-badge>
+                  </span>
+                  <span v-if="row.item.status == 'closed'">
+                    <b-badge variant="dark">Closed</b-badge>
+                  </span>
+                </template>
               </b-table>
 
               <!-- Info modal -->
