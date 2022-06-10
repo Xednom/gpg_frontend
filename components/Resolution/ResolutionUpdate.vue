@@ -1,5 +1,6 @@
 <template>
   <div class="content">
+    <b-overlay :show="show" rounded="sm">
     <div class="container">
       <div class="row">
         <card card-body-classes="table-full-width">
@@ -74,7 +75,7 @@
                   >
                   </textarea>
                 </div>
-                <div class="col-sm-12 col-md-12 mt-3">
+                <!-- <div class="col-sm-12 col-md-12 mt-3">
                   <label>Additional notes</label>
                   <textarea
                     class="form-control"
@@ -82,14 +83,24 @@
                     :disabled="resolution.status == 'closed'"
                   >
                   </textarea>
-                </div>
+                </div> -->
+              </div>
+
+              <div>
+                <comment
+                  :items="resolution.resolution_comments"
+                  :item="resolution"
+                  url="resolution"
+                  store="resolution"
+                  @refresh="fetchResolution(resolution.id)"
+                ></comment>
               </div>
 
               <div slot="footer">
                 <div class="pull-left">
                   <nuxt-link to="/resolution">Return back to list</nuxt-link>
                 </div>
-                <div class="pull-right">
+                <!-- <div class="pull-right">
                   <base-button
                     v-if="!loading"
                     native-type="submit"
@@ -113,13 +124,14 @@
                   >
                     Saving...
                   </base-button>
-                </div>
+                </div> -->
               </div>
             </form>
           </div>
         </card>
       </div>
     </div>
+    </b-overlay>
   </div>
 </template>
 
@@ -131,6 +143,8 @@ import { DatePicker, Select, Option } from "element-ui";
 import { BaseAlert } from "@/components";
 import { debounce } from "lodash";
 
+import Comment from "@/components/Comments/Comment.vue";
+
 export default {
   name: "resolution_create",
   components: {
@@ -139,6 +153,7 @@ export default {
     [Select.name]: Select,
     [Option.name]: Option,
     VueTypeaheadBootstrap,
+    Comment,
   },
   mixins: [CreateResolutionMixin],
   props: {
@@ -149,9 +164,11 @@ export default {
   },
   data() {
     return {
+      appName: "resolution",
       loading: false,
       saving: false,
       success: false,
+      show: false,
       resolution: {},
       balance: "",
       query: "",
@@ -252,14 +269,17 @@ export default {
       });
     },
     async fetchResolution(id) {
+      this.show = true;
       try {
         let endpoint = `/api/v1/resolution/${id}/`;
         let response = await this.$axios.get(endpoint);
         if (response.status == 200) {
+          this.show = false
           this.resolution = response.data;
         }
         console.log(response.status == 200);
       } catch (e) {
+        this.show = false;
         this.errorMessage("danger", e.response.data);
       }
     },
@@ -308,7 +328,7 @@ export default {
     ...mapGetters({
       clientUser: "user/clientUser",
       categories: "resolution/categories",
-      resolution: "resolution/resolution",
+      // resolution: "resolution/resolution",
     }),
     date_submitted: {
       get() {
