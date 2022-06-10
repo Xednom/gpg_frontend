@@ -80,7 +80,7 @@
                   </div>
                 </template>
                 <template #cell(title)="row">
-                  <nuxt-link class="text-dark" :to="'/forums/' + row.item.id">
+                  <nuxt-link :to="'/forums/' + row.item.id">
                     {{ row.item.title }}
                   </nuxt-link>
                 </template>
