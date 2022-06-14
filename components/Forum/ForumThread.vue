@@ -7,8 +7,10 @@
             <div class="col-md-12">
               <form @submit.prevent="save">
                 <h2 class="card-title">{{ thread.title }}</h2>
-                <b-badge variant="success" v-if="thread.is_active">active</b-badge>
-                <b-badge variant="danger" v-else-if="!thread.is_active">inactive</b-badge>
+                <b-badge variant="success" v-if="thread.status == 'active'">active</b-badge>
+                <b-badge variant="danger" v-else-if="thread.status == 'closed'">closed</b-badge>
+                <b-badge variant="warning" v-else-if="thread.status == 'on_hold'">on hold</b-badge>
+                <b-badge variant="secondary" v-else-if="thread.status == 'canceled'">canceled</b-badge>
                 <div class="pull-right">
                   <nuxt-link to="/forums">Return back to list</nuxt-link>
                 </div>

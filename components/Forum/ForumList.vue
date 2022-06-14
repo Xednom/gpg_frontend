@@ -64,6 +64,7 @@
               <b-table
                 :items="threads"
                 :fields="fields"
+                :busy="isBusy"
                 sticky-header
                 responsive
                 no-border-collapse
@@ -85,12 +86,18 @@
                   </nuxt-link>
                 </template>
 
-                <template #cell(is_active)="row">
-                  <span v-if="row.item.is_active">
+                <template #cell(status)="row">
+                  <span v-if="row.item.status == 'active'">
                     <b-badge variant="success">active</b-badge>
                   </span>
-                  <span v-else>
-                    <b-badge variant="danger">inactive</b-badge>
+                  <span v-else-if="row.item.status == 'closed'">
+                    <b-badge variant="danger">closed</b-badge>
+                  </span>
+                  <span v-else-if="row.item.status == 'on_hold'">
+                    <b-badge variant="warning">on hold</b-badge>
+                  </span>
+                  <span v-else-if="row.item.status == 'canceled'">
+                    <b-badge variant="secondary">canceled</b-badge>
                   </span>
                 </template>
 
@@ -174,7 +181,7 @@ export default {
       fields: [
         { key: "title", label: "topic", sortable: true },
         { key: "author_username", label: "author", sotrable: true },
-        { key: "is_active", label: "status", sortable: true },
+        { key: "status", label: "status", sortable: true },
       ],
       totalRows: 1,
       currentPage: 1,
