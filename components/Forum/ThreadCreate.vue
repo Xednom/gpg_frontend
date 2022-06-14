@@ -23,27 +23,32 @@
                   class="col-sm-12 col-md-12"
                   v-if="$auth.user.designation_category != 'staff'"
                 >
-                  <div class="row">
-                    <label>Staff cc:</label>
-                  </div>
-                  <el-select
-                    multiple
-                    class="select-primary col-sm-12 col-md-12"
-                    filterable
-                    size="large"
-                    name="status"
-                    placeholder="Search here"
-                    v-model="staff_carbon_copy"
-                  >
-                    <el-option
-                      v-for="option in optionStaffs"
-                      class="select-primary"
-                      :value="option.id"
-                      :label="option.staff_id"
-                      :key="option.staff_id"
+                  <div class="col-sm-6 col-md-6">
+                    <div class="row">
+                      <label>Staff cc:</label>
+                    </div>
+                    <el-select
+                      multiple
+                      class="select-primary col-sm-12 col-md-12"
+                      filterable
+                      remote
+                      size="large"
+                      name="status"
+                      placeholder="Search here"
+                      v-model="staff_carbon_copy"
+                      :remote-method="filterStaffCode"
+                      :loading="loadStaff"
                     >
-                    </el-option>
-                  </el-select>
+                      <el-option
+                        v-for="option in options"
+                        class="select-primary"
+                        :value="option.id"
+                        :label="option.staff_id"
+                        :key="option.staff_id"
+                      >
+                      </el-option>
+                    </el-select>
+                  </div>
                 </div>
               </div>
               <div
@@ -56,15 +61,18 @@
                   </div>
                   <el-select
                     multiple
-                    class="select-primary"
+                    class="select-primary col-sm-12 col-md-12"
                     filterable
+                    remote
                     size="large"
                     name="status"
                     placeholder="Search here"
                     v-model="staff_carbon_copy"
+                    :remote-method="filterStaffCode"
+                    :loading="loadStaff"
                   >
                     <el-option
-                      v-for="option in optionStaffs"
+                      v-for="option in options"
                       class="select-primary"
                       :value="option.id"
                       :label="option.staff_id"
@@ -82,10 +90,13 @@
                     multiple
                     class="select-primary"
                     filterable
+                    remote
                     size="large"
                     name="status"
                     placeholder="Search here"
                     v-model="client_carbon_copy"
+                    :loading="loadClient"
+                    :remote-method="filterClientCode"
                   >
                     <el-option
                       v-for="option in optionClients"
@@ -171,12 +182,19 @@ export default {
   data() {
     return {
       loading: false,
+      loadStaff: false,
+      loadClient: false,
       saving: false,
       success: false,
       error: "",
       optionStaffs: [],
       optionClients: [],
       selected: [],
+      list: [],
+      listClient: [],
+      clientList: [],
+      options: [],
+      clientOptions: [],
     };
   },
   methods: {
@@ -185,20 +203,71 @@ export default {
       return this.errors.first(fieldName);
     },
     async fetchAllStaff() {
+      this.loadStaff = true;
       try {
         await this.$store.dispatch("user/fetchStaffCode");
-        this.optionStaffs = this.staffs;
-        console.log(this.staffs);
+        this.loadStaff = false;
+        this.list = this.staffs;
       } catch (e) {
+        this.loadStaff = false;
         throw e;
       }
     },
+    async filterStaffCode(query) {
+      this.loadStaff = true;
+      if (query !== "") {
+        try {
+          this.loadStaff = false;
+          setTimeout(() => {
+            this.loading = false;
+            this.options = this.list.filter((item) => {
+              let staff_code =
+                item.staff_id.toLowerCase().indexOf(query.toLowerCase()) > -1;
+              console.log(item.staff_id);
+              return staff_code;
+            });
+          }, 200);
+        } catch (e) {
+          this.loadStaff = false;
+          throw e;
+        }
+      } else {
+        this.loadStaff = false;
+        this.options = [];
+      }
+    },
+    async filterClientCode(query) {
+      this.loadClient = true;
+      if (query !== "") {
+        try {
+          this.loadClient = false;
+          setTimeout(() => {
+            this.loadClient = false;
+            this.optionClients = this.listClient.filter((item) => {
+              console.log(item);
+              let client_code =
+                item.client_code.toLowerCase().indexOf(query.toLowerCase()) >
+                -1;
+              return client_code;
+            });
+          }, 200);
+        } catch (e) {
+          this.loadClient = false;
+          throw e;
+        }
+      } else {
+        this.loadStaff = false;
+        this.options = [];
+      }
+    },
     async fetchAllClientCode() {
+      this.loadClient = true;
       try {
         await this.$store.dispatch("user/fetchClientCode");
-        this.optionClients = this.clients;
-        console.log(this.clients);
+        this.loadClient = false;
+        this.listClient = this.clients;
       } catch (e) {
+        this.loadCLient = false;
         throw e;
       }
     },
