@@ -72,7 +72,13 @@
                 {{ successMessage() }}
               </span>
             </base-alert>
-            <div class="col-sm-12 col-md-12">
+            <div v-if="detail == '404'">
+              <b-alert show variant="danger"
+                >You're not assigned to this property detail. Please contact
+                your administrator regarding this.</b-alert
+              >
+            </div>
+            <div class="col-sm-12 col-md-12" v-else-if="detail != '404'">
               <card>
                 <template slot="header">
                   <h3 class="card-title">APN Inventory</h3>
@@ -309,32 +315,32 @@
                     ></property-file-list>
                   </tab-pane>
                 </tabs>
+                <div class="pull-right">
+                  <base-button
+                    v-if="!saving"
+                    native-type="submit"
+                    slot="footer"
+                    type="submit"
+                    round
+                    block
+                    size="lg"
+                  >
+                    Save
+                  </base-button>
+                  <base-button
+                    v-else
+                    native-type="submit"
+                    slot="footer"
+                    type="primary"
+                    round
+                    block
+                    size="lg"
+                    disabled
+                  >
+                    Saving...
+                  </base-button>
+                </div>
               </card>
-            </div>
-            <div class="pull-right">
-              <base-button
-                v-if="!saving"
-                native-type="submit"
-                slot="footer"
-                type="submit"
-                round
-                block
-                size="lg"
-              >
-                Save
-              </base-button>
-              <base-button
-                v-else
-                native-type="submit"
-                slot="footer"
-                type="primary"
-                round
-                block
-                size="lg"
-                disabled
-              >
-                Saving...
-              </base-button>
             </div>
           </form>
         </b-skeleton-wrapper>
@@ -463,6 +469,7 @@ export default {
           required: true,
         },
       },
+      detail: "",
     };
   },
   components: {
@@ -559,6 +566,8 @@ export default {
         })
         .catch((e) => {
           this.loading = false;
+          this.detail = e.response.status;
+          console.info("error!", e.response.status);
           console.error(e);
           throw e;
         });
