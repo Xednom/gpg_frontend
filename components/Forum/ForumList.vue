@@ -179,8 +179,9 @@ export default {
       fuseSearch: null,
       isBusy: false,
       fields: [
-        { key: "title", label: "topic", sortable: true },
+        { key: "title", label: "title", sortable: true },
         { key: "author_username", label: "author", sotrable: true },
+        { key: "created_at", label: "date created", sortable: true },
         { key: "status", label: "status", sortable: true },
       ],
       totalRows: 1,
