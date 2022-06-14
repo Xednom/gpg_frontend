@@ -106,6 +106,7 @@
                           v-model="propertyDetail.apn"
                           v-validate="modelValidations.apn"
                           :error="getError('apn')"
+                          :disabled="$auth.user.designation_category == 'staff'"
                         >
                         </base-input>
 
@@ -118,6 +119,7 @@
                           placeholder="Select a County"
                           v-model="propertyDetail.county"
                           filterable
+                          :disabled="$auth.user.designation_category == 'staff'"
                         >
                           <template v-if="!this.propertyDetail.state"
                             >Please select a State first</template
@@ -145,6 +147,7 @@
                           v-model="propertyDetail.state"
                           @change="changeFetchCounties"
                           filterable
+                          :disabled="$auth.user.designation_category == 'staff'"
                         >
                           <el-option
                             v-for="option in states"
@@ -164,6 +167,7 @@
                           v-model="propertyDetail.size"
                           v-validate="modelValidations.size"
                           :error="getError('size')"
+                          :disabled="$auth.user.designation_category == 'staff'"
                         >
                         </base-input>
                       </div>
@@ -185,6 +189,7 @@
                           required
                           placeholder="Property owner"
                           v-model="propertyDetail.property_owner"
+                          :disabled="$auth.user.designation_category == 'staff'"
                         >
                         </base-input>
                       </div>
@@ -201,6 +206,7 @@
                           v-model="propertyDetail.property_status"
                           v-validate="modelValidations.propertyStatus"
                           :error="getError('propertyStatus')"
+                          :disabled="$auth.user.designation_category == 'staff'"
                         >
                           <el-option
                             v-for="option in propertyStatusChoices.status"
