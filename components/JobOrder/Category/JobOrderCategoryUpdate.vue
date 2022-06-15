@@ -191,7 +191,7 @@
                       placeholder="Job description"
                       v-model="jobOrderCategory.job_description"
                       :disabled="
-                        jobOrderCategory.status == 'complete' || jobOrderCategory.status == 'closed'
+                        jobOrderCategory.status == 'complete' || jobOrderCategory.status == 'closed' || $auth.user.designation_category == 'staff'
                       "
                       required
                     >
