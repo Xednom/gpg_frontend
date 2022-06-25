@@ -8981,6 +8981,11 @@ vue-client-only@^2.0.0:
   resolved "https://registry.yarnpkg.com/vue-client-only/-/vue-client-only-2.0.0.tgz#ddad8d675ee02c761a14229f0e440e219de1da1c"
   integrity sha512-arhk1wtWAfLsJyxGMoEYhoBowM87/i6HLSG2LH/03Yog6i2d9JEN1peMP0Ceis+/n9DxdenGYZZTxbPPJyHciA==
 
+vue-fb-customer-chat@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/vue-fb-customer-chat/-/vue-fb-customer-chat-0.2.1.tgz#cf4125c6618995a4e83782e1eb824e7d2d8d41f5"
+  integrity sha512-LQFIBYQ0rWpQJsC4JyIY13p+eI+qnffwt5O62HjQ+eATSX9mFDQjljJsdxk37MrtJECKXQz2Tl5k1r4nD8f6Nw==
+
 vue-functional-data-merge@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/vue-functional-data-merge/-/vue-functional-data-merge-3.1.0.tgz#08a7797583b7f35680587f8a1d51d729aa1dc657"

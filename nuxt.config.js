@@ -70,7 +70,8 @@ export default {
   plugins: [
     `~/plugins/dashboard-plugin.js`,
     { src: '~/plugins/full-calendar.js', ssr: false },
-    { src: '~/plugins/world-map.js', ssr: false }
+    { src: '~/plugins/world-map.js', ssr: false },
+    { src: '~/plugins/vue-fb-customer-chat.js', ssr: false }
   ],
   /*
   ** Nuxt.js dev-modules
