@@ -222,9 +222,9 @@ export default {
       fuseSearch: null,
       isBusy: false,
       fields: [
-        { key: "amount_due_w_currency", label: "Amount due", sortable: true },
-        { key: "payment_made_w_currency", label: "Payment Made", sortable: true },
-        { key: "account_balance_w_currency", label: "Account Balance", sortable: true },
+        { key: "staff_code", label: "Staff code", sortable: true },
+        { key: "total_time_of_work", label: "Total time of work", sortable: true },
+        { key: "timesheet", label: "Timesheet", sortable: true },
         { key: "actions", label: "Actions" },
       ],
       totalRows: 1,
