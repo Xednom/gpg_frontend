@@ -342,9 +342,11 @@ export default {
         });
     },
     async fetchAccountCharges() {
+      this.isBusy = true;
       return await this.$axios
         .get(`/api/v1/account-charge/?limit=${this.limit}`)
         .then((res) => {
+          this.isBusy = false;
           this.count = res.count;
           this.next = res.data.next;
           this.prev = res.data.prev;
@@ -353,6 +355,7 @@ export default {
           this.accountCharges = res.data.results;
         })
         .catch((e) => {
+          this.isBusy = false;
           throw e;
         });
     },
