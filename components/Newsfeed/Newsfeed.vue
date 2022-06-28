@@ -8,87 +8,101 @@
           </card>
         </div>
         <div class="col-sm-12" v-else>
-          <card
-            card-body-classes="table-full-width"
-            v-for="(newsFeed, index) in newsFeeds"
-            :key="index"
-          >
-            <h1 slot="header" class="card-title">{{ newsFeed.title }}</h1>
-            <div>
-              <p v-html="newsFeed.body"></p>
-            </div>
-            <hr />
-            <nuxt-link :to="'/newsfeed/' + newsFeed.id"
-              ><b-button class="btn-view-comment"
-                >View comments</b-button
-              ></nuxt-link
+          <div>
+            <b-button
+              :class="visible ? null : 'collapsed'"
+              :aria-expanded="visible ? 'true' : 'false'"
+              aria-controls="newsfeed"
+              @click="visible = !visible"
             >
+              {{ visible ? 'Hide' : 'Show' }} News
+            </b-button>
 
-            <div>
-              <b-modal
-                size="lg"
-                id="comment-section"
-                hide-footer
-                :title="newsFeed.title + ' comment section'"
+            <b-card
+              card-body-classes="table-full-width"
+              v-for="(newsFeed, index) in newsFeeds"
+              :key="index"
+            >
+              <h1 slot="header" class="card-title">{{ newsFeed.title }}</h1>
+              <b-collapse id="newsfeed" v-model="visible" class="mt-2">
+                <div>
+                  <p v-html="newsFeed.body"></p>
+                </div>
+              </b-collapse>
+
+              <hr />
+              <nuxt-link :to="'/newsfeed/' + newsFeed.id"
+                ><b-button class="btn-view-comment"
+                  >View comments</b-button
+                ></nuxt-link
               >
-                <form @submit.prevent="save">
-                  <base-alert v-if="error" type="danger" dismissible>
-                    <span>
-                      {{ errorMessage(error) }}
-                    </span>
-                  </base-alert>
-                  <b-form-textarea
-                    class="form-control comment-text-section mb-3"
-                    placeholder="Comment"
-                    v-model="comment"
-                    rows="1"
-                    max-rows="10"
-                    required
-                  >
-                  </b-form-textarea>
-                  <div slot="footer">
-                    <div class="pull-right">
-                      <base-button
-                        v-if="!loading"
-                        native-type="submit"
-                        slot="footer"
-                        type="submit"
-                        round
-                        block
-                        size="sm"
-                      >
-                        Post
-                      </base-button>
-                      <base-button
-                        v-else
-                        native-type="submit"
-                        slot="footer"
-                        type="primary"
-                        round
-                        block
-                        size="sm"
-                        disabled
-                      >
-                        Posting...
-                      </base-button>
-                    </div>
-                  </div>
-                </form>
-                <card
-                  class="comment-card"
-                  v-for="(comments, index) in newsFeed.news_feed_comments"
-                  :key="index"
+
+              <div>
+                <b-modal
+                  size="lg"
+                  id="comment-section"
+                  hide-footer
+                  :title="newsFeed.title + ' comment section'"
                 >
-                  <h4 slot="header" class="card-title">
-                    <strong>{{ comments.commenter }}</strong>
-                  </h4>
-                  <p>
-                    {{ comments.comment }}
-                  </p>
-                </card>
-              </b-modal>
-            </div>
-          </card>
+                  <form @submit.prevent="save">
+                    <base-alert v-if="error" type="danger" dismissible>
+                      <span>
+                        {{ errorMessage(error) }}
+                      </span>
+                    </base-alert>
+                    <b-form-textarea
+                      class="form-control comment-text-section mb-3"
+                      placeholder="Comment"
+                      v-model="comment"
+                      rows="1"
+                      max-rows="10"
+                      required
+                    >
+                    </b-form-textarea>
+                    <div slot="footer">
+                      <div class="pull-right">
+                        <base-button
+                          v-if="!loading"
+                          native-type="submit"
+                          slot="footer"
+                          type="submit"
+                          round
+                          block
+                          size="sm"
+                        >
+                          Post
+                        </base-button>
+                        <base-button
+                          v-else
+                          native-type="submit"
+                          slot="footer"
+                          type="primary"
+                          round
+                          block
+                          size="sm"
+                          disabled
+                        >
+                          Posting...
+                        </base-button>
+                      </div>
+                    </div>
+                  </form>
+                  <card
+                    class="comment-card"
+                    v-for="(comments, index) in newsFeed.news_feed_comments"
+                    :key="index"
+                  >
+                    <h4 slot="header" class="card-title">
+                      <strong>{{ comments.commenter }}</strong>
+                    </h4>
+                    <p>
+                      {{ comments.comment }}
+                    </p>
+                  </card>
+                </b-modal>
+              </div>
+            </b-card>
+          </div>
         </div>
       </div>
     </div>
@@ -108,6 +122,7 @@ export default {
       modals: {
         comments: false,
       },
+      visible: true,
     };
   },
   computed: {

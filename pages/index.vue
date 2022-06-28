@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <!-- Big Chart -->
-    <div class="col-6" v-if="$auth.user.designation_category !='staff'">
+    <div class="col-6" v-if="$auth.user.designation_category != 'staff'">
       <card type="chart">
         <template slot="header">
           <div class="row">
@@ -50,7 +50,7 @@
         </div>
       </card>
     </div>
-    <div class="col-6" v-if="$auth.user.designation_category !='staff'">
+    <div class="col-6" v-if="$auth.user.designation_category != 'staff'">
       <card type="chart">
         <template slot="header">
           <div class="row">
@@ -527,9 +527,12 @@ export default {
     },
 
     async fetchJobOrderByApnAnalytics(month, month_year) {
+      console.warn(this.$auth.user.designation_category);
       return await this.$axios
         .get(
-          `/api/v1/job-order-by-category-analytics/?month=${month}&month_year=${month_year}`
+          `/api/v1/job-order-by-category-analytics/?client=${
+            this.$auth.user.first_name
+          }&month=${month}&month_year=${month_year}`
         )
         .then((res) => {
           this.jobOrderByApns = res.data.results;
@@ -569,7 +572,9 @@ export default {
     async fetchJobOrderGeneralAnalytics(month, month_year) {
       return await this.$axios
         .get(
-          `/api/v1/job-order-by-general-analytics/?month=${month}&month_year=${month_year}`
+          `/api/v1/job-order-by-general-analytics/?client=${
+            this.$auth.user.first_name
+          }&month=${month}&month_year=${month_year}`
         )
         .then((res) => {
           this.jobOrderGenerals = res.data.results;
@@ -613,12 +618,17 @@ export default {
       });
 
       this.months.forEach((month) => {
-        this.fetchJobOrderGeneralAnalytics(month, this.currentDate.getFullYear());
+        this.fetchJobOrderGeneralAnalytics(
+          month,
+          this.currentDate.getFullYear()
+        );
       });
     },
   },
   mounted() {
-    this.initAnalytics();
+    if (this.$auth.user.designation_category != "staff") {
+      this.initAnalytics();
+    }
   },
 };
 </script>
