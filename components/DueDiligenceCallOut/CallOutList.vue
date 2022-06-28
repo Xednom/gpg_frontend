@@ -91,55 +91,125 @@
                 </template>
 
                 <template #cell(initial_due_diligence_status)="row">
-                    <span v-if="row.item.initial_due_diligence_status">
-                      <b-badge variant="success">{{
-                        row.item.initial_due_diligence_status
-                      }}</b-badge>
-                    </span>
-                    <span v-else>-</span>
+                  <span v-if="row.item.initial_due_diligence_status =='complete'">
+                    <b-badge variant="success">{{
+                      row.item.initial_due_diligence_status
+                    }}</b-badge>
+                  </span>
+                  <span v-else-if="row.item.initial_due_diligence_status == 'cancelled'">
+                    <b-badge variant="danger">{{
+                      row.item.initial_due_diligence_status
+                    }}</b-badge>
+                  </span>
+                  <span v-else-if="row.item.initial_due_diligence_status == 'processing'">
+                    <b-badge variant="primary">{{
+                      row.item.initial_due_diligence_status
+                    }}</b-badge>
+                  </span>
+                  <span v-else>
+                    <b-badge variant="warning">{{
+                      row.item.initial_due_diligence_status
+                    }}</b-badge>
+                  </span>
                 </template>
 
                 <template #cell(initial_dd_date_complete)="row">
-                    <span v-if="row.item.initial_dd_date_complete">
-                      {{ row.item.initial_dd_date_complete }}
-                    </span>
-                    <span v-else>-</span>
+                  <span v-if="row.item.initial_dd_date_complete">
+                    {{ row.item.initial_dd_date_complete }}
+                  </span>
+                  <span v-else>-</span>
                 </template>
 
                 <template #cell(call_out_status)="row">
-                    <span v-if="row.item.call_out_status">
-                      <b-badge variant="success">{{
-                        row.item.call_out_status
-                      }}</b-badge>
-                    </span>
-                    <span v-else>-</span>
+                  <span v-if="row.item.call_out_status == 'complete'">
+                    <b-badge variant="success">{{
+                      row.item.call_out_status
+                    }}</b-badge>
+                  </span>
+                  <span v-else-if="row.item.call_out_status == 'cancelled'">
+                    <b-badge variant="danger">{{
+                      row.item.call_out_status
+                    }}</b-badge>
+                  </span>
+                  <span v-else-if="row.item.call_out_status == 'processing'">
+                    <b-badge variant="primary">{{
+                      row.item.call_out_status
+                    }}</b-badge>
+                  </span>
+                  <span v-else
+                    ><b-badge variant="warning">{{
+                      row.item.call_out_status
+                    }}</b-badge></span
+                  >
                 </template>
 
                 <template #cell(tax_data_status)="row">
-                    <span v-if="row.item.tax_data_status">
-                      <b-badge variant="success">{{
-                        row.item.tax_data_status
-                      }}</b-badge>
-                    </span>
-                    <span v-else>-</span>
+                  <span v-if="row.item.tax_data_status == 'complete'">
+                    <b-badge variant="success">{{
+                      row.item.tax_data_status
+                    }}</b-badge>
+                  </span>
+                  <span v-else-if="row.item.tax_data_status == 'cancelled'">
+                    <b-badge variant="danger">{{
+                      row.item.tax_data_status
+                    }}</b-badge>
+                  </span>
+                  <span v-else-if="row.item.tax_data_status == 'processing'">
+                    <b-badge variant="primary">{{
+                      row.item.tax_data_status
+                    }}</b-badge>
+                  </span>
+                  <span v-else>
+                    <b-badge variant="warning">{{
+                      row.item.tax_data_status
+                    }}</b-badge>
+                  </span>
                 </template>
 
                 <template #cell(zoning_data_status)="row">
-                    <span v-if="row.item.zoning_data_status">
-                      <b-badge variant="success">{{
-                        row.item.zoning_data_status
-                      }}</b-badge>
-                    </span>
-                    <span v-else>-</span>
+                  <span v-if="row.item.zoning_data_status == 'complete'">
+                    <b-badge variant="success">{{
+                      row.item.zoning_data_status
+                    }}</b-badge>
+                  </span>
+                  <span v-else-if="row.item.zoning_data_status == 'cancelled'">
+                    <b-badge variant="danger">{{
+                      row.item.zoning_data_status
+                    }}</b-badge>
+                  </span>
+                  <span v-else-if="row.item.zoning_data_status == 'processing'">
+                    <b-badge variant="primary">{{
+                      row.item.zoning_data_status
+                    }}</b-badge>
+                  </span>
+                  <span v-else>
+                    <b-badge variant="warning">{{
+                      row.item.zoning_data_status
+                    }}</b-badge>
+                  </span>
                 </template>
 
                 <template #cell(utilities_data_status)="row">
-                    <span v-if="row.item.utilities_data_status">
-                      <b-badge variant="success">{{
-                        row.item.utilities_data_status
-                      }}</b-badge>
-                    </span>
-                    <span v-else>-</span>
+                  <span v-if="row.item.utilities_data_status == 'complete'">
+                    <b-badge variant="success">{{
+                      row.item.utilities_data_status
+                    }}</b-badge>
+                  </span>
+                  <span v-else-if="row.item.utilities_data_status == 'cancelled'">
+                    <b-badge variant="danger">{{
+                      row.item.utilities_data_status
+                    }}</b-badge>
+                  </span>
+                  <span v-else-if="row.item.utilities_data_status == 'processing'">
+                    <b-badge variant="primary">{{
+                      row.item.utilities_data_status
+                    }}</b-badge>
+                  </span>
+                  <span v-else>
+                    <b-badge variant="warning">{{
+                      row.item.utilities_data_status
+                    }}</b-badge>
+                  </span>
                 </template>
 
                 <template #cell(actions)="row">
