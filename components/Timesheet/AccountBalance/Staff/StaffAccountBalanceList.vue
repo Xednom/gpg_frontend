@@ -222,6 +222,7 @@ export default {
       fuseSearch: null,
       isBusy: false,
       fields: [
+        { key: "date", label: "Date", sortable: true },
         { key: "staff_code", label: "Staff code", sortable: true },
         { key: "total_time_of_work", label: "Total time of work", sortable: true },
         { key: "timesheet", label: "Timesheet", sortable: true },
