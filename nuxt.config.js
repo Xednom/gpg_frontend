@@ -23,7 +23,7 @@ import { style } from "d3-selection";
    apiUrl = "http://127.0.0.1:8000/";
  }
 export default {
-  mode: 'universal',
+  mode: 'spa',
   /*
   ** Headers of the page
   */
