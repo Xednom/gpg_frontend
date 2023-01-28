@@ -14,6 +14,7 @@ const blankState = {
   state: "",
   size: "",
   property_owner: "",
+  property_complete_address: "",
   notes_client_side: "",
   notes_va_side: "",
   notes_management_side: "",
@@ -31,7 +32,7 @@ const blankState = {
   // property detail files
   details: "",
   url: "",
-  description: ""
+  description: "",
 };
 
 export const state = () => ({
@@ -64,6 +65,7 @@ export const getters = {
   state: (state) => state.state,
   size: (state) => state.size,
   property_owner: (state) => state.property_owner,
+  property_complete_address: (state) => state.property_complete_address,
   property_detail: (state) => state.property_detail,
   user: (state) => state.user,
   asking_price: (state) => state.asking_price,

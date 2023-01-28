@@ -1,9 +1,7 @@
 <template>
   <div>
     <card>
-      <h5 class="info-text">
-        Property Details
-      </h5>
+      <h5 class="info-text">Property Details</h5>
       <div class="row justify-content-center mt-5">
         <div class="form-row"></div>
         <div class="col-sm-5">
@@ -28,9 +26,7 @@
             v-model="county"
             filterable
           >
-            <template v-if="!this.state"
-              >Please select a State first</template
-            >
+            <template v-if="!this.state">Please select a State first</template>
             <template v-else>
               <el-option
                 v-for="option in counties"
@@ -124,6 +120,17 @@
           >
           </base-input>
         </div>
+        <div class="col-md-10">
+          <div class="row">
+            <label>Property complete address</label>
+          </div>
+          <textarea
+            class="form-control"
+            placeholder="Description"
+            v-model="propertyCompleteAddress"
+          >
+          </textarea>
+        </div>
         <div class="col-sm-5"></div>
       </div>
     </card>
@@ -200,7 +207,7 @@ export default {
         return res;
       });
     },
-    getClientCode: debounce(function() {
+    getClientCode: debounce(function () {
       this.$axios
         .get(`/api/v1/client-code/?search=${this.query}`)
         .then((res) => {
@@ -284,6 +291,14 @@ export default {
       },
       set(value) {
         this.setBasicStoreValue("property_owner", value);
+      },
+    },
+    propertyCompleteAddress: {
+      get() {
+        return this.$store.getters["propertyDetail/property_complete_address"];
+      },
+      set(value) {
+        this.setBasicStoreValue("property_complete_address", value);
       },
     },
   },

@@ -218,6 +218,17 @@
                           </el-option>
                         </el-select>
                       </div>
+                      <div class="col-md-10">
+                        <div class="row">
+                          <label>Property complete address</label>
+                        </div>
+                        <textarea
+                          class="form-control"
+                          placeholder="Description"
+                          v-model="propertyDetail.property_complete_address"
+                        >
+                        </textarea>
+                      </div>
                     </div>
                   </tab-pane>
 
@@ -231,12 +242,8 @@
                     ></property-price-list>
                   </tab-pane>
                   <tab-pane>
-                    <span slot="label">
-                      Listing Ad Details
-                    </span>
-                    <h5 class="info-text">
-                      Listing Ad Details
-                    </h5>
+                    <span slot="label"> Listing Ad Details </span>
+                    <h5 class="info-text">Listing Ad Details</h5>
                     <div class="row justify-content-center mt-5">
                       <div class="col-sm-5">
                         <base-input
@@ -690,6 +697,8 @@ export default {
           website_url: this.propertyDetail.website_url,
           file_storage: this.propertyDetail.file_storage,
           property_price_statuses: this.propertyDetail.property_price_statuses,
+          property_complete_address:
+            this.propertyDetail.property_complete_address,
         };
 
         const staffPayload = {
@@ -713,6 +722,8 @@ export default {
           website_url: this.propertyDetail.website_url,
           file_storage: this.propertyDetail.file_storage,
           property_price_statuses: this.propertyDetail.property_price_statuses,
+          property_complete_address:
+            this.propertyDetail.property_complete_address,
         };
 
         if (this.$auth.user.designation_category == "staff") {

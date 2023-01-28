@@ -12,15 +12,11 @@
             class="row"
           >
             <tab-pane>
-              <span slot="label">
-                Property Details
-              </span>
+              <span slot="label"> Property Details </span>
               <first-step></first-step>
             </tab-pane>
             <tab-pane>
-              <span slot="label">
-                Property Price
-              </span>
+              <span slot="label"> Property Price </span>
               <card>
                 <div
                   class="row justify-content-center mt-5"
@@ -202,7 +198,7 @@ export default {
     validateStep(ref) {
       return this.$refs[ref].validate();
     },
-    addRow: function() {
+    addRow: function () {
       this.property_price_statuses.push({
         asking_price: "",
         cash_terms: "",
@@ -212,10 +208,10 @@ export default {
         notes: "",
       });
     },
-    deleteRow: function(e, item) {
+    deleteRow: function (e, item) {
       e.preventDefault();
       var index = this.property_price_statuses
-        .map(function(item) {
+        .map(function (item) {
           return item.id;
         })
         .indexOf(item);
@@ -316,6 +312,7 @@ export default {
           state: this.state,
           size: this.size,
           property_owner: this.property_owner,
+          property_complete_address: this.property_complete_address,
           notes_client_side: this.notes_client_side,
           notes_va_side: this.notes_va_side,
           notes_management_side: this.notes_management_side,
@@ -337,6 +334,7 @@ export default {
           state: this.state,
           size: this.size,
           property_owner: this.property_owner,
+          property_complete_address: this.property_complete_address,
           notes_client_side: this.notes_client_side,
           notes_va_side: this.notes_va_side,
           notes_management_side: this.notes_management_side,
@@ -397,6 +395,7 @@ export default {
       "state",
       "size",
       "property_owner",
+      "property_complete_address",
       "company_name",
       "phone",
       "email",
