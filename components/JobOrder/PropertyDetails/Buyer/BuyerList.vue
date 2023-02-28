@@ -89,7 +89,7 @@
                     size="sm"
                     @click="
                       {
-                        fetchbuyerList(row.item.id), (modals.info = true);
+                        fetchBuyerList(row.item.id), (modals.info = true);
                       }
                     "
                     class="mr-1"
@@ -125,7 +125,7 @@
       headerClasses="justify-content-center"
       class="white-content"
     >
-      <seller-update :fetch="fetchBuyerLists"></seller-update>
+      <buyer-update :fetch="fetchBuyerLists"></buyer-update>
     </modal>
 
     <modal
@@ -133,10 +133,10 @@
       headerClasses="justify-content-center"
       class="white-content"
     >
-      <seller-create
+      <buyer-create
         :fetch="fetchBuyerLists"
         :property-detail="propertyDetail"
-      ></seller-create>
+      ></buyer-create>
     </modal>
   </div>
 </template>
@@ -203,11 +203,11 @@ export default {
         { key: "client_code", sortable: true },
         { key: "date_lead_added", sortable: true },
         { key: "lead_type", sortable: true },
-        { key: "seller_lead_name", sortable: true },
+        { key: "buyer_lead_name", sortable: true },
         { key: "phone_number", sortable: true },
         { key: "email", sortable: true },
         { key: "lead_status", sortable: true },
-        { key: "seller_asking_price", sortable: true },
+        { key: "buyer_offer", sortable: true },
         { key: "lead_assigned_to", sortable: true },
         { key: "total_minutes_consumed", sortable: true },
         { key: "actions", label: "Actions" },
@@ -295,9 +295,9 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    async fetchbuyerList(id) {
-      this.$store.dispatch("buyerList/fetchbuyerList", id).then(() => {
-        console.warn("Seller: ", this.buyerList);
+    async fetchBuyerList(id) {
+      this.$store.dispatch("buyerList/fetchBuyerList", id).then(() => {
+        console.warn("Buyer: ", this.buyerList);
       });
     },
     async fetchBuyerLists() {

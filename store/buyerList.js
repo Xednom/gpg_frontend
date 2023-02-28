@@ -95,7 +95,7 @@ export const actions = {
     return await this.$axios
       .get(endpoint)
       .then((res) => {
-        commit("setbuyerList", { buyerList: res.data });
+        commit("setBuyerList", { buyerList: res.data });
         console.warn("buyer info: ", { buyerList: res.data });
       })
       .catch((e) => {

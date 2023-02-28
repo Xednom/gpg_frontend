@@ -338,6 +338,17 @@
                       :fetch="fetchPropertyDetail"
                     ></seller-list>
                   </tab-pane>
+                  <tab-pane>
+                    <span slot="label">
+                      Buyer list for APN
+                      <strong>{{ propertyDetail.apn }}</strong>
+                    </span>
+                    <span slot="label"> Buyer list </span>
+                    <buyer-list
+                    :property-detail="propertyDetail"
+                      :fetch="fetchPropertyDetail"
+                    ></buyer-list>
+                  </tab-pane>
                 </tabs>
                 <div class="pull-right">
                   <base-button
@@ -388,6 +399,7 @@ import PropertyPriceList from "~/components/JobOrder/PropertyDetails/PropertyPri
 import PropertyFileList from "~/components/JobOrder/PropertyDetails/PropertyDetailFiles/PropertyDetailFileList";
 import PropertyPriceCreate from "~/components/JobOrder/PropertyDetails/PropertyPriceCreate";
 import SellerList from "~/components/JobOrder/PropertyDetails/Seller/SellerList.vue";
+import BuyerList from "~/components/JobOrder/PropertyDetails/Buyer/BuyerList.vue";
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
 
 import { TabPane, Tabs, Collapse, CollapseItem } from "@/components";
@@ -528,6 +540,7 @@ export default {
     CollapseItem,
     BaseAlert,
     SellerList,
+    BuyerList,
     [DatePicker.name]: DatePicker,
   },
   provide() {
