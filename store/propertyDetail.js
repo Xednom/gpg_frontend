@@ -81,6 +81,15 @@ export const getters = {
   comment: (state) => state.comment,
   property_price_statuses: (state) => state.property_price_statuses,
   property_detail_files: (state) => state.property_detail_files,
+  property_detail_seller_lists: (state) => state.property_detail_seller_lists,
+  property_detail_buyer_lists: (state) => state.property_detail_buyer_lists,
+  property_detail_acquisition: (state) => state.property_detail_acquisition,
+  property_detail_disposition: (state) => state.property_detail_disposition,
+  property_detail_assessment_files: (state) =>
+    state.property_detail_assessment_files,
+  property_detail_marketing_file: (state) =>
+    state.property_detail_marketing_file,
+  property_detail_listing_file: (state) => state.property_detail_listing_file,
   details: (state) => state.details,
   url: (state) => state.url,
   description: (state) => state.description,
@@ -187,9 +196,15 @@ export const actions = {
   },
   async savePropertyDetail({ commit, dispatch }, payload) {
     let url = "/api/v1/property-detail/";
-    await this.$axios.post(url, payload).then((res) => {
-      return res.data;
-    });
+    await this.$axios
+      .post(url, payload)
+      .then((res) => {
+        console.warn("Result data from vuex: ", res.data);
+        return res.data;
+      })
+      .catch((err) => {
+        console.danger("Failed to save property", err);
+      });
   },
   async deletePropertyDetail({ commit, dispatch }, payload) {
     let url = `/api/v1/property-detail/${payload}/`;

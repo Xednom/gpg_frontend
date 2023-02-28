@@ -97,6 +97,151 @@
               <span slot="label">Listing Ad Details</span>
               <third-step></third-step>
             </tab-pane>
+            <tab-pane>
+              <span slot="label"> Seller list </span>
+              <card>
+                <h5 slot="header" class="title">Seller list</h5>
+                <div class="col-xs-12">
+                  <b-btn class="btn btn-success" @click="addSellerRow">
+                    Add Seller
+                  </b-btn>
+                </div>
+                <card
+                  v-for="(item, index) in this.property_detail_seller_lists"
+                  :key="index"
+                  title="Seller list"
+                >
+                  <div class="col-md-12">
+                    <b-btn
+                      class="btn btn-danger btn-sm float-right"
+                      @click="deleteSellerRow($event, index)"
+                    >
+                      <i class="tim-icons icon-simple-remove"> {{ item.id }}</i>
+                    </b-btn>
+                  </div>
+                  <div class="row justify-content-center mt-5">
+                    <div class="col-sm-5">
+                      <base-input label="Date lead added">
+                        <el-date-picker
+                          v-model="item.date_lead_added"
+                          type="date"
+                          format="yyyy-MM-dd"
+                          value-format="yyyy-MM-dd"
+                          placeholder="Choose date"
+                        >
+                        </el-date-picker>
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input label="Lead type">
+                        <el-select
+                          class="select-primary"
+                          reqiured
+                          size="large"
+                          name="leadType"
+                          placeholder="Lead type"
+                          v-model="item.lead_type"
+                        >
+                          <el-option
+                            v-for="option in leadTypeChoices.status"
+                            class="select-primary"
+                            :value="option.value"
+                            :label="option.label"
+                            :key="option.label"
+                          >
+                          </el-option>
+                        </el-select>
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input
+                        label="Seller Lead name"
+                        name="Seller Lead name"
+                        placeholder="Seller lead name"
+                        v-model="item.seller_lead_name"
+                      >
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input
+                        label="Phone number"
+                        name="Phone number"
+                        placeholder="Phone number"
+                        v-model="item.phone_number"
+                      >
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input
+                        label="Email"
+                        name="Email"
+                        placeholder="Email"
+                        v-model="item.email"
+                      >
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input label="Lead status">
+                        <el-select
+                          class="select-primary"
+                          reqiured
+                          size="large"
+                          name="leadStatus"
+                          placeholder="Lead status"
+                          v-model="item.lead_status"
+                        >
+                          <el-option
+                            v-for="option in leadStatusChoices.status"
+                            class="select-primary"
+                            :value="option.value"
+                            :label="option.label"
+                            :key="option.label"
+                          >
+                          </el-option>
+                        </el-select>
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input
+                        label="Seller Asking Price"
+                        name="Seller Asking Price"
+                        placeholder="Seller Asking Price"
+                        v-model="item.seller_asking_price"
+                      >
+                      </base-input>
+                    </div>
+                    <!-- <div class="col-md-12">
+                <div class="col-xs-12">
+                  <b-btn class="btn btn-success" @click="addCounterOffer">
+                    Add counter offer
+                  </b-btn>
+                </div>
+                <card
+                  v-for="(counter, index) in item.counter_offer_amount"
+                  :key="index"
+                  title="Counter Offer"
+                >
+                  <b-btn
+                    class="btn btn-danger btn-sm float-right"
+                    @click="deleteCounterOffer($event, index)"
+                  >
+                    <i class="tim-icons icon-simple-remove"></i>
+                  </b-btn>
+                  <div class="col-sm-5">
+                    <base-input
+                      label="Amount"
+                      name="Amount"
+                      placeholder="Amount"
+                      v-model="counter.amount"
+                    >
+                    </base-input>
+                  </div>
+                </card>
+              </div> -->
+                  </div>
+                </card>
+              </card>
+            </tab-pane>
           </tabs>
           <div class="pull-right">
             <base-button
@@ -134,11 +279,12 @@ import { mapGetters, mapActions } from "vuex";
 import FirstStep from "@/components/JobOrder/PropertyDetails/PropertyDetailFirstStep.vue";
 import SecondStep from "@/components/JobOrder/PropertyDetails/PropertyDetailSecondStep.vue";
 import ThirdStep from "@/components/JobOrder/PropertyDetails/PropertyDetailThirdStep.vue";
+import SellerList from "~/components/JobOrder/PropertyDetails/Seller/SellerFormCard.vue";
 import swal from "sweetalert2";
 import { TabPane, Tabs, Collapse, CollapseItem } from "@/components";
 
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
-import { Select, Option } from "element-ui";
+import { Select, Option, DatePicker } from "element-ui";
 
 export default {
   mixins: [CreatePropertyDetailMixin],
@@ -172,6 +318,24 @@ export default {
         notes: "",
         non_field_errors: "",
       },
+      property_detail_seller_lists: [],
+      leadTypeChoices: {
+        placeholder: "",
+        status: [
+          { value: null, label: "--Select lead type--" },
+          { value: "buyers", label: "Buyers" },
+          { value: "sellers", label: "Sellers" },
+        ],
+      },
+      leadStatusChoices: {
+        placeholder: "",
+        status: [
+          { value: "interested", label: "Interested" },
+          { value: "not_interested", label: "Not Interested" },
+          { value: "dead_lead", label: "Dead lead" },
+          { value: "do_not_call_list", label: "Do Not Call List" },
+        ],
+      },
     };
   },
   components: {
@@ -184,6 +348,8 @@ export default {
     CollapseItem,
     [Select.name]: Select,
     [Option.name]: Option,
+    SellerList,
+    [DatePicker.name]: DatePicker,
   },
   provide() {
     return {
@@ -317,6 +483,7 @@ export default {
           notes_va_side: this.notes_va_side,
           notes_management_side: this.notes_management_side,
           property_price_statuses: this.property_price_statuses,
+          property_detail_seller_lists: this.property_detail_seller_lists,
         };
 
         const staffPayload = {
@@ -339,6 +506,7 @@ export default {
           notes_va_side: this.notes_va_side,
           notes_management_side: this.notes_management_side,
           property_price_statuses: this.property_price_statuses,
+          property_detail_seller_lists: this.property_detail_seller_lists,
         };
 
         if (this.$auth.user.designation_category == "staff") {
@@ -382,6 +550,40 @@ export default {
         }
         this.loading = false;
       }
+    },
+    addSellerRow: function () {
+      this.property_detail_seller_lists.push({
+        apn: this.apn,
+        client_code: this.clientUser.client_code,
+        date_lead_added: "",
+        lead_type: null,
+        seller_lead_name: "",
+        phone_number: "",
+        email: "",
+        lead_status: null,
+        seller_asking_price: "",
+        counter_offer_amount: [],
+      });
+      console.log(this.property_detail_seller_lists);
+    },
+    addCounterOffer() {
+      const vm = this;
+      // _.forEach(vm.sellerLists, function (item) {
+      //   vm.counter_offer_amount.push({
+      //     amount: "",
+      //   });
+      // });
+      vm.counter_offer_amount.push({
+        amount: "",
+      });
+      console.warn(vm.counter_offer_amount);
+    },
+    deleteCounterOffer(e, index) {
+      const vm = this;
+      vm.counter_offer_amount.splice(index, 1);
+    },
+    deleteSellerRow(e, index) {
+      this.property_detail_seller_lists.splice(index, 1);
     },
   },
   computed: {

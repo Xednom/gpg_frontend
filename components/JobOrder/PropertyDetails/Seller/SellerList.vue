@@ -5,7 +5,7 @@
         <card card-body-classes="table-full-width">
           <div>
             <b-button variant="success" @click="modals.create = true"
-              >Add Property Detail File</b-button
+              >Add Seller list</b-button
             >
             <b-container fluid>
               <!-- <b-row> -->
@@ -56,8 +56,8 @@
 
               <!-- Main table element -->
               <b-table
-                :items="propertyDetailFiles"
-                :fields="computedFields"
+                :items="sellerLists"
+                :fields="fields"
                 :current-page="currentPage"
                 :per-page="perPage"
                 :filter="filter"
@@ -68,6 +68,7 @@
                 stacked="md"
                 show-empty
                 small
+                responsive
                 @filtered="onFiltered"
               >
                 <template #table-busy>
@@ -83,16 +84,12 @@
                   >
                 </template>
 
-                <template #cell(url)="row">
-                  <a :href="row.item.url" target="_blank">link here</a>
-                </template>
-
                 <template #cell(actions)="row">
                   <b-button
                     size="sm"
                     @click="
                       {
-                        fetchPropertyFile(row.item.id), (modals.info = true);
+                        fetchSellerList(row.item.id), (modals.info = true);
                       }
                     "
                     class="mr-1"
@@ -105,19 +102,14 @@
           </div>
           <div
             slot="footer"
-            class="
-              col-12
-              d-flex
-              justify-content-center justify-content-sm-between
-              flex-wrap
-            "
+            class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
           >
             <div class="">
               <p class="card-category"></p>
             </div>
             <b-pagination
               v-model="currentPage"
-              :total-rows="propertyFileCount"
+              :total-rows="sellerListCount"
               :per-page="perPage"
               align="fill"
               size="sm"
@@ -127,16 +119,13 @@
         </card>
       </div>
     </div>
-    <!-- info modal -->
+    <!-- update modal -->
     <modal
       :show.sync="modals.info"
       headerClasses="justify-content-center"
       class="white-content"
     >
-      <property-detail-file
-        :file="propertyDetailFile"
-        :fetch="refresh"
-      ></property-detail-file>
+      <seller-update :fetch="fetchSellerLists"></seller-update>
     </modal>
 
     <modal
@@ -144,18 +133,16 @@
       headerClasses="justify-content-center"
       class="white-content"
     >
-      <property-detail-file-create
-        :file="propertyDetail"
-        :user="user"
-        :fetch="refresh"
-      ></property-detail-file-create>
+      <seller-create :fetch="fetchSellerLists" :property-detail="propertyDetail"></seller-create>
     </modal>
   </div>
 </template>
-<script>
-import { Table, TableColumn, Select, Option } from "element-ui";
-import PropertyDetailFile from "~/components/JobOrder/PropertyDetails/PropertyDetailFiles/PropertyDetailFileDetail";
-import PropertyDetailFileCreate from "~/components/JobOrder/PropertyDetails/PropertyDetailFiles/PropertyDetailFileCreate";
+  <script>
+import { Table, TableColumn, Select, Option, DatePicker } from "element-ui";
+import PropertyPriceDetail from "~/components/JobOrder/PropertyDetails/PropertyPriceUpdate";
+import PropertyPriceCreate from "~/components/JobOrder/PropertyDetails/PropertyPriceCreate";
+import SellerCreate from "~/components/JobOrder/PropertyDetails/Seller/SellerListCreate.vue";
+import SellerUpdate from "~/components/JobOrder/PropertyDetails/Seller/SellerListUpdate.vue";
 import { Modal } from "@/components";
 import Fuse from "fuse.js";
 import swal from "sweetalert2";
@@ -169,75 +156,62 @@ export default {
     [Option.name]: Option,
     [Table.name]: Table,
     [TableColumn.name]: TableColumn,
-    PropertyDetailFile,
-    PropertyDetailFileCreate,
+    PropertyPriceDetail,
+    PropertyPriceCreate,
+    SellerCreate,
+    SellerUpdate,
+    [DatePicker.name]: DatePicker,
   },
   props: {
     propertyDetail: {
       Type: Object,
     },
-  },
-  computed: {
-    /***
-     * Returns a page from the searched data or the whole data. Search is performed in the watch section below
-     */
-    queriedData() {
-      let result = this.tableData;
-      if (this.searchedData.length > 0) {
-        result = this.searchedData;
-      }
-      return result.slice(this.from, this.to);
-    },
-    sortOptions() {
-      // Create an options list from our fields
-      return this.fields
-        .filter((f) => f.sortable)
-        .map((f) => {
-          return { text: f.label, value: f.key };
-        });
-    },
-    computedFields() {
-      if (
-        this.$auth.user.designation_category == "new_client" ||
-        this.$auth.user.designation_category == "current_client" ||
-        this.$auth.user.designation_category == "affiliate_partner"
-      ) {
-        return this.fields.filter((field) => !field.requiresStaff);
-      } else {
-        return this.fields.filter((field) => !field.requiresClient);
-      }
-    },
-    propertyFileCount() {
-      if (this.propertyDetailFiles) {
-        return this.propertyDetailFiles.length;
-      }
-    },
+    // sellerLists: {
+    //   Type: Array,
+    // },
+    fetch: {
+      Type: Function
+    }
   },
   data() {
     return {
       searchQuery: "",
       searchedData: [],
-      propertyDetailFile: {},
+      propertyPrice: {},
       user: {},
-      propertyDetailFiles: [],
+      // propertyPrices: [],
       fuseSearch: null,
       isBusy: false,
       error: {
-        property_detail: "",
-        details: "",
-        url: "",
-        description: "",
+        client: "",
+        staff: "",
+        apn: "",
+        state: "",
+        county: "",
+        size: "",
+        asking_price: "",
+        cash_terms: "",
+        finance_terms: "",
+        other_terms: "",
+        notes: "",
         non_field_errors: "",
       },
       fields: [
-        { key: "details", sortable: true },
-        { key: "url", sortable: true },
-        { key: "description", sortable: true },
+        { key: "client_code", sortable: true },
+        { key: "date_lead_added", sortable: true },
+        { key: "lead_type", sortable: true },
+        { key: "seller_lead_name", sortable: true },
+        { key: "phone_number", sortable: true },
+        { key: "email", sortable: true },
+        { key: "lead_status", sortable: true },
+        { key: "seller_asking_price", sortable: true },
+        { key: "lead_assigned_to", sortable: true },
+        { key: "total_minutes_consumed", sortable: true },
         { key: "actions", label: "Actions" },
       ],
       totalRows: 1,
       currentPage: 1,
-      perPage: 5,
+      perPage: 100,
       pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
       sortBy: "",
       sortDesc: false,
@@ -256,18 +230,46 @@ export default {
       },
     };
   },
-  methods: {
-    // ...mapActions("propertyDetail", ["deletePropertyDetail"]),
-    async fetchMe() {
-      try {
-        let endpoint = `/auth/users/me/`;
-        await this.$axios.get(endpoint).then((res) => {
-          this.user = res.data;
+  computed: {
+    /***
+     * Returns a page from the searched data or the whole data. Search is performed in the watch section below
+     */
+    ...mapGetters({ sellerList: "sellerList/sellerList" }),
+    ...mapGetters({ sellerLists: "sellerList/sellerLists" }),
+    queriedData() {
+      let result = this.tableData;
+      if (this.searchedData.length > 0) {
+        result = this.searchedData;
+      }
+      return result.slice(this.from, this.to);
+    },
+    sortOptions() {
+      // Create an options list from our fields
+      return this.fields
+        .filter((f) => f.sortable)
+        .map((f) => {
+          return { text: f.label, value: f.key };
         });
-      } catch (err) {
-        console.error(err.response.data);
+    },
+    sellerListCount() {
+      if (this.sellerList) {
+        return this.sellerList.length;
       }
     },
+  },
+
+  methods: {
+    // ...mapActions("propertyDetail", ["deletePropertyDetail"]),
+    // async fetchMe() {
+    //   try {
+    //     let endpoint = `/auth/users/me/`;
+    //     await this.$axios.get(endpoint).then((res) => {
+    //       this.user = res.data;
+    //     });
+    //   } catch (err) {
+    //     console.error(err.response.data);
+    //   }
+    // },
     handleLike(index, row) {
       swal({
         title: `You liked ${row.name}`,
@@ -301,42 +303,38 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    async fetchPropertyFile(id) {
-      let endpoint = `/api/v1/property-detail-file/${id}/`;
-      return await this.$axios
-        .get(endpoint)
-        .then((res) => {
-          this.propertyDetailFile = res.data;
-        })
-        .catch((e) => {
-          throw e;
-        });
+    async fetchSellerList(id) {
+      this.$store.dispatch("sellerList/fetchSellerList", id).then(() => {
+        console.warn("Seller: ", this.sellerList);
+      });
     },
-    fetchPropertyDetailFiles() {
-      this.isBusy = true;
-      let endpoint = `/api/v1/property-detail-file/?search=${this.propertyDetail.id}`;
-      return this.$axios
-        .get(endpoint)
-        .then((res) => {
-          this.isBusy = false;
-          this.propertyDetailFiles = res.data.results;
-        })
-        .catch((e) => {
-          this.isBusy = false;
-          console.error(e);
-        });
-    },
-    refresh() {
-      this.fetchPropertyDetailFiles();
+    async fetchSellerLists() {
+      this.$store.dispatch("sellerList/fetchSellerLists", this.propertyDetail.id).then(() => {
+        console.warn("Seller lists: ", this.sellerLists);
+      });
     },
     errorMessage(variant = null, error) {
       this.$bvToast.toast(
-        error.details
-          ? "Details: " + error.details
-          : error.url
-          ? "URL: " + errors.url
-          : errors.description
-          ? "Description" + error.description
+        error.apn
+          ? "APN: " + error.apn
+          : error.state
+          ? "State: " + errors.state
+          : errors.county
+          ? "County" + error.county
+          : error.size
+          ? "Size: " + error.username
+          : error.property_status
+          ? "Property status: " + error.property_status
+          : error.asking_price
+          ? "Asking price: " + error.asking_price
+          : error.finance_terms
+          ? "Finance terms: " + error.finance_terms
+          : error.cash_terms
+          ? "Cash terms: " + error.cash_terms
+          : error.other_terms
+          ? "Other terms: " + error.other_terms
+          : error.notes
+          ? "Notes: " + error.notes
           : error.non_field_errors
           ? error.non_field_errors
           : error,
@@ -349,12 +347,12 @@ export default {
     },
   },
   mounted() {
-    this.fetchMe();
-    setTimeout(() => this.fetchPropertyDetailFiles(), 1000);
+    this.fetchSellerLists();
+    console.warn("Property detail: ", this.propertyDetail.id);
   },
 };
 </script>
-<style scoped>
+  <style scoped>
 .pagination-select,
 .search-input {
   width: 200px;
@@ -363,3 +361,4 @@ export default {
   transform: none !important;
 }
 </style>
+  

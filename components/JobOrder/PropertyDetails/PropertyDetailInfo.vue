@@ -327,6 +327,17 @@
                       :propertyDetail="this.propertyDetail"
                     ></property-file-list>
                   </tab-pane>
+                  <tab-pane>
+                    <span slot="label">
+                      Seller list for APN
+                      <strong>{{ propertyDetail.apn }}</strong>
+                    </span>
+                    <span slot="label"> Seller list </span>
+                    <seller-list
+                    :property-detail="propertyDetail"
+                      :fetch="fetchPropertyDetail"
+                    ></seller-list>
+                  </tab-pane>
                 </tabs>
                 <div class="pull-right">
                   <base-button
@@ -371,11 +382,12 @@
 import { mapGetters, mapActions } from "vuex";
 
 import { Modal } from "@/components";
-import { Select, Option } from "element-ui";
+import { Select, Option, DatePicker } from "element-ui";
 import { BaseAlert } from "@/components";
 import PropertyPriceList from "~/components/JobOrder/PropertyDetails/PropertyPriceList";
 import PropertyFileList from "~/components/JobOrder/PropertyDetails/PropertyDetailFiles/PropertyDetailFileList";
 import PropertyPriceCreate from "~/components/JobOrder/PropertyDetails/PropertyPriceCreate";
+import SellerList from "~/components/JobOrder/PropertyDetails/Seller/SellerList.vue";
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
 
 import { TabPane, Tabs, Collapse, CollapseItem } from "@/components";
@@ -387,6 +399,7 @@ export default {
     return {
       property_price_statuses: [],
       property_detail_files: [],
+      property_detail_seller_lists: [],
       user: {},
       wizardModel: {},
       loading: false,
@@ -483,6 +496,23 @@ export default {
         },
       },
       detail: "",
+      leadTypeChoices: {
+        placeholder: "",
+        status: [
+          { value: null, label: "--Select lead type--" },
+          { value: "buyers", label: "Buyers" },
+          { value: "sellers", label: "Sellers" },
+        ],
+      },
+      leadStatusChoices: {
+        placeholder: "",
+        status: [
+          { value: "interested", label: "Interested" },
+          { value: "not_interested", label: "Not Interested" },
+          { value: "dead_lead", label: "Dead lead" },
+          { value: "do_not_call_list", label: "Do Not Call List" },
+        ],
+      },
     };
   },
   components: {
@@ -497,6 +527,8 @@ export default {
     Collapse,
     CollapseItem,
     BaseAlert,
+    SellerList,
+    [DatePicker.name]: DatePicker,
   },
   provide() {
     return {
@@ -697,6 +729,8 @@ export default {
           website_url: this.propertyDetail.website_url,
           file_storage: this.propertyDetail.file_storage,
           property_price_statuses: this.propertyDetail.property_price_statuses,
+          property_detail_seller_lists:
+            this.propertyDetail.property_detail_seller_lists,
           property_complete_address:
             this.propertyDetail.property_complete_address,
         };
@@ -722,6 +756,8 @@ export default {
           website_url: this.propertyDetail.website_url,
           file_storage: this.propertyDetail.file_storage,
           property_price_statuses: this.propertyDetail.property_price_statuses,
+          property_detail_seller_lists:
+            this.propertyDetail.property_detail_seller_lists,
           property_complete_address:
             this.propertyDetail.property_complete_address,
         };
@@ -769,6 +805,40 @@ export default {
         }
         this.saving = false;
       }
+    },
+    addSellerRow: function () {
+      this.propertyDetail.property_detail_seller_lists.push({
+        apn: this.propertyDetail.apn,
+        client_code: this.clientUser.client_code,
+        date_lead_added: "",
+        lead_type: null,
+        seller_lead_name: "",
+        phone_number: "",
+        email: "",
+        lead_status: null,
+        seller_asking_price: "",
+        counter_offer_amount: [],
+      });
+      console.log(this.property_detail_seller_lists);
+    },
+    addCounterOffer() {
+      const vm = this;
+      // _.forEach(vm.sellerLists, function (item) {
+      //   vm.counter_offer_amount.push({
+      //     amount: "",
+      //   });
+      // });
+      vm.counter_offer_amount.push({
+        amount: "",
+      });
+      console.warn(vm.counter_offer_amount);
+    },
+    deleteCounterOffer(e, index) {
+      const vm = this;
+      vm.counter_offer_amount.splice(index, 1);
+    },
+    deleteSellerRow(e, index) {
+      this.propertyDetail.property_detail_seller_lists.splice(index, 1);
     },
   },
   mounted() {
