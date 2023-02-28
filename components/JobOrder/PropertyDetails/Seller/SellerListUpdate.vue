@@ -77,6 +77,29 @@
           </base-input>
         </div>
       </div>
+      <div class="form-row">
+        <div class="col-sm-12 col-md-12">
+          <div class="row"><label>Lead Status</label></div>
+          <el-select
+            class="select-primary"
+            required
+            size="large"
+            name="leadStatus"
+            placeholder="Lead status"
+            v-model="lead_status"
+            @input="setItem"
+          >
+            <el-option
+              v-for="option in leadStatusChoices.status"
+              class="select-primary"
+              :value="option.value"
+              :label="option.label"
+              :key="option.label"
+            >
+            </el-option>
+          </el-select>
+        </div>
+      </div>
       <div slot="footer">
         <div class="pull-right mt-5">
           <base-button
@@ -150,7 +173,7 @@ export default {
         status: [
           { value: "interested", label: "Interested" },
           { value: "not_interested", label: "Not Interested" },
-          { value: "dead_leda", label: "Dead lead" },
+          { value: "dead_lead", label: "Dead lead" },
           { value: "do_not_call_list", label: "Do Not Call List" },
         ],
       },
