@@ -69,11 +69,7 @@
       <div class="form-row">
         <div class="col-sm-12 col-md-12">
           <label>Email</label>
-          <base-input
-            name="Email"
-            placeholder="Email"
-            v-model="email"
-          >
+          <base-input name="Email" placeholder="Email" v-model="email">
           </base-input>
         </div>
       </div>
@@ -98,6 +94,28 @@
             >
             </el-option>
           </el-select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col-sm-12 col-md-12">
+          <base-input
+            label="Seller Asking Price"
+            name="Seller Asking Price"
+            placeholder="Seller Asking Price"
+            v-model="seller_asking_price"
+          >
+          </base-input>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col-sm-12 col-md-12">
+          <base-input
+            label="Total minutes consumed"
+            name="Total minutes consumed"
+            placeholder="Total minutes consumed"
+            v-model="total_minutes_consumed"
+          >
+          </base-input>
         </div>
       </div>
       <div slot="footer">
@@ -221,9 +239,9 @@ export default {
       };
       await this.updateSellerList(payload).then(() => {
         this.success = true;
-          if (this.success) {
-            this.fetch();
-          }
+        if (this.success) {
+          this.fetch();
+        }
         setTimeout(() => (this.success = false), 2000);
       });
     },
