@@ -255,7 +255,7 @@ export default {
         status: [
           { value: "interested", label: "Interested" },
           { value: "not_interested", label: "Not Interested" },
-          { value: "dead_leda", label: "Dead lead" },
+          { value: "dead_lead", label: "Dead lead" },
           { value: "do_not_call_list", label: "Do Not Call List" },
         ],
       },
