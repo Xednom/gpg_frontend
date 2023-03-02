@@ -108,7 +108,7 @@ export const actions = {
       return res.data;
     });
   },
-  async saveacquisitions({ commit, dispatch }, payload) {
+  async saveAcquisitions({ commit, dispatch }, payload) {
     let url = "/api/v1/save-acquisitions/";
     await this.$axios.post(url, payload).then((res) => {
       commit("setBasicField", res.data);
