@@ -86,17 +86,16 @@
                 </template>
 
                 <template #cell(actions)="row">
+
                   <b-button
-                    size="sm"
+                    v-b-modal.update
                     @click="
                       {
                         fetchAcquisition(row.item.id), (modals.info = true);
                       }
                     "
-                    class="mr-1"
+                    >Info</b-button
                   >
-                    Info
-                  </b-button>
                 </template>
               </b-table>
             </b-container>
@@ -121,24 +120,34 @@
       </div>
     </div>
     <!-- update modal -->
-    <modal
+    <!-- <modal
       :show.sync="modals.info"
       headerClasses="justify-content-center"
       class="white-content"
     >
-      <acquisition-update :fetch="fetchAcquisitions"></acquisition-update>
-    </modal>
+      <acquisition-update :fetch="fetchAcquisition"></acquisition-update>
+    </modal> -->
 
-    <!-- <modal
-      :show.sync="modals.create"
-      headerClasses="justify-content-center"
-      class="white-content"
-    >
-      <acquisition-create
+    <b-modal id="update" size="lg" title="Update Acquisition" hide-footer>
+      <acquisition-update
         :fetch="fetchAcquisitions"
-        :property-detail="propertyDetail"
-      ></acquisition-create>
-  </modal> -->
+      >
+        <template #modal-footer>
+          <div class="w-100">
+            <p class="float-left">Modal Footer Content</p>
+            <b-button
+              variant="primary"
+              size="sm"
+              class="float-right"
+              @click="show = false"
+            >
+              Close
+            </b-button>
+          </div>
+        </template>
+      </acquisition-update>
+    </b-modal>
+
     <b-modal id="create" size="lg" title="Add Acquisition" hide-footer>
       <acquisition-create
         :fetch="fetchAcquisitions"
@@ -311,7 +320,7 @@ export default {
       this.currentPage = 1;
     },
     async fetchAcquisition(id) {
-      this.$store.dispatch("acquisition/fetchacquisition", id).then(() => {
+      this.$store.dispatch("acquisition/fetchAcquisition", id).then(() => {
         console.warn("Acquisition: ", this.acquisition);
       });
     },
