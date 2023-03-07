@@ -86,7 +86,6 @@
                 </template>
 
                 <template #cell(actions)="row">
-
                   <b-button
                     v-b-modal.update
                     @click="
@@ -132,19 +131,6 @@
       <acquisition-update
         :fetch="fetchAcquisitions"
       >
-        <template #modal-footer>
-          <div class="w-100">
-            <p class="float-left">Modal Footer Content</p>
-            <b-button
-              variant="primary"
-              size="sm"
-              class="float-right"
-              @click="show = false"
-            >
-              Close
-            </b-button>
-          </div>
-        </template>
       </acquisition-update>
     </b-modal>
 
@@ -181,8 +167,11 @@ import Fuse from "fuse.js";
 import swal from "sweetalert2";
 import { mapGetters } from "vuex";
 
+import AcquisitionMixin from "@/mixins/Acquisition.js";
+
 export default {
-  name: "Acquisition",
+  name: "AcquisitionList",
+  mixins: [AcquisitionMixin],
   components: {
     Modal,
     [Select.name]: Select,
@@ -321,7 +310,7 @@ export default {
     },
     async fetchAcquisition(id) {
       this.$store.dispatch("acquisition/fetchAcquisition", id).then(() => {
-        console.warn("Acquisition: ", this.acquisition);
+        this.item = this.acquisition;
       });
     },
     async fetchAcquisitions() {
@@ -364,7 +353,6 @@ export default {
   },
   mounted() {
     this.fetchAcquisitions();
-    console.warn("Property detail: ", this.propertyDetail.id);
   },
 };
 </script>
