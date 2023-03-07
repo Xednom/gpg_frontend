@@ -115,7 +115,7 @@ export const actions = {
       return res.data;
     });
   },
-  async deleteacquisition({ commit, dispatch }, payload) {
+  async deleteAcquisition({ commit, dispatch }, payload) {
     let url = `/api/v1/acquisition/${payload}/`;
     try {
       await this.$axios.delete(url, payload);
@@ -123,7 +123,7 @@ export const actions = {
       console.error(err);
     }
   },
-  async updateacquisition({ commit }, payload) {
+  async updateAcquisition({ commit }, payload) {
     console.log(payload);
     let url = `/api/v1/acquisition/${payload.id}/`;
     let method = "put";
