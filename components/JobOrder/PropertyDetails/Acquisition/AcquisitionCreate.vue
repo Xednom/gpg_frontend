@@ -21,17 +21,25 @@
         </div>
         <div class="row justify-content-center mt-5">
           <div class="col-sm-5">
-            <base-input label="Possible offer" v-model="item.possible_offer">
+            <base-input
+              label="Possible offer"
+              name="Possible offer"
+              v-model="item.possible_offer"
+              v-validate="'required'"
+              :error="getError('Possible offer')"
+            >
             </base-input>
           </div>
           <div class="col-sm-5">
             <base-input
               label="Approved amount from client"
+              name="Approved amount from client"
               v-model="item.approved_amount_from_client"
+              v-validate="modelValidations.approved_amount_from_client"
+              :error="getError('Approved amount from client')"
             >
               <el-select
                 class="select-primary"
-                reqiured
                 size="large"
                 placeholder="Approved amount from Client"
                 v-model="item.approved_amount_from_client"
@@ -52,35 +60,45 @@
               label="Seller Lead name"
               name="Seller Lead name"
               v-model="item.seller_lead_name"
+              v-validate="modelValidations.seller_lead_name"
+              :error="getError('Seller Lead name')"
             >
             </base-input>
           </div>
           <div class="col-sm-5">
             <base-input
               label="Minimum amount"
-              name="Minimum amount"
+              name="minimum_amount"
               v-model="item.minimum_amount"
+              v-validate="modelValidations.minimum_amount"
             >
             </base-input>
           </div>
           <div class="col-sm-5">
             <base-input
               label="Maximum amount"
-              name="Maximum amount"
+              name="maximum_amount"
               v-model="item.maximum_amount"
+              v-validate="modelValidations.maximum_amount"
             >
             </base-input>
           </div>
           <div class="col-sm-5">
             <base-input
               label="Amount closed deal"
-              name="Amount closed deal"
+              name="amount_closed_deal"
               v-model="item.amount_closed_deal"
+              v-validate="modelValidations.amount_closed_deal"
             >
             </base-input>
           </div>
           <div class="col-sm-5">
-            <base-input label="Deal status">
+            <base-input
+              label="Deal status"
+              name="Deal Status"
+              v-validate="'required'"
+              :error="getError('Deal Status')"
+            >
               <el-select
                 class="select-primary"
                 reqiured
@@ -216,19 +234,63 @@ export default {
           { value: "drop_deal", label: "Drop deal" },
         ],
       },
+      modelValidations: {
+        possible_offer: {
+          required: true,
+        },
+        approved_amount_from_client: {
+          required: true,
+        },
+        seller_lead_name: {
+          required: true,
+        },
+        minimum_amount: {
+          required: true,
+        },
+        maximum_amount: {
+          required: true,
+        },
+        amount_closed_deal: {
+          required: true,
+        },
+        deal_status: {
+          required: true,
+        },
+        assigned_sales_team: {
+          required: true,
+        },
+      },
     };
   },
   methods: {
+    getError(fieldName) {
+      return this.errors.first(fieldName);
+    },
     ...mapActions("acquisition", ["saveAcquisitions"]),
     ...mapActions("user", ["fetchClientUser", "fetchUser"]),
     async save() {
-      await this.saveAcquisitions(this.acquisitions).then(() => {
-        this.success = true;
-        if (this.success) {
-          this.acquisitions = [];
-          this.fetch();
-        }
-        setTimeout(() => (this.success = false), 2000);
+      let isValidForm = await this.$validator.validateAll();
+      console.log("Valid form: ", isValidForm);
+      if (isValidForm) {
+        await this.saveAcquisitions(this.acquisitions)
+          .then(() => {
+            this.success = true;
+            if (this.success) {
+              this.acquisitions = [];
+              this.fetch();
+            }
+            setTimeout(() => (this.success = false), 2000);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      }
+    },
+    errorMessage(variant = null, error) {
+      this.$bvToast.toast("Errpr", {
+        title: `Error`,
+        variant: variant,
+        solid: true,
       });
     },
     successMessage() {
@@ -242,7 +304,6 @@ export default {
     //   console.info("Client info: ", this.client);
     // },
     addAcquisitionRow: function () {
-
       this.acquisitions.push({
         property_detail: this.propertyDetail.id,
         apn: this.propertyDetail.apn,
@@ -256,9 +317,6 @@ export default {
         assigned_sales_team: null,
         notes: "",
       });
-
-      console.warn("Get user: ", this.getUser);
-      console.info("Get code: ", this.clientCode)
     },
     deleteCounterOffer(e, index) {
       const vm = this;
@@ -314,7 +372,7 @@ export default {
 
       console.info("Client info: ", this.client);
 
-      return this.client
+      return this.client;
     },
   },
   mounted() {
