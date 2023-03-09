@@ -268,8 +268,8 @@ export default {
         });
     },
     acquisitionCount() {
-      if (this.acquisition) {
-        return this.acquisition.length;
+      if (this.acquisitions) {
+        return this.acquisitions.length;
       }
     },
   },
