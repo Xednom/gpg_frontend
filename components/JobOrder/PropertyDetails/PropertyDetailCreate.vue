@@ -346,12 +346,12 @@
                 <card
                   v-for="(item, index) in property_detail_acquisition"
                   :key="index"
-                  title="Acquisition list"
+                  title="Disposition list"
                 >
                   <div class="col-md-12">
                     <b-btn
                       class="btn btn-danger btn-sm float-right"
-                      @click="deleteAcquisitionRow($event, index)"
+                      @click="deleteDispositionRow($event, index)"
                     >
                       <i class="tim-icons icon-simple-remove"> {{ item.id }}</i>
                     </b-btn>
@@ -369,7 +369,7 @@
                         label="Approved amount from client"
                         v-model="item.approved_amount_from_client"
                       >
-                      <el-select
+                        <el-select
                           class="select-primary"
                           reqiured
                           size="large"
@@ -453,6 +453,114 @@
                 </card>
               </card>
             </tab-pane>
+            <tab-pane>
+              <span slot="label"> Disposition list </span>
+              <!-- <disposition-create
+                v-model="property_detail_disposition"
+                @change="changed"
+              ></disposition-create> -->
+              <card>
+                <h5 slot="header" class="title">Disposition list</h5>
+                <div class="col-xs-12">
+                  <b-btn class="btn btn-success" @click="addDispositionRow">
+                    Add Disposition
+                  </b-btn>
+                </div>
+                <card
+                  v-for="(item, index) in property_detail_disposition"
+                  :key="index"
+                  title="Acquisition list"
+                >
+                  <div class="col-md-12">
+                    <b-btn
+                      class="btn btn-danger btn-sm float-right"
+                      @click="deleteAcquisitionRow($event, index)"
+                    >
+                      <i class="tim-icons icon-simple-remove"> {{ item.id }}</i>
+                    </b-btn>
+                  </div>
+                  <div class="row justify-content-center mt-5">
+                    <div class="col-sm-5">
+                      <base-input
+                        label="Selling price"
+                        v-model="item.selling_price"
+                      >
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input
+                        label="Discounted cash price"
+                        v-model="item.discounted_cash_price"
+                      >
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input
+                        label="Selling price minimum"
+                        v-model="item.selling_price_minimum"
+                      >
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input
+                        label="Seller price maximum"
+                        name="Seller price maximum"
+                        v-model="item.selling_price_maximum"
+                      >
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <label>Financed terms</label>
+                      <textarea
+                        name="notes"
+                        class="form-control"
+                        type="text"
+                        v-model="item.financed_terms"
+                      >
+                      </textarea>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input
+                        label="Amount closed deal"
+                        name="Amount closed deal"
+                        v-model="item.amount_closed_deal"
+                      >
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input label="Deal status">
+                        <el-select
+                          class="select-primary"
+                          reqiured
+                          size="large"
+                          placeholder="Deal status"
+                          v-model="item.deal_status"
+                        >
+                          <el-option
+                            v-for="option in dealStatusChoices.status"
+                            class="select-primary"
+                            :value="option.value"
+                            :label="option.label"
+                            :key="option.label"
+                          >
+                          </el-option>
+                        </el-select>
+                      </base-input>
+                    </div>
+                    <div class="col-sm-12">
+                      <label>Notes</label>
+                      <textarea
+                        name="notes"
+                        class="form-control"
+                        type="text"
+                        v-model="item.notes"
+                      >
+                      </textarea>
+                    </div>
+                  </div>
+                </card>
+              </card>
+            </tab-pane>
           </tabs>
           <div class="pull-right">
             <base-button
@@ -492,6 +600,7 @@ import SecondStep from "@/components/JobOrder/PropertyDetails/PropertyDetailSeco
 import ThirdStep from "@/components/JobOrder/PropertyDetails/PropertyDetailThirdStep.vue";
 import SellerList from "~/components/JobOrder/PropertyDetails/Seller/SellerFormCard.vue";
 import Acquisition from "~/components/JobOrder/PropertyDetails/Acquisition/AcquisitionCreate.vue";
+import DispositionCreate from "~/components/JobOrder/PropertyDetails/Disposition/DispositionFormTable.vue";
 import swal from "sweetalert2";
 import { TabPane, Tabs, Collapse, CollapseItem } from "@/components";
 
@@ -514,6 +623,7 @@ export default {
     SellerList,
     [DatePicker.name]: DatePicker,
     Acquisition,
+    DispositionCreate,
   },
   data() {
     return {
@@ -547,6 +657,7 @@ export default {
       property_detail_seller_lists: [],
       property_detail_buyer_lists: [],
       property_detail_acquisition: [],
+      property_detail_disposition: [],
       leadTypeChoices: {
         placeholder: "",
         status: [
@@ -692,6 +803,9 @@ export default {
         }
       );
     },
+    changed() {
+      this.$emit("change", this.property_detail_disposition)
+    },
     async save() {
       let isValidForm = await this.$validator.validateAll();
       if (isValidForm) {
@@ -718,6 +832,7 @@ export default {
           property_detail_seller_lists: this.property_detail_seller_lists,
           property_detail_buyer_lists: this.property_detail_buyer_lists,
           property_detail_acquisition: this.property_detail_acquisition,
+          property_detail_disposition: this.property_detail_disposition,
         };
 
         const staffPayload = {
@@ -743,6 +858,7 @@ export default {
           property_detail_seller_lists: this.property_detail_seller_lists,
           property_detail_buyer_lists: this.property_detail_buyer_lists,
           property_detail_acquisition: this.property_detail_acquisition,
+          property_detail_disposition: this.property_detail_disposition,
         };
 
         if (this.$auth.user.designation_category == "staff") {
@@ -831,6 +947,21 @@ export default {
         notes: "",
       });
     },
+    addDispositionRow() {
+      this.property_detail_disposition.push({
+        apn: this.apn,
+        client_code: this.clientUser.client_code,
+        selling_price: "",
+        discounted_cash_price: "",
+        selling_price_minimum: "",
+        selling_price_maximum: "",
+        financed_terms: "",
+        amount_closed_deal: "",
+        deal_status: "",
+        assigned_sales_team: null,
+        notes: "",
+      });
+    },
     addCounterOffer() {
       const vm = this;
       // _.forEach(vm.sellerLists, function (item) {
@@ -854,7 +985,7 @@ export default {
       this.property_detail_buyer_lists.splice(index, 1);
     },
     deleteAcquisitionRow(e, index) {
-      this.property_detail_acquisition.splice(index, 1);
+      this.property_detail_disposition.splice(index, 1);
     },
   },
   computed: {
