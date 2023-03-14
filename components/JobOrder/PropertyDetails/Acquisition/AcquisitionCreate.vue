@@ -96,12 +96,12 @@
             <base-input
               label="Deal status"
               name="Deal Status"
+              v-model="item.deal_status"
               v-validate="'required'"
               :error="getError('Deal Status')"
             >
               <el-select
                 class="select-primary"
-                reqiured
                 size="large"
                 placeholder="Deal status"
                 v-model="item.deal_status"
