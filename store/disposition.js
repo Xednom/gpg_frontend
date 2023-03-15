@@ -10,6 +10,7 @@ const blankState = {
   amount_closed_deal: "",
   deal_status: "",
   assigned_sales_team: null,
+  financed_terms: "",
   notes: "",
 };
 
@@ -38,6 +39,7 @@ export const getters = {
   amount_closed_deal: (state) => state.amount_closed_deal,
   deal_status: (state) => state.deal_status,
   assigned_sales_team: (state) => state.assigned_sales_team,
+  financed_terms: (state) => state.financed_terms,
   notes: (state) => state.notes,
   dispositionsPagination: (state) => state.dispositionsPagination,
   dispositions: (state) => state.dispositions,

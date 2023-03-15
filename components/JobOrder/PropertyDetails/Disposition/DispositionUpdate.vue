@@ -65,6 +65,16 @@
             </base-input>
           </div>
           <div class="col-sm-12">
+            <label>Financed terms</label>
+            <textarea
+              name="financed_terms"
+              class="form-control"
+              type="text"
+              v-model="financed_terms"
+            >
+            </textarea>
+          </div>
+          <div class="col-sm-12">
             <label>Notes</label>
             <textarea
               name="notes"
@@ -129,8 +139,8 @@ export default {
       type: Function,
     },
     items: {
-      type: Function
-    }
+      type: Function,
+    },
   },
   data() {
     return {
@@ -158,6 +168,7 @@ export default {
       amount_closed_deal: "",
       deal_status: "",
       assigned_sales_team: "",
+      financed_terms: "",
       notes: "",
     };
   },
@@ -183,6 +194,7 @@ export default {
         amount_closed_deal: this.amount_closed_deal,
         deal_status: this.deal_status,
         assigned_sales_team: this.assigned_sales_team,
+        financed_terms: this.financed_terms,
         notes: this.notes,
       };
       console.warn("Payload: ", payload);
@@ -215,6 +227,7 @@ export default {
         vm.amount_closed_deal = item.amount_closed_deal;
         vm.deal_status = item.deal_status;
         vm.assigned_sales_team = item.assigned_sales_team;
+        vm.financed_terms = item.financed_terms;
         vm.notes = item.notes;
       });
     },
@@ -223,7 +236,7 @@ export default {
     // setTimeout(() => {
     //     this.items();
     //   }, 500);
-  }
+  },
 };
 </script>
       
