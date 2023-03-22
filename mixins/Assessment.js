@@ -10,24 +10,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters({ assessment: "assessment/assessment" }),
-    setItem() {
-      const vm = this;
-      const items = [this.$store.getters["assessment/assessment"]];
-      _.forEach(items, function(item) {
-        vm.id = item.id;
-        vm.apn = item.apn;
-        vm.client_code = item.client_code;
-        vm.possible_offer = item.possible_offer;
-        vm.approved_amount_from_client = item.approved_amount_from_client;
-        vm.minimum_amount = item.minimum_amount;
-        vm.maximum_amount = item.maximum_amount;
-        vm.amount_closed_deal = item.amount_closed_deal;
-        vm.deal_status = item.deal_status;
-        vm.assigned_sales_team = item.assigned_sales_team;
-        vm.notes = item.notes;
-      });
-    },
+
     property_detail: {
       get() {
         return this.$store.getters["assessment/property_detail"];

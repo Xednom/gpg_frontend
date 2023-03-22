@@ -370,6 +370,16 @@
                       :fetch="fetchPropertyDetail"
                     ></disposition-list>
                   </tab-pane>
+                  <tab-pane>
+                    <span slot="label">
+                      Assessment files for APN
+                      <strong>{{ propertyDetail.apn }}</strong>
+                    </span>
+                    <assessment-list
+                      :property-detail="propertyDetail"
+                      :fetch="fetchPropertyDetail"
+                    ></assessment-list>
+                  </tab-pane>
                 </tabs>
                 <div class="pull-right">
                   <base-button
@@ -423,6 +433,7 @@ import SellerList from "~/components/JobOrder/PropertyDetails/Seller/SellerList.
 import BuyerList from "~/components/JobOrder/PropertyDetails/Buyer/BuyerList.vue";
 import AcquisitionList from "~/components/JobOrder/PropertyDetails/Acquisition/AcquisitionList.vue";
 import DispositionList from "~/components/JobOrder/PropertyDetails/Disposition/DispositionList.vue";
+import AssessmentList from "~/components/JobOrder/PropertyDetails/Assessment/AssessmentList.vue";
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
 
 import { TabPane, Tabs, Collapse, CollapseItem } from "@/components";
@@ -447,6 +458,7 @@ export default {
     AcquisitionList,
     DispositionList,
     [DatePicker.name]: DatePicker,
+    AssessmentList
   },
   data() {
     return {

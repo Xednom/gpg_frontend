@@ -114,7 +114,7 @@ export const actions = {
       return res.data;
     });
   },
-  async saveassessments({ commit, dispatch }, payload) {
+  async saveAssessments({ commit, dispatch }, payload) {
     let url = "/api/v1/save-assessments/";
     await this.$axios.post(url, payload).then((res) => {
       commit("setBasicField", res.data);
@@ -131,7 +131,7 @@ export const actions = {
   },
   async updateAssessment({ commit }, payload) {
     console.log(payload);
-    let url = `/api/v1/assessments/${payload.id}/`;
+    let url = `/api/v1/assessment/${payload.id}/`;
     let method = "put";
     console.log(payload);
     return await this.$axios[method](url, payload).then((res) => {
