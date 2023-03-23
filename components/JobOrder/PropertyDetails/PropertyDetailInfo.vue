@@ -334,7 +334,7 @@
                     </span>
                     <span slot="label"> Seller list </span>
                     <seller-list
-                    :property-detail="propertyDetail"
+                      :property-detail="propertyDetail"
                       :fetch="fetchPropertyDetail"
                     ></seller-list>
                   </tab-pane>
@@ -345,9 +345,40 @@
                     </span>
                     <span slot="label"> Buyer list </span>
                     <buyer-list
-                    :property-detail="propertyDetail"
+                      :property-detail="propertyDetail"
                       :fetch="fetchPropertyDetail"
                     ></buyer-list>
+                  </tab-pane>
+                  <tab-pane>
+                    <span slot="label">
+                      Acquisition list for APN
+                      <strong>{{ propertyDetail.apn }}</strong>
+                    </span>
+                    <span slot="label"> Acquisition list </span>
+                    <acquisition-list
+                      :property-detail="propertyDetail"
+                      :fetch="fetchPropertyDetail"
+                    ></acquisition-list>
+                  </tab-pane>
+                  <tab-pane>
+                    <span slot="label">
+                      Disposition list for APN
+                      <strong>{{ propertyDetail.apn }}</strong>
+                    </span>
+                    <disposition-list
+                      :property-detail="propertyDetail"
+                      :fetch="fetchPropertyDetail"
+                    ></disposition-list>
+                  </tab-pane>
+                  <tab-pane>
+                    <span slot="label">
+                      Assessment files for APN
+                      <strong>{{ propertyDetail.apn }}</strong>
+                    </span>
+                    <assessment-list
+                      :property-detail="propertyDetail"
+                      :fetch="fetchPropertyDetail"
+                    ></assessment-list>
                   </tab-pane>
                 </tabs>
                 <div class="pull-right">
@@ -400,6 +431,9 @@ import PropertyFileList from "~/components/JobOrder/PropertyDetails/PropertyDeta
 import PropertyPriceCreate from "~/components/JobOrder/PropertyDetails/PropertyPriceCreate";
 import SellerList from "~/components/JobOrder/PropertyDetails/Seller/SellerList.vue";
 import BuyerList from "~/components/JobOrder/PropertyDetails/Buyer/BuyerList.vue";
+import AcquisitionList from "~/components/JobOrder/PropertyDetails/Acquisition/AcquisitionList.vue";
+import DispositionList from "~/components/JobOrder/PropertyDetails/Disposition/DispositionList.vue";
+import AssessmentList from "~/components/JobOrder/PropertyDetails/Assessment/AssessmentList.vue";
 import CreatePropertyDetailMixin from "@/mixins/CreatePropertyDetailMixin.js";
 
 import { TabPane, Tabs, Collapse, CollapseItem } from "@/components";
@@ -407,6 +441,25 @@ import { TabPane, Tabs, Collapse, CollapseItem } from "@/components";
 export default {
   name: "wizard-form",
   mixins: ["CreatePropertyDetailMixin"],
+  components: {
+    [Select.name]: Select,
+    [Option.name]: Option,
+    PropertyPriceList,
+    PropertyFileList,
+    Modal,
+    PropertyPriceCreate,
+    TabPane,
+    Tabs,
+    Collapse,
+    CollapseItem,
+    BaseAlert,
+    SellerList,
+    BuyerList,
+    AcquisitionList,
+    DispositionList,
+    [DatePicker.name]: DatePicker,
+    AssessmentList
+  },
   data() {
     return {
       property_price_statuses: [],
@@ -526,22 +579,6 @@ export default {
         ],
       },
     };
-  },
-  components: {
-    [Select.name]: Select,
-    [Option.name]: Option,
-    PropertyPriceList,
-    PropertyFileList,
-    Modal,
-    PropertyPriceCreate,
-    TabPane,
-    Tabs,
-    Collapse,
-    CollapseItem,
-    BaseAlert,
-    SellerList,
-    BuyerList,
-    [DatePicker.name]: DatePicker,
   },
   provide() {
     return {

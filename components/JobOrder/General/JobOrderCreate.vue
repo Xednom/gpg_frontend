@@ -32,10 +32,14 @@
           </base-input>
         </div>
         <div class="col-sm-12 col-md-12">
-          <base-input label="Due date">
+          <base-input
+            label="Due date"
+            name="Due date"
+            v-validate="'required'"
+            :error="getError('Due date')"
+          >
             <el-date-picker
               v-model="due_date"
-              v-validate="'required'"
               type="date"
               format="yyyy-MM-dd"
               value-format="yyyy-MM-dd"
@@ -259,7 +263,7 @@ export default {
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
-    getClientCode: debounce(function() {
+    getClientCode: debounce(function () {
       this.$axios
         .get(`/api/v1/client-code/?search=${this.query}`)
         .then((res) => {
