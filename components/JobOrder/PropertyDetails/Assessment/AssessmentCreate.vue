@@ -212,10 +212,8 @@
 import { DatePicker, Select, Option } from "element-ui";
 import { BaseAlert } from "@/components";
 import { mapActions, mapGetters } from "vuex";
-import AssessmentMixin from "@/mixins/Assessment.js";
 
 export default {
-  mixins: [AssessmentMixin],
   components: {
     [DatePicker.name]: DatePicker,
     [Select.name]: Select,
@@ -240,6 +238,7 @@ export default {
       success: false,
       assessments: [],
       clientUser: {},
+      user: {},
       statusChoices: {
         placeholder: "",
         status: [
@@ -294,7 +293,7 @@ export default {
     async save() {
       let isValidForm = await this.$validator.validateAll();
       if (isValidForm) {
-        await this.saveassessments(this.assessments)
+        await this.$store.dispatch("assessment/saveAssessments", (this.assessments))
           .then(() => {
             this.success = true;
             if (this.success) {
@@ -355,6 +354,7 @@ export default {
       try {
         await this.$axios.get(endpoint).then((res) => {
           this.clientUser = res.data;
+          console.warn("Client user: ", this.clientUser)
         });
       } catch (err) {
         console.error(err.response.data);

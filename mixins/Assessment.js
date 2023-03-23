@@ -10,15 +10,6 @@ export default {
     },
   },
   computed: {
-
-    property_detail: {
-      get() {
-        return this.$store.getters["assessment/property_detail"];
-      },
-      set(value) {
-        this.setBasicStoreValue("property_detail", value);
-      },
-    },
     property_detail: {
       get() {
         return this.$store.getters["assessment/property_detail"];
@@ -131,5 +122,22 @@ export default {
         this.setBasicStoreValue("notes", value);
       },
     },
+  },
+  mounted() {
+    setTimeout(() => {
+      this.id = this.item.id;
+      this.apn = this.item.apn;
+      this.client_code = this.item.client_code;
+      this.description = this.item.description;
+      this.notes = this.item.notes;
+      this.description_of_request = this.item.description_of_request;
+      this.completed_job_order_file = this.item.completed_job_order_file;
+      this.date_completed = this.item.date_completed;
+      this.status_of_job = this.item.status_of_job;
+      this.packets = this.item.packets;
+      this.comps_by_parcel = this.item.comps_by_parcel;
+      this.comps_by_area = this.item.comps_by_area;
+      this.due_diligence = this.item.due_diligence;
+    }, 500);
   },
 };

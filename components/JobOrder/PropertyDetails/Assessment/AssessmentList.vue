@@ -130,6 +130,7 @@
       <b-modal id="assessment-update" size="lg" title="Update Assessment" hide-footer>
         <assessment-update
           :fetch="fetchAssessments"
+          :item="assessment"
         >
         </assessment-update>
       </b-modal>

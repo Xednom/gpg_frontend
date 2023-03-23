@@ -57,7 +57,6 @@
                   format="yyyy-MM-dd"
                   value-format="yyyy-MM-dd"
                   placeholder="Choose date"
-                  @input="setItem"
                 >
                 </el-date-picker>
               </base-input>
@@ -70,7 +69,6 @@
                   size="large"
                   name="leadType"
                   v-model="status_of_job"
-                  @change="setItem"
                 >
                   <el-option
                     v-for="option in statusChoices.status"
@@ -203,8 +201,10 @@ import { BaseAlert } from "@/components";
 import { mapGetters, mapActions } from "vuex";
 
 import _ from "lodash";
+import AssessmentMixin from "@/mixins/Assessment.js";
 
 export default {
+  mixins: [AssessmentMixin],
   components: {
     [DatePicker.name]: DatePicker,
     [Select.name]: Select,
@@ -217,6 +217,9 @@ export default {
     },
     fetch: {
       type: Function,
+    },
+    item: {
+      type: Object,
     },
   },
   data() {
@@ -294,28 +297,8 @@ export default {
     },
   },
   computed: {
-    setItem() {
-      const vm = this;
-      const items = [this.$store.getters["assessment/assessment"]];
-      console.warn("Items: ", items);
-      _.forEach(items, function (item) {
-        vm.id = item.id;
-        vm.apn = item.apn;
-        vm.client_code = item.client_code;
-        vm.description = item.description;
-        vm.description_of_request = item.description_of_request;
-        vm.completed_job_order_file = item.completed_job_order_file;
-        vm.date_completed = item.date_completed;
-        vm.status_of_job = item.status_of_job;
-        vm.packets = item.packets;
-        vm.comps_by_parcel = item.comps_by_parcel;
-        vm.comps_by_area = item.comps_by_area;
-        vm.due_diligence = item.due_diligence;
-        vm.notes = item.notes;
-      });
-    },
+    ...mapGetters(["assessment/assessment"]),
   },
-  mounted() {},
 };
 </script>
       
