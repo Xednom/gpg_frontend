@@ -1,7 +1,8 @@
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   methods: {
+    ...mapActions("listing", ["fetchListingStatus"]),
     setBasicStoreValue(fieldName, value) {
       this.$store.commit("listing/setBasicField", {
         field: fieldName,
@@ -25,6 +26,7 @@ export default {
     },
   },
   computed: {
+    ...mapGetters({ listingStatus: "listing/listingStatus" }),
     property_detail: {
       get() {
         return this.$store.getters["listing/property_detail"];

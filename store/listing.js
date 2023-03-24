@@ -10,7 +10,7 @@ const blankState = {
   status_of_job: "",
   tagging: "",
   listing_sites: "",
-  listing_status: "",
+  listing_status: null,
   assigned_to: null,
 };
 
@@ -35,6 +35,7 @@ export const getters = {
   client_code: (state) => state.client_code,
   description: (state) => state.description,
   description_of_request: (state) => state.description_of_request,
+  notes: (state) => state.notes,
   completed_job_order_file: (state) => state.completed_job_order_file,
   date_completed: (state) => state.date_completed,
   status_of_job: (state) => state.status_of_job,
