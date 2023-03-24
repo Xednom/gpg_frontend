@@ -8,6 +8,26 @@ export default {
         value: value,
       });
     },
+    marketingFields() {
+      this.id = this.item.id;
+      this.apn = this.item.apn;
+      this.client_code = this.item.client_code;
+      this.description = this.item.description;
+      this.notes = this.item.notes;
+      this.description_of_request = this.item.description_of_request;
+      this.completed_job_order_file = this.item.completed_job_order_file;
+      this.date_completed = this.item.date_completed;
+      this.status_of_job = this.item.status_of_job;
+      this.images = this.item.images;
+      this.ad_content = this.item.ad_content;
+      this.youtube_videos = this.item.youtube_videos;
+      this.tiktok_videos = this.item.tiktok_videos;
+      this.email_campaign = this.item.email_campaign;
+      this.other_graphics = this.item.other_graphics;
+      this.other_makerting_files = this.item.other_makerting_files;
+      this.neighbor_list = this.item.neighbor_list;
+      this.assigned_to = this.item.assigned_to;
+    },
   },
   computed: {
     property_detail: {
@@ -157,24 +177,7 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      this.id = this.item.id;
-      this.apn = this.item.apn;
-      this.client_code = this.item.client_code;
-      this.description = this.item.description;
-      this.notes = this.item.notes;
-      this.description_of_request = this.item.description_of_request;
-      this.completed_job_order_file = this.item.completed_job_order_file;
-      this.date_completed = this.item.date_completed;
-      this.status_of_job = this.item.status_of_job;
-      this.images = this.item.images;
-      this.ad_content = this.item.ad_content;
-      this.youtube_videos = this.item.youtube_videos;
-      this.tiktok_videos = this.item.tiktok_videos;
-      this.email_campaign = this.item.email_campaign;
-      this.other_graphics = this.item.other_graphics;
-      this.other_makerting_files = this.item.other_makerting_files;
-      this.neighbor_list = this.item.neighbor_list;
-      this.assigned_to = this.item.assigned_to;
+      this.marketingFields();
     }, 500);
   },
 };
