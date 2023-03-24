@@ -744,6 +744,406 @@
                 </card>
               </card>
             </tab-pane>
+            <tab-pane>
+              <span slot="label"> Marketing list </span>
+              <!-- <disposition-create
+                v-model="property_detail_disposition"
+                @change="changed"
+              ></disposition-create> -->
+              <card>
+                <h5 slot="header" class="title">Marketing list</h5>
+                <div class="col-xs-12">
+                  <b-btn class="btn btn-success" @click="addMarketingRow">
+                    Add Marketing
+                  </b-btn>
+                </div>
+                <card
+                  v-for="(item, index) in property_detail_marketing_file"
+                  :key="index"
+                  title="Marketing list"
+                >
+                  <div class="col-md-12">
+                    <b-btn
+                      class="btn btn-danger btn-sm float-right"
+                      @click="deleteMarketingRow($event, index)"
+                    >
+                      <i class="tim-icons icon-simple-remove"> {{ item.id }}</i>
+                    </b-btn>
+                  </div>
+                  <div class="row justify-content-center mt-5">
+                    <div class="col-sm-12">
+                      <label>Description</label>
+                      <textarea
+                        name="Description"
+                        class="form-control"
+                        type="text"
+                        v-model="item.description"
+                      >
+                      </textarea>
+                    </div>
+                    <div class="col-sm-12">
+                      <label>Notes</label>
+                      <textarea
+                        name="notes"
+                        class="form-control"
+                        type="text"
+                        v-model="item.notes"
+                      >
+                      </textarea>
+                    </div>
+                    <div class="col-sm-12">
+                      <label>Description of request</label>
+                      <textarea
+                        name="notes"
+                        class="form-control"
+                        type="text"
+                        v-model="item.description_of_request"
+                      >
+                      </textarea>
+                    </div>
+                    <div class="col-sm-12">
+                      <label>Completd Job order file</label>
+                      <textarea
+                        name="notes"
+                        class="form-control"
+                        type="text"
+                        v-model="item.completed_job_order_file"
+                      >
+                      </textarea>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input label="Date completed">
+                        <el-date-picker
+                          v-model="item.date_completed"
+                          type="date"
+                          format="yyyy-MM-dd"
+                          value-format="yyyy-MM-dd"
+                          placeholder="Choose date"
+                        >
+                        </el-date-picker>
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input label="Status of Job">
+                        <el-select
+                          class="select-primary"
+                          reqiured
+                          size="large"
+                          name="leadType"
+                          v-model="item.status_of_job"
+                        >
+                          <el-option
+                            v-for="option in statusChoices.status"
+                            class="select-primary"
+                            :value="option.value"
+                            :label="option.label"
+                            :key="option.label"
+                          >
+                          </el-option>
+                        </el-select>
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input label="Images">
+                        <el-select
+                          class="select-primary"
+                          reqiured
+                          size="large"
+                          name="images"
+                          v-model="item.images"
+                        >
+                          <el-option
+                            v-for="option in yesOrNoOrNot.status"
+                            class="select-primary"
+                            :value="option.value"
+                            :label="option.label"
+                            :key="option.label"
+                          >
+                          </el-option>
+                        </el-select>
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input label="Ad Content">
+                        <el-select
+                          class="select-primary"
+                          reqiured
+                          size="large"
+                          name="ad_content"
+                          v-model="item.ad_content"
+                        >
+                          <el-option
+                            v-for="option in yesOrNoOrNot.status"
+                            class="select-primary"
+                            :value="option.value"
+                            :label="option.label"
+                            :key="option.label"
+                          >
+                          </el-option>
+                        </el-select>
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input label="Youtube videos">
+                        <el-select
+                          class="select-primary"
+                          reqiured
+                          size="large"
+                          name="youtube_videos"
+                          v-model="item.youtube_videos"
+                        >
+                          <el-option
+                            v-for="option in yesOrNoOrNot.status"
+                            class="select-primary"
+                            :value="option.value"
+                            :label="option.label"
+                            :key="option.label"
+                          >
+                          </el-option>
+                        </el-select>
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input label="Tiktok videos">
+                        <el-select
+                          class="select-primary"
+                          reqiured
+                          size="large"
+                          name="tiktok_videos"
+                          v-model="item.tiktok_videos"
+                        >
+                          <el-option
+                            v-for="option in yesOrNoOrNot.status"
+                            class="select-primary"
+                            :value="option.value"
+                            :label="option.label"
+                            :key="option.label"
+                          >
+                          </el-option>
+                        </el-select>
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input label="Email campaign">
+                        <el-select
+                          class="select-primary"
+                          reqiured
+                          size="large"
+                          name="email_campaign"
+                          v-model="item.email_campaign"
+                        >
+                          <el-option
+                            v-for="option in yesOrNoOrNot.status"
+                            class="select-primary"
+                            :value="option.value"
+                            :label="option.label"
+                            :key="option.label"
+                          >
+                          </el-option>
+                        </el-select>
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input label="Other graphics">
+                        <el-select
+                          class="select-primary"
+                          reqiured
+                          size="large"
+                          name="other_graphics"
+                          v-model="item.other_graphics"
+                        >
+                          <el-option
+                            v-for="option in yesOrNoOrNot.status"
+                            class="select-primary"
+                            :value="option.value"
+                            :label="option.label"
+                            :key="option.label"
+                          >
+                          </el-option>
+                        </el-select>
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input label="Other Marketing files">
+                        <el-select
+                          class="select-primary"
+                          reqiured
+                          size="large"
+                          name="other_makerting_files"
+                          v-model="item.other_makerting_files"
+                        >
+                          <el-option
+                            v-for="option in yesOrNoOrNot.status"
+                            class="select-primary"
+                            :value="option.value"
+                            :label="option.label"
+                            :key="option.label"
+                          >
+                          </el-option>
+                        </el-select>
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input label="Neighbor list">
+                        <el-select
+                          class="select-primary"
+                          reqiured
+                          size="large"
+                          name="neighbor_list"
+                          v-model="item.neighbor_list"
+                        >
+                          <el-option
+                            v-for="option in yesOrNoOrNot.status"
+                            class="select-primary"
+                            :value="option.value"
+                            :label="option.label"
+                            :key="option.label"
+                          >
+                          </el-option>
+                        </el-select>
+                      </base-input>
+                    </div>
+                  </div>
+                </card>
+              </card>
+            </tab-pane>
+            <tab-pane>
+              <span slot="label"> Listing list </span>
+              <!-- <disposition-create
+                v-model="property_detail_disposition"
+                @change="changed"
+              ></disposition-create> -->
+              <card>
+                <h5 slot="header" class="title">Listing list</h5>
+                <div class="col-xs-12">
+                  <b-btn class="btn btn-success" @click="addListingRow">
+                    Add Listing
+                  </b-btn>
+                </div>
+                <card
+                  v-for="(item, index) in property_detail_listing_file"
+                  :key="index"
+                  title="Listing list"
+                >
+                  <div class="col-md-12">
+                    <b-btn
+                      class="btn btn-danger btn-sm float-right"
+                      @click="deleteListingRow($event, index)"
+                    >
+                      <i class="tim-icons icon-simple-remove"> {{ item.id }}</i>
+                    </b-btn>
+                  </div>
+                  <div class="row justify-content-center mt-5">
+                    <div class="col-sm-12">
+                      <label>Description</label>
+                      <textarea
+                        name="Description"
+                        class="form-control"
+                        type="text"
+                        v-model="item.description"
+                      >
+                      </textarea>
+                    </div>
+                    <div class="col-sm-12">
+                      <label>Notes</label>
+                      <textarea
+                        name="notes"
+                        class="form-control"
+                        type="text"
+                        v-model="item.notes"
+                      >
+                      </textarea>
+                    </div>
+                    <div class="col-sm-12">
+                      <label>Description of request</label>
+                      <textarea
+                        name="notes"
+                        class="form-control"
+                        type="text"
+                        v-model="item.description_of_request"
+                      >
+                      </textarea>
+                    </div>
+                    <div class="col-sm-12">
+                      <label>Completd Job order file</label>
+                      <textarea
+                        name="notes"
+                        class="form-control"
+                        type="text"
+                        v-model="item.completed_job_order_file"
+                      >
+                      </textarea>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input label="Date completed">
+                        <el-date-picker
+                          v-model="item.date_completed"
+                          type="date"
+                          format="yyyy-MM-dd"
+                          value-format="yyyy-MM-dd"
+                          placeholder="Choose date"
+                        >
+                        </el-date-picker>
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input label="Status of Job">
+                        <el-select
+                          class="select-primary"
+                          reqiured
+                          size="large"
+                          name="leadType"
+                          v-model="item.status_of_job"
+                        >
+                          <el-option
+                            v-for="option in statusChoices.status"
+                            class="select-primary"
+                            :value="option.value"
+                            :label="option.label"
+                            :key="option.label"
+                          >
+                          </el-option>
+                        </el-select>
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input label="Tagging" v-model="item.tagging">
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input
+                        label="Listing sites"
+                        v-model="item.listing_sites"
+                      >
+                      </base-input>
+                    </div>
+                    <div class="col-sm-5">
+                      <base-input
+                        label="Listing Status"
+                        v-model="item.listing_status"
+                      >
+                        <el-select
+                          class="select-primary"
+                          reqiured
+                          size="large"
+                          name="listing_status"
+                          v-model="item.listing_status"
+                        >
+                          <el-option
+                            v-for="option in listingStatus"
+                            class="select-primary"
+                            :value="option.id"
+                            :label="option.name"
+                            :key="option.id"
+                          >
+                          </el-option>
+                        </el-select>
+                      </base-input>
+                    </div>
+                  </div>
+                </card>
+              </card>
+            </tab-pane>
           </tabs>
           <div class="pull-right">
             <base-button
@@ -842,6 +1242,8 @@ export default {
       property_detail_acquisition: [],
       property_detail_disposition: [],
       property_detail_assessment_files: [],
+      property_detail_marketing_file: [],
+      property_detail_listing_file: [],
       leadTypeChoices: {
         placeholder: "",
         status: [
@@ -902,6 +1304,7 @@ export default {
   },
   methods: {
     ...mapActions("propertyDetail", ["savePropertyDetail", "reset"]),
+    ...mapActions("listing", ["fetchListingStatus"]),
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
@@ -1034,7 +1437,10 @@ export default {
           property_detail_buyer_lists: this.property_detail_buyer_lists,
           property_detail_acquisition: this.property_detail_acquisition,
           property_detail_disposition: this.property_detail_disposition,
-          property_detail_assessment_files: this.property_detail_assessment_files,
+          property_detail_assessment_files:
+            this.property_detail_assessment_files,
+          property_detail_marketing_file: this.property_detail_marketing_file,
+          property_detail_listing_file: this.property_detail_listing_file,
         };
 
         const staffPayload = {
@@ -1061,7 +1467,10 @@ export default {
           property_detail_buyer_lists: this.property_detail_buyer_lists,
           property_detail_acquisition: this.property_detail_acquisition,
           property_detail_disposition: this.property_detail_disposition,
-          property_detail_assessment_files: this.property_detail_assessment_files,
+          property_detail_assessment_files:
+            this.property_detail_assessment_files,
+          property_detail_marketing_file: this.property_detail_marketing_file,
+          property_detail_listing_file: this.property_detail_listing_file,
         };
 
         if (this.$auth.user.designation_category == "staff") {
@@ -1182,6 +1591,43 @@ export default {
         notes: "",
       });
     },
+    addMarketingRow: function () {
+      this.property_detail_marketing_file.push({
+        apn: this.apn,
+        client_code: this.clientUser.client_code,
+        description: "",
+        description_of_request: "",
+        completed_job_order_file: "",
+        date_completed: "",
+        status_of_job: "",
+        images: "",
+        ad_content: "",
+        youtube_videos: "",
+        tiktok_videos: "",
+        email_campaign: "",
+        other_graphics: "",
+        other_makerting_files: "",
+        neighbor_list: "",
+        assigned_to: null,
+        notes: "",
+      });
+    },
+    addListingRow: function () {
+      this.property_detail_listing_file.push({
+        apn: this.apn,
+        client_code: this.clientUser.client_code,
+        description: "",
+        description_of_request: "",
+        completed_job_order_file: "",
+        date_completed: "",
+        status_of_job: "",
+        tagging: "",
+        listing_sites: "",
+        listing_status: null,
+        assigned_to: null,
+        notes: "",
+      });
+    },
     addCounterOffer() {
       const vm = this;
       // _.forEach(vm.sellerLists, function (item) {
@@ -1210,6 +1656,12 @@ export default {
     deleteAssessmentRow(e, index) {
       this.property_detail_assessment_files.splice(index, 1);
     },
+    deleteMarketingRow(e, index) {
+      this.property_detail_marketing_file.splice(index, 1);
+    },
+    deleteListingRow(e, index) {
+      this.property_detail_listing_file.splice(index, 1);
+    },
   },
   computed: {
     ...mapGetters("propertyDetail", [
@@ -1233,10 +1685,12 @@ export default {
       "notes_management_side",
       // "property_price_statuses"
     ]),
+    ...mapGetters({ listingStatus: "listing/listingStatus" }),
   },
   mounted() {
     this.fetchMe();
     this.addRow();
+    this.fetchListingStatus();
     // this.receivePropertyPriceStatuses();
   },
 };
