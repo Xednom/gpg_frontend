@@ -37,6 +37,7 @@
             name="Due date"
             v-validate="'required'"
             :error="getError('Due date')"
+            v-model="due_date"
           >
             <el-date-picker
               v-model="due_date"
