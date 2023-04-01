@@ -182,9 +182,6 @@ export default {
     fetch: {
       type: Function,
     },
-    apn: {
-      type: String,
-    },
   },
   data() {
     return {
@@ -287,14 +284,14 @@ export default {
       }
     },
     errorMessage(variant = null, error) {
-      this.$bvToast.toast("Errpr", {
+      this.$bvToast.toast("Error", {
         title: `Error`,
         variant: variant,
         solid: true,
       });
     },
     successMessage() {
-      return "Successfully added a Property Price data.";
+      return "Successfully added an Acquisition data.";
     },
     // async getUser() {
     //   this.fetchUser();
@@ -307,7 +304,7 @@ export default {
       this.acquisitions.push({
         property_detail: this.propertyDetail.id,
         apn: this.propertyDetail.apn,
-        client_code: this.client.client_code,
+        client_code: this.clientUser.client_code,
         possible_offer: "",
         approved_amount_from_client: "",
         minimum_amount: "",
@@ -330,6 +327,7 @@ export default {
       try {
         await this.$axios.get(endpoint).then((res) => {
           this.clientUser = res.data;
+          console.warn("Client ", this.clientUser)
         });
       } catch (err) {
         console.error(err.response.data);
@@ -376,6 +374,7 @@ export default {
     },
   },
   mounted() {
+    this.fetchMe();
     // this.getUser();
   },
 };
