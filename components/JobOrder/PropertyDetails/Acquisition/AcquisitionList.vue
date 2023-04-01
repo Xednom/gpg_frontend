@@ -130,6 +130,7 @@
     <b-modal id="update" size="lg" title="Update Acquisition" hide-footer>
       <acquisition-update
         :fetch="fetchAcquisitions"
+        :item="acquisition"
       >
       </acquisition-update>
     </b-modal>
