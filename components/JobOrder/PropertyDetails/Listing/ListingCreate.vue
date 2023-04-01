@@ -1,7 +1,7 @@
 <template>
   <div class="col-md-12">
     <div class="col-xs-12">
-      <b-btn class="btn btn-success" @click="addListingRow">
+      <b-btn class="btn btn-success" :disabled="loading" @click="addListingRow">
         Add listing
       </b-btn>
     </div>
@@ -285,6 +285,7 @@ export default {
         assigned_to: null,
         notes: "",
       });
+      console.warn("code: ", this.user);
     },
     deleteCounterOffer(e, index) {
       const vm = this;
@@ -307,6 +308,7 @@ export default {
     async fetchMe() {
       try {
         let endpoint = `/auth/users/me/`;
+        this.loading = true;
         await this.$axios.get(endpoint).then((res) => {
           this.user = res.data;
           if (
@@ -314,12 +316,16 @@ export default {
             this.user.designation_category == "current_client" ||
             this.user.designation_category == "affiliate_partner"
           ) {
+            this.loading = false;
+            console.warn("User: ", this.user);
             this.fetchClient(this.user.id);
           } else {
+            this.loading = false;
             this.fetchStaff(this.user.id);
           }
         });
       } catch (err) {
+        this.loading = false;
         console.error(err.response.data);
       }
     },
