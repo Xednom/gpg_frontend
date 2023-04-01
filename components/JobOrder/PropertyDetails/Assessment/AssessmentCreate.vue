@@ -1,7 +1,11 @@
 <template>
   <div class="col-md-12">
     <div class="col-xs-12">
-      <b-btn class="btn btn-success" @click="addAssessmentRow">
+      <b-btn
+        class="btn btn-success"
+        :disabled="loading"
+        @click="addAssessmentRow"
+      >
         Add Assessment
       </b-btn>
     </div>
@@ -293,7 +297,8 @@ export default {
     async save() {
       let isValidForm = await this.$validator.validateAll();
       if (isValidForm) {
-        await this.$store.dispatch("assessment/saveAssessments", (this.assessments))
+        await this.$store
+          .dispatch("assessment/saveAssessments", this.assessments)
           .then(() => {
             this.success = true;
             if (this.success) {
@@ -354,7 +359,7 @@ export default {
       try {
         await this.$axios.get(endpoint).then((res) => {
           this.clientUser = res.data;
-          console.warn("Client user: ", this.clientUser)
+          console.warn("Client user: ", this.clientUser);
         });
       } catch (err) {
         console.error(err.response.data);
@@ -363,6 +368,7 @@ export default {
     async fetchMe() {
       try {
         let endpoint = `/auth/users/me/`;
+        this.loading = true;
         await this.$axios.get(endpoint).then((res) => {
           this.user = res.data;
           if (
@@ -370,13 +376,16 @@ export default {
             this.user.designation_category == "current_client" ||
             this.user.designation_category == "affiliate_partner"
           ) {
+            this.loading = false;
             this.fetchClient(this.user.id);
           } else {
+            this.loading = false;
             this.fetchStaff(this.user.id);
           }
         });
       } catch (err) {
         console.error(err.response.data);
+        this.loading = false;
       }
     },
   },
