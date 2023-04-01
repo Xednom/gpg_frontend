@@ -23,7 +23,6 @@
                 size="large"
                 placeholder="Approved amount from Client"
                 v-model="approved_amount_from_client"
-                @change="setItem"
               >
                 <el-option
                   v-for="option in possibleOfferChoices.status"
@@ -127,10 +126,12 @@
 import { DatePicker, Select, Option } from "element-ui";
 import { BaseAlert } from "@/components";
 import { mapGetters, mapActions } from "vuex";
+import AcquistionMixin from "@/mixins/Acquisition.js";
 
 import _ from "lodash";
 
 export default {
+  mixins: [AcquistionMixin],
   components: {
     [DatePicker.name]: DatePicker,
     [Select.name]: Select,
@@ -143,6 +144,9 @@ export default {
     },
     fetch: {
       type: Function,
+    },
+    item: {
+      type: Object,
     },
   },
   data() {
@@ -235,26 +239,9 @@ export default {
     },
   },
   computed: {
-    setItem() {
-      const vm = this;
-      const items = [this.$store.getters["acquisition/acquisition"]];
-      _.forEach(items, function (item) {
-        vm.id = item.id;
-        vm.apn = item.apn;
-        vm.client_code = item.client_code;
-        vm.possible_offer = item.possible_offer;
-        vm.approved_amount_from_client = item.approved_amount_from_client;
-        vm.minimum_amount = item.minimum_amount;
-        vm.maximum_amount = item.maximum_amount;
-        vm.amount_closed_deal = item.amount_closed_deal;
-        vm.deal_status = item.deal_status;
-        vm.assigned_sales_team = item.assigned_sales_team;
-        vm.notes = item.notes;
-      });
-    },
+    ...mapGetters(["acquisition/acquisition"])
   },
   mounted() {
-    console.warn("Item id: ", this.itemId);
   },
 };
 </script>

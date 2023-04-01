@@ -8,6 +8,20 @@ export default {
         value: value,
       });
     },
+    acquisitionFields() {
+      const vm = this;
+      vm.id = vm.item.id;
+      vm.apn = vm.item.apn;
+      vm.client_code = vm.item.client_code;
+      vm.possible_offer = vm.item.possible_offer;
+      vm.approved_amount_from_client = vm.item.approved_amount_from_client;
+      vm.minimum_amount = vm.item.minimum_amount;
+      vm.maximum_amount = vm.item.maximum_amount;
+      vm.amount_closed_deal = vm.item.amount_closed_deal;
+      vm.deal_status = vm.item.deal_status;
+      vm.assigned_sales_team = vm.item.assigned_sales_team;
+      vm.notes = vm.item.notes;
+    },
   },
   computed: {
     ...mapGetters({ acquisition: "acquisition/acquisition" }),
@@ -124,5 +138,10 @@ export default {
         this.setBasicStoreValue("notes", value);
       },
     },
+  },
+  mounted() {
+    setTimeout(() => {
+      this.acquisitionFields();
+    }, 500);
   },
 };
